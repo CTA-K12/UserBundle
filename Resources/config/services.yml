@@ -1,0 +1,7 @@
+parameters:
+#    mesd_authentication.example.class: Mesd\AuthenticationBundle\Example
+ 
+services:
+#    mesd_authentication.example:
+#        class: %mesd_authentication.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

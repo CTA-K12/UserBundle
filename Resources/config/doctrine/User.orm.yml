@@ -1,0 +1,62 @@
+Mesd\UserBundle\Entity\User:
+  type: mappedSuperclass
+  fields:
+    username:
+      type: string
+      length: 255
+      nullable: false
+    usernameCanonical:
+      column: username_canonical
+      type: string
+      length: 255
+      nullable: false
+      unique: true
+    email:
+      type: string
+      length: 255
+      nullable: false
+    emailCanonical:
+      column: email_canonical
+      type: string
+      length: 255
+      nullable: false
+      unique: true
+    enabled:
+      type: boolean
+      nullable: false
+    salt:
+      type: string
+      nullable: false
+    password:
+      type: string
+      nullable: false
+    lastLogin:
+      column: last_login
+      type: datetime
+      nullable: true
+    locked:
+      type: boolean
+      nullable: false
+    expired:
+      type: boolean
+      nullable: false
+    expiresAt:
+      column: expires_at
+      type: datetime
+      nullable: true
+    confirmationToken:
+      column: confirmation_token
+      type: string
+      nullable: true
+    passwordRequestedAt:
+      column: password_requested_at
+      type: datetime
+      nullable: true
+    credentialsExpired:
+      column: credentials_expired
+      type: boolean
+      nullable: false
+    credentialsExpireAt:
+      column: credentials_expire_at
+      type: datetime
+      nullable: true
