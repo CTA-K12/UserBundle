@@ -1,46 +1,43 @@
 <?php
 
-/*
- * This file is part of the MesdUserBundle package.
- *
- * (c) MESD <https://github.com/MESD>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-
 namespace Mesd\UserBundle\Entity;
 
-abstract class Role implements RoleInterface
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Role
+ */
+abstract class Role
 {
     protected $id;
-    protected $description;
+
+    /**
+     * @var string
+     */
     protected $name;
 
-
-    public function __construct()
-    {
-
-    }
-
     /**
-     * @return integer
+     * @var string
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    protected $description;
+
 
     /**
-     * @return string
+     * Set name
+     *
+     * @param string $name
+     * @return Role
      */
-    public function getDescription()
+    public function setName($name)
     {
-        return $this->description;
+        $this->name = $name;
+
+        return $this;
     }
 
     /**
+     * Get name
+     *
      * @return string
      */
     public function getName()
@@ -49,9 +46,10 @@ abstract class Role implements RoleInterface
     }
 
     /**
-     * @param string $name
+     * Set description
      *
-     * @return self
+     * @param string $description
+     * @return Role
      */
     public function setDescription($description)
     {
@@ -61,24 +59,12 @@ abstract class Role implements RoleInterface
     }
 
     /**
-     * @param string $name
+     * Get description
      *
-     * @return self
+     * @return string
      */
-    public function setName($name)
+    public function getDescription()
     {
-        $this->name = strtoupper($name);
-
-        return $this;
+        return $this->description;
     }
-
-
-    /**
-     * @see Symfony\Component\Security\Core\Role\RoleInterface
-     */
-    public function getRole()
-    {
-        return $this->name;
-    }
-
 }

@@ -1,26 +1,13 @@
 <?php
 
-/*
- * This file is part of the FOSUserBundle package.
- *
- * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Mesd\UserBundle\Entity;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Storage agnostic user object
- *
- * @author Thibault Duplessis <thibault.duplessis@gmail.com>
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * User
  */
-abstract class User implements UserInterface, GroupableInterface
+abstract class User
 {
     protected $id;
 
@@ -50,47 +37,19 @@ abstract class User implements UserInterface, GroupableInterface
     protected $enabled;
 
     /**
-     * The salt to use for hashing
-     *
      * @var string
      */
     protected $salt;
 
     /**
-     * Encrypted password. Must be persisted.
-     *
      * @var string
      */
     protected $password;
 
     /**
-     * Plain password. Used for model validation. Must not be persisted.
-     *
-     * @var string
-     */
-    protected $plainPassword;
-
-    /**
      * @var \DateTime
      */
     protected $lastLogin;
-
-    /**
-     * Random string sent to the user email address in order to verify it
-     *
-     * @var string
-     */
-    protected $confirmationToken;
-
-    /**
-     * @var \DateTime
-     */
-    protected $passwordRequestedAt;
-
-    /**
-     * @var Collection
-     */
-    protected $groups;
 
     /**
      * @var boolean
@@ -108,9 +67,14 @@ abstract class User implements UserInterface, GroupableInterface
     protected $expiresAt;
 
     /**
-     * @var Collection
+     * @var string
      */
-    protected $roles;
+    protected $confirmationToken;
+
+    /**
+     * @var \DateTime
+     */
+    protected $passwordRequestedAt;
 
     /**
      * @var boolean
@@ -122,189 +86,13 @@ abstract class User implements UserInterface, GroupableInterface
      */
     protected $credentialsExpireAt;
 
-    public function __construct()
-    {
-        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->enabled = false;
-        $this->locked = false;
-        $this->expired = false;
-        $this->credentialsExpired = false;
-    }
-
 
     /**
-     * Serializes the user.
+     * Set username
      *
-     * The serialized data have to contain the fields used by the equals method and the username.
-     *
-     * @return string
+     * @param string $username
+     * @return User
      */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->password,
-            $this->salt,
-            $this->usernameCanonical,
-            $this->username,
-            $this->expired,
-            $this->locked,
-            $this->credentialsExpired,
-            $this->enabled,
-            $this->id,
-        ));
-    }
-
-    /**
-     * Unserializes the user.
-     *
-     * @param string $serialized
-     */
-    public function unserialize($serialized)
-    {
-        $data = unserialize($serialized);
-
-        list(
-            $this->password,
-            $this->salt,
-            $this->usernameCanonical,
-            $this->username,
-            $this->expired,
-            $this->locked,
-            $this->credentialsExpired,
-            $this->enabled,
-            $this->id
-        ) = $data;
-    }
-
-    /**
-     * Removes sensitive data from the user.
-     */
-    public function eraseCredentials()
-    {
-        $this->plainPassword = null;
-    }
-
-    /**
-     * Returns the user unique id.
-     *
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    public function getUsernameCanonical()
-    {
-        return $this->usernameCanonical;
-    }
-
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function getEmailCanonical()
-    {
-        return $this->emailCanonical;
-    }
-
-    /**
-     * Gets the encrypted password.
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    public function getPlainPassword()
-    {
-        return $this->plainPassword;
-    }
-
-    /**
-     * Gets the last login time.
-     *
-     * @return \DateTime
-     */
-    public function getLastLogin()
-    {
-        return $this->lastLogin;
-    }
-
-    public function getConfirmationToken()
-    {
-        return $this->confirmationToken;
-    }
-
-    public function isAccountNonExpired()
-    {
-        if (true === $this->expired) {
-            return false;
-        }
-
-        if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() < time()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function isAccountNonLocked()
-    {
-        return !$this->locked;
-    }
-
-    public function isCredentialsNonExpired()
-    {
-        if (true === $this->credentialsExpired) {
-            return false;
-        }
-
-        if (null !== $this->credentialsExpireAt && $this->credentialsExpireAt->getTimestamp() < time()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function isCredentialsExpired()
-    {
-        return !$this->isCredentialsNonExpired();
-    }
-
-    public function isEnabled()
-    {
-        return $this->enabled;
-    }
-
-    public function isExpired()
-    {
-        return !$this->isAccountNonExpired();
-    }
-
-    public function isLocked()
-    {
-        return !$this->isAccountNonLocked();
-    }
-
-    public function isUser(UserInterface $user = null)
-    {
-        return null !== $user && $this->getId() === $user->getId();
-    }
-
     public function setUsername($username)
     {
         $this->username = $username;
@@ -312,6 +100,22 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set usernameCanonical
+     *
+     * @param string $usernameCanonical
+     * @return User
+     */
     public function setUsernameCanonical($usernameCanonical)
     {
         $this->usernameCanonical = $usernameCanonical;
@@ -320,29 +124,21 @@ abstract class User implements UserInterface, GroupableInterface
     }
 
     /**
-     * @param \DateTime $date
+     * Get usernameCanonical
      *
-     * @return User
+     * @return string
      */
-    public function setCredentialsExpireAt(\DateTime $date = null)
+    public function getUsernameCanonical()
     {
-        $this->credentialsExpireAt = $date;
-
-        return $this;
+        return $this->usernameCanonical;
     }
 
     /**
-     * @param boolean $boolean
+     * Set email
      *
+     * @param string $email
      * @return User
      */
-    public function setCredentialsExpired($boolean)
-    {
-        $this->credentialsExpired = $boolean;
-
-        return $this;
-    }
-
     public function setEmail($email)
     {
         $this->email = $email;
@@ -350,6 +146,22 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set emailCanonical
+     *
+     * @param string $emailCanonical
+     * @return User
+     */
     public function setEmailCanonical($emailCanonical)
     {
         $this->emailCanonical = $emailCanonical;
@@ -357,39 +169,68 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
-    public function setEnabled($boolean)
+    /**
+     * Get emailCanonical
+     *
+     * @return string
+     */
+    public function getEmailCanonical()
     {
-        $this->enabled = (Boolean) $boolean;
+        return $this->emailCanonical;
+    }
+
+    /**
+     * Set enabled
+     *
+     * @param boolean $enabled
+     * @return User
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
 
         return $this;
     }
 
     /**
-     * Sets this user to expired.
+     * Get enabled
      *
-     * @param Boolean $boolean
+     * @return boolean
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Set salt
      *
+     * @param string $salt
      * @return User
      */
-    public function setExpired($boolean)
+    public function setSalt($salt)
     {
-        $this->expired = (Boolean) $boolean;
+        $this->salt = $salt;
 
         return $this;
     }
 
     /**
-     * @param \DateTime $date
+     * Get salt
      *
-     * @return User
+     * @return string
      */
-    public function setExpiresAt(\DateTime $date = null)
+    public function getSalt()
     {
-        $this->expiresAt = $date;
-
-        return $this;
+        return $this->salt;
     }
 
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return User
+     */
     public function setPassword($password)
     {
         $this->password = $password;
@@ -397,27 +238,114 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
-    public function setPlainPassword($password)
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
     {
-        $this->plainPassword = $password;
+        return $this->password;
+    }
+
+    /**
+     * Set lastLogin
+     *
+     * @param \DateTime $lastLogin
+     * @return User
+     */
+    public function setLastLogin($lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
 
         return $this;
     }
 
-    public function setLastLogin(\DateTime $time = null)
+    /**
+     * Get lastLogin
+     *
+     * @return \DateTime
+     */
+    public function getLastLogin()
     {
-        $this->lastLogin = $time;
+        return $this->lastLogin;
+    }
+
+    /**
+     * Set locked
+     *
+     * @param boolean $locked
+     * @return User
+     */
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
 
         return $this;
     }
 
-    public function setLocked($boolean)
+    /**
+     * Get locked
+     *
+     * @return boolean
+     */
+    public function getLocked()
     {
-        $this->locked = $boolean;
+        return $this->locked;
+    }
+
+    /**
+     * Set expired
+     *
+     * @param boolean $expired
+     * @return User
+     */
+    public function setExpired($expired)
+    {
+        $this->expired = $expired;
 
         return $this;
     }
 
+    /**
+     * Get expired
+     *
+     * @return boolean
+     */
+    public function getExpired()
+    {
+        return $this->expired;
+    }
+
+    /**
+     * Set expiresAt
+     *
+     * @param \DateTime $expiresAt
+     * @return User
+     */
+    public function setExpiresAt($expiresAt)
+    {
+        $this->expiresAt = $expiresAt;
+
+        return $this;
+    }
+
+    /**
+     * Get expiresAt
+     *
+     * @return \DateTime
+     */
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
+
+    /**
+     * Set confirmationToken
+     *
+     * @param string $confirmationToken
+     * @return User
+     */
     public function setConfirmationToken($confirmationToken)
     {
         $this->confirmationToken = $confirmationToken;
@@ -425,142 +353,82 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
-    public function setPasswordRequestedAt(\DateTime $date = null)
+    /**
+     * Get confirmationToken
+     *
+     * @return string
+     */
+    public function getConfirmationToken()
     {
-        $this->passwordRequestedAt = $date;
+        return $this->confirmationToken;
+    }
+
+    /**
+     * Set passwordRequestedAt
+     *
+     * @param \DateTime $passwordRequestedAt
+     * @return User
+     */
+    public function setPasswordRequestedAt($passwordRequestedAt)
+    {
+        $this->passwordRequestedAt = $passwordRequestedAt;
 
         return $this;
     }
 
     /**
-     * Gets the timestamp that the user requested a password reset.
+     * Get passwordRequestedAt
      *
-     * @return null|\DateTime
+     * @return \DateTime
      */
     public function getPasswordRequestedAt()
     {
         return $this->passwordRequestedAt;
     }
 
-    public function isPasswordRequestNonExpired($ttl)
-    {
-        return $this->getPasswordRequestedAt() instanceof \DateTime &&
-               $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
-    }
-
-
-
     /**
-     * Returns the user roles as an array
-     * as required by symfony security component.
+     * Set credentialsExpired
      *
-     * @return array
+     * @param boolean $credentialsExpired
+     * @return User
      */
-    public function getRoles()
+    public function setCredentialsExpired($credentialsExpired)
     {
-        $roles = $this->roles->toArray();
+        $this->credentialsExpired = $credentialsExpired;
 
-        foreach ($this->getGroups() as $group) {
-            $roles = array_merge($roles, $group->getRoles()->toArray());
-        }
-
-        return array_unique($roles);
+        return $this;
     }
 
     /**
-     * Returns the user roles
-     *
-     * @return Collection
-     */
-    public function getRoleCollection()
-    {
-        return $this->roles ?: $this->roles = new ArrayCollection();
-    }
-
-    /**
-     * Never use this to check if this user has access to anything!
-     *
-     * Use the SecurityContext, or an implementation of AccessDecisionManager
-     * instead, e.g.
-     *
-     *         $securityContext->isGranted('ROLE_USER');
-     *
-     * @param string $name
+     * Get credentialsExpired
      *
      * @return boolean
      */
-    public function hasRole($name)
+    public function getCredentialsExpired()
     {
-        return in_array($name, $this->getRoles());
+        return $this->credentialsExpired;
     }
-
-    public function addRole($role)
-    {
-        if (!$this->getRoleCollection()->contains($role)) {
-            $this->getRoleCollection()->add($role);
-        }
-
-        return $this;
-    }
-
-    public function removeRole($role)
-    {
-        if ($this->getRoleCollection()->contains($role)) {
-            $this->getRoleCollection()->removeElement($role);
-        }
-
-        return $this;
-    }
-
-
 
     /**
-     * Gets the groups granted to the user.
+     * Set credentialsExpireAt
      *
-     * @return Collection
+     * @param \DateTime $credentialsExpireAt
+     * @return User
      */
-    public function getGroups()
+    public function setCredentialsExpireAt($credentialsExpireAt)
     {
-        return $this->groups ?: $this->groups = new ArrayCollection();
-    }
-
-    public function getGroupNames()
-    {
-        $names = array();
-        foreach ($this->getGroups() as $group) {
-            $names[] = $group->getName();
-        }
-
-        return $names;
-    }
-
-    public function hasGroup($name)
-    {
-        return in_array($name, $this->getGroupNames());
-    }
-
-    public function addGroup(GroupInterface $group)
-    {
-        if (!$this->getGroups()->contains($group)) {
-            $this->getGroups()->add($group);
-        }
+        $this->credentialsExpireAt = $credentialsExpireAt;
 
         return $this;
     }
 
-    public function removeGroup(GroupInterface $group)
+    /**
+     * Get credentialsExpireAt
+     *
+     * @return \DateTime
+     */
+    public function getCredentialsExpireAt()
     {
-        if ($this->getGroups()->contains($group)) {
-            $this->getGroups()->removeElement($group);
-        }
-
-        return $this;
-    }
-
-
-
-    public function __toString()
-    {
-        return (string) $this->getUsername();
+        return $this->credentialsExpireAt;
     }
 }

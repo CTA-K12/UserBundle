@@ -2,109 +2,69 @@
 
 namespace Mesd\UserBundle\Entity;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
-
-abstract class Group implements GroupInterface
+/**
+ * Group
+ */
+abstract class Group
 {
     protected $id;
-    protected $name;
-    protected $description;
-    protected $roles;
 
     /**
-     * @param RoleInterface $role
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @var string
+     */
+    protected $description;
+
+
+    /**
+     * Set name
      *
+     * @param string $name
      * @return Group
      */
-    public function addRole(RoleInterface $role)
+    public function setName($name)
     {
-        if (!$this->hasRole($role->getName())) {
-            $this->roles[] = $role;
-        }
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
+    /**
+     * Get name
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
-    public function getRoles()
-    {
-        return $this->roles;
-    }
-
-    public function getRoleNames()
-    {
-        $names = array();
-        foreach ($this->getRoles() as $role) {
-            $names[] = $role->getName();
-        }
-
-        return $names;
-    }
-
     /**
-     * @param string $name
+     * Set description
      *
-     * @return boolean
-     */
-    public function hasRole($name)
-    {
-        return in_array($name, $this->getRoleNames());
-    }
-
-
-    /**
-     * @param string $role
-     *
+     * @param string $description
      * @return Group
      */
-    public function removeRole(RoleInterface $role)
+    public function setDescription($description)
     {
-        if ($this->roles->contains($role)) {
-            $this->roles->removeElement($role);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * @param string $name
-     *
-     * @return Group
-     */
-    public function setDescription($name)
-    {
-        $this->name = $description;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * @param string $name
+     * Get description
      *
-     * @return Group
+     * @return string
      */
-    public function setName($name)
+    public function getDescription()
     {
-        $this->name = strtoupper($name);
-
-        return $this;
+        return $this->description;
     }
-
 }
