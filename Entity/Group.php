@@ -5,11 +5,13 @@ namespace Mesd\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Mesd\UserBundle\Model\GroupInterface;
+use Mesd\UserBundle\Model\RoleInterface;
 
 /**
  * Group
  */
-abstract class Group
+abstract class Group implements GroupInterface
 {
     protected $id;
 
@@ -28,6 +30,11 @@ abstract class Group
      */
     protected $roles;
 
+
+    public function __construct()
+    {
+        $this->roles  = new Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Set name
@@ -78,10 +85,10 @@ abstract class Group
     /**
      * Add role
      *
-     * @param \Mesd\UserBundle\Entity\Role $role
+     * @param RoleInterface $role
      * @return Group
      */
-    public function addRole(\Mesd\UserBundle\Entity\Role $role)
+    public function addRole(RoleInterface $role)
     {
         $this->roles[] = $role;
 
@@ -106,6 +113,36 @@ abstract class Group
     public function getRoleCollection()
     {
         return $this->roles;
+    }
+
+    /**
+     * Get role names as array
+     *
+     * @return array
+     */
+    public function getRoleNames()
+    {
+        $names = array();
+        foreach ($this->getRoleCollection() as $role) {
+            $names[] = $role->getName();
+        }
+
+        return $names;
+    }
+
+    /**
+     * Remove role
+     *
+     * @param RoleInterface $role
+     * @return User
+     */
+    public function removeRole(RoleInterface $role)
+    {
+        if ($this->getRoleCollection()->contains($role)) {
+            $this->getRoleCollection()->removeElement($role);
+        }
+
+        return $this;
     }
 
 }

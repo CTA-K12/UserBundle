@@ -5,11 +5,14 @@ namespace Mesd\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Mesd\UserBundle\Model\GroupInterface;
+use Mesd\UserBundle\Model\RoleInterface;
 
 /**
  * User
  */
-abstract class User
+abstract class User implements AdvancedUserInterface, \Serializable
 {
     protected $id;
 
@@ -47,6 +50,13 @@ abstract class User
      * @var string
      */
     protected $password;
+
+    /**
+     * This property is never persisted
+     *
+     * @var string
+     */
+    protected $plainPassword;
 
     /**
      * @var \DateTime
@@ -97,6 +107,19 @@ abstract class User
      * @var \Doctrine\Common\Collections\Collection
      */
     protected $groups;
+
+
+    public function __construct()
+    {
+        $this->salt               = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->enabled            = false;
+        $this->locked             = false;
+        $this->expired            = false;
+        $this->credentialsExpired = false;
+
+        $this->roles  = new Doctrine\Common\Collections\ArrayCollection();
+        $this->groups = new Doctrine\Common\Collections\ArrayCollection();
+    }
 
 
     /**
@@ -258,6 +281,29 @@ abstract class User
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set plainPassword
+     *
+     * @param string $plainPassword
+     * @return User
+     */
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get plainPassword
+     *
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
     }
 
     /**
@@ -445,13 +491,19 @@ abstract class User
     }
 
 
+
+    /**
+     * Role Methods
+     *
+     */
+
     /**
      * Add role
      *
-     * @param \Mesd\UserBundle\Entity\Role $role
+     * @param RoleInterface
      * @return User
      */
-    public function addRole(\Mesd\UserBundle\Entity\Role $role)
+    public function addRole(RoleInterface $role)
     {
         $this->roles[] = $role;
 
@@ -485,12 +537,49 @@ abstract class User
     }
 
     /**
-     * Add group
+     * Get role names as array
      *
-     * @param \Mesd\UserBundle\Entity\Group $group
+     * @return array
+     */
+    public function getRoleNames()
+    {
+        $names = array();
+        foreach ($this->getRoleCollection() as $role) {
+            $names[] = $role->getName();
+        }
+
+        return $names;
+    }
+
+    /**
+     * Remove role
+     *
+     * @param RoleInterface $role
      * @return User
      */
-    public function addGroup(\Mesd\UserBundle\Entity\Group $group)
+    public function removeRole(RoleInterface $role)
+    {
+        if ($this->getRoleCollection()->contains($role)) {
+            $this->getRoleCollection()->removeElement($role);
+        }
+
+        return $this;
+    }
+
+
+
+    /**
+     * Group Methods
+     *
+     */
+
+    /**
+     * Add group
+     *
+     * @param GroupInterface $group
+     * @return User
+     */
+    public function addGroup(GroupInterface $group)
     {
         $this->groups[] = $group;
 
@@ -516,6 +605,137 @@ abstract class User
     public function getGroupCollection()
     {
         return $this->groups;
+    }
+
+    /**
+     * Get group names as array
+     *
+     * @return array
+     */
+    public function getGroupNames()
+    {
+        $names = array();
+        foreach ($this->getGroupCollection() as $group) {
+            $names[] = $group->getName();
+        }
+
+        return $names;
+    }
+
+    /**
+     * Remove group
+     *
+     * @param GroupInterface $group
+     * @return User
+     */
+    public function removeGroup(GroupInterface $group)
+    {
+        if ($this->getGroupCollection()->contains($group)) {
+            $this->getGroupCollection()->removeElement($group);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * UserInterface Required Methods
+     *
+     */
+
+    /**
+     * Serializes the user.
+     *
+     * The serialized data have to contain the fields used by the equals method and the username.
+     *
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->password,
+            $this->salt,
+            $this->usernameCanonical,
+            $this->username,
+            $this->expired,
+            $this->locked,
+            $this->credentialsExpired,
+            $this->enabled,
+            $this->id,
+        ));
+    }
+
+    /**
+     * Unserializes the user.
+     *
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+
+        list(
+            $this->password,
+            $this->salt,
+            $this->usernameCanonical,
+            $this->username,
+            $this->expired,
+            $this->locked,
+            $this->credentialsExpired,
+            $this->enabled,
+            $this->id
+        ) = $data;
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     */
+    public function eraseCredentials()
+    {
+        $this->plainPassword = null;
+    }
+
+
+
+    /**
+     * AdvancedUserInterface Required Methods
+     *
+     */
+
+    public function isAccountNonExpired()
+    {
+        if (true === $this->expired) {
+            return false;
+        }
+
+        if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return !$this->locked;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        if (true === $this->credentialsExpired) {
+            return false;
+        }
+
+        if (null !== $this->credentialsExpireAt && $this->credentialsExpireAt->getTimestamp() < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->enabled;
     }
 
 }

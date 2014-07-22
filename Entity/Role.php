@@ -3,11 +3,12 @@
 namespace Mesd\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Mesd\UserBundle\Model\RoleInterface;
 
 /**
  * Role
  */
-abstract class Role
+abstract class Role implements RoleInterface
 {
     protected $id;
 
