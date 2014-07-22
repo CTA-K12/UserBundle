@@ -3,6 +3,8 @@
 namespace Mesd\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Group
@@ -20,6 +22,11 @@ abstract class Group
      * @var string
      */
     protected $description;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    protected $roles;
 
 
     /**
@@ -67,4 +74,38 @@ abstract class Group
     {
         return $this->description;
     }
+
+    /**
+     * Add role
+     *
+     * @param \Mesd\UserBundle\Entity\Role $role
+     * @return Group
+     */
+    public function addRole(\Mesd\UserBundle\Entity\Role $role)
+    {
+        $this->roles[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get roles as array
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoles()
+    {
+        return $this->roles->toArray();
+    }
+
+    /**
+     * Get roles as a collection
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoleCollection()
+    {
+        return $this->roles;
+    }
+
 }

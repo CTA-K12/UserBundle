@@ -3,6 +3,8 @@
 namespace Mesd\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * User
@@ -86,6 +88,16 @@ abstract class User
      */
     protected $credentialsExpireAt;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    protected $roles;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    protected $groups;
+
 
     /**
      * Set username
@@ -118,7 +130,7 @@ abstract class User
      */
     public function setUsernameCanonical($usernameCanonical)
     {
-        $this->usernameCanonical = $usernameCanonical;
+        $this->usernameCanonical = strtolower($usernameCanonical);
 
         return $this;
     }
@@ -164,7 +176,7 @@ abstract class User
      */
     public function setEmailCanonical($emailCanonical)
     {
-        $this->emailCanonical = $emailCanonical;
+        $this->emailCanonical = strtolower($emailCanonical);
 
         return $this;
     }
@@ -431,4 +443,79 @@ abstract class User
     {
         return $this->credentialsExpireAt;
     }
+
+
+    /**
+     * Add role
+     *
+     * @param \Mesd\UserBundle\Entity\Role $role
+     * @return User
+     */
+    public function addRole(\Mesd\UserBundle\Entity\Role $role)
+    {
+        $this->roles[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get roles as array
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoles()
+    {
+        $roles = $this->roles->toArray();
+
+        foreach ($this->getGroupCollection() as $group) {
+            $roles = array_merge($roles, $group->getRoles());
+        }
+
+        return array_unique($roles);
+    }
+
+    /**
+     * Get role
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoleCollection()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Add group
+     *
+     * @param \Mesd\UserBundle\Entity\Group $group
+     * @return User
+     */
+    public function addGroup(\Mesd\UserBundle\Entity\Group $group)
+    {
+        $this->groups[] = $group;
+
+        return $this;
+    }
+
+    /**
+     * Get groups as array
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGroups()
+    {
+
+        return $this->groups->toArray();
+    }
+
+    /**
+     * Get groups as Collection
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGroupCollection()
+    {
+        return $this->groups;
+    }
+
 }
