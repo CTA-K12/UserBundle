@@ -1,5 +1,4 @@
-Getting Started With MesdUserBundle
-==================================
+##Getting Started With MesdUserBundle
 
 The Symfony2 security component provides a flexible security framework that
 allows you to load users from configuration, a database, or anywhere else
@@ -9,35 +8,15 @@ and easy to store users in a database.
 If you need to persist and fetch the users in your system to and from
 a database, then you're in the right place.
 
-## Prerequisites
+### Prerequisites
 
 Symfony 2.3+
 
-### Translations
 
-If you wish to use default texts provided in this bundle, you have to make
-sure you have translator enabled in your config.
+### Installation
 
-``` yaml
-# app/config/config.yml
 
-framework:
-    translator: ~
-```
-
-For more information about translations, check [ Symfony documentation ](http://symfony.com/doc/current/book/translation.html).
-
-## Installation
-
-1. Download MesdUserBundle using composer
-2. Enable the Bundle
-3. Create your User class
-4. Configure your application's security.yml
-5. Configure the MesdUserBundle
-6. Import MesdUserBundle routing
-7. Update your database schema
-
-### Step 1: Download MesdUserBundle using composer
+#### Step 1: Download MesdUserBundle using composer
 
 Add the MesdUserBundle to your composer.json file. You'll need to add the github url
 under your "repositories" section, and add the bundle to your "require" section. Make
@@ -65,12 +44,11 @@ $ composer update mesd/user-bundle
 Composer will install the bundle to your project's `vendor/Mesd` directory.
 
 
-### Step 2: Enable the bundle
+#### Step 2: Enable the bundle
 
 Enable the bundle in the kernel:
 
 ``` php
-<?php
 // app/AppKernel.php
 
 public function registerBundles()
@@ -82,7 +60,7 @@ public function registerBundles()
 }
 ```
 
-### Step 3: Create your User class
+#### Step 3: Create your User class
 
 The goal of this bundle is to persist some `User` class to a database (MySql,
 PostgreSQL, etc). Your first job, then, is to create the `User` class
@@ -92,7 +70,7 @@ properties or methods you find useful. This is *your* `User` class.
 The bundle provides base classes which are already mapped for most fields
 to make it easier to create your entity. Here is how you use it:
 
-1. Extend the base `User` class from the ``Model`` folder.
+1. Extend the base `User` class from the ``Entity`` folder.
 2. Map the `id` field. It must be protected as it is inherited from the parent class.
 
 **Warning:**
@@ -119,20 +97,19 @@ look.
 > to call parent::__construct(), as the base User class depends on
 > this to initialize some fields.
 
-#### Doctrine ORM User class
+##### Doctrine ORM User class
 
 Your `User` class should live in the `Entity` namespace of your bundle and look like this to
 start:
 
-##### Option A) Annotations:
+###### Option A) Annotations:
 
 ``` php
-<?php
 // src/Acme/UserBundle/Entity/User.php
 
 namespace Acme\UserBundle\Entity;
 
-use Mesd\UserBundle\Model\User as BaseUser;
+use Mesd\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -161,7 +138,7 @@ class User extends BaseUser
 > `User` is a reserved keyword in SQL so you cannot use it as table name.
 
 
-##### Option B) yaml:
+###### Option B) yaml:
 
 If you use yml to configure Doctrine you must add two files. The Entity and the orm.yml:
 
@@ -171,7 +148,7 @@ If you use yml to configure Doctrine you must add two files. The Entity and the 
 
 namespace Acme\UserBundle\Entity;
 
-use Mesd\UserBundle\Model\User as BaseUser;
+use Mesd\UserBundle\Entity\User as BaseUser;
 
 /**
  * User
@@ -194,12 +171,126 @@ Acme\UserBundle\Entity\User:
         id:
             type: integer
             generator:
-                strategy: AUTO
+            strategy: AUTO
+
+    manyToMany:
+        roles:
+            targetEntity: Role
+            joinTable:
+                name: demo_user_role
+                joinColumns:
+                    user_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    role_id:
+                        referencedColumnName: id
 ```
 
 
+#### Step 3: Create your Role class
 
-### Step 4: Configure your application's security.yml
+The Role entity will be a many to many join to the User entity. Each ueser can belong
+to as many roles as needed. The symfony2 security component will handle role security
+for us, we just need a place to store the roles.
+
+1. Extend the base `Role` class from the ``Entity`` folder.
+2. Map the `id` field. It must be protected as it is inherited from the parent class.
+
+**Warning:**
+
+> When you extend from the mapped superclass provided by the bundle, don't
+> redefine the mapping for the other fields as it is provided by the bundle.
+
+In the following sections, you'll see examples of how your `Role` class should
+look.
+
+**Note:**
+
+> The doc uses a bundle named `AcmeUserBundle`. If you want to use the same
+> name, you need to register it in your kernel. But you can of course place
+> your user class in the bundle you want.
+
+**Warning:**
+
+> If you override the __construct() method in your User class, be sure
+> to call parent::__construct(), as the base User class depends on
+> this to initialize some fields.
+
+##### Doctrine ORM User class
+
+Your `Role` class should live in the `Entity` namespace of your bundle and look like this to
+start:
+
+###### Option A) Annotations:
+
+``` php
+// src/Acme/UserBundle/Entity/Role.php
+
+namespace Acme\UserBundle\Entity;
+
+use Mesd\UserBundle\Entity\Role as BaseRole;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="acme_role")
+ */
+class Role extends BaseRole
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    public function __construct()
+    {
+        parent::__construct();
+        // your own logic
+    }
+}
+```
+
+
+###### Option B) yaml:
+
+If you use yml to configure Doctrine you must add two files. The Entity and the orm.yml:
+
+```php
+<?php
+// src/Acme/UserBundle/Entity/Role.php
+
+namespace Acme\UserBundle\Entity;
+
+use Mesd\UserBundle\Entity\Role as BaseRole;
+
+/**
+ * Role
+ */
+class Role extends BaseRole
+{
+    public function __construct()
+    {
+        parent::__construct();
+        // your own logic
+    }
+}
+```
+```yaml
+# src/Acme/UserBundle/Resources/config/doctrine/Role.orm.yml
+Acme\UserBundle\Entity\Role:
+    type:  entity
+    table: acme_role
+    id:
+        id:
+            type: integer
+            generator:
+            strategy: AUTO
+```
+
+
+#### Step 5: Configure your application's security.yml
 
 In order for Symfony's security component to use the MesdUserBundle, you must
 tell it to do so in the `security.yml` file. The `security.yml` file is where the
@@ -335,7 +426,7 @@ For more information on configuring the `security.yml` file please read the Symf
 security component [documentation](http://symfony.com/doc/current/book/security.html).
 
 
-### Step 5: Configure the MesdUserBundle
+#### Step 6: Configure the MesdUserBundle
 
 Now that you have properly configured your application's `security.yml` to work
 with the MesdUserBundle, the next step is to configure the bundle to work with
@@ -413,7 +504,7 @@ MesdPresentationBundle_change_password:
 > In order to use the built-in email functionality (confirmation of the account,
 > resetting of the password), you must activate and configure the SwiftmailerBundle.
 
-### Step 7: Update your database schema
+#### Step87: Update your database schema
 
 Now that the bundle is configured, the last thing you need to do is update your
 database schema because you have added a new entity, the `User` class which you
