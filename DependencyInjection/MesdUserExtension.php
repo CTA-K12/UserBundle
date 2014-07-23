@@ -14,6 +14,14 @@ class MesdUserExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        foreach( $config as $parameter => $value ) {
+
+            $container->setParameter(
+                'mesd_user.' . $parameter,
+                $value
+            );
+        }
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

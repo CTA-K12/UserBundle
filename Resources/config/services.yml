@@ -1,7 +1,7 @@
 parameters:
-#    mesd_authentication.example.class: Mesd\AuthenticationBundle\Example
- 
+    mesd_user.user_manager.class: Mesd\UserBundle\Model\UserManager
+
 services:
-#    mesd_authentication.example:
-#        class: %mesd_authentication.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    mesd_user.user_manager:
+        class: %mesd_user.user_manager.class%
+        arguments: [@doctrine, @security.encoder_factory, %mesd_user.user_class%, %mesd_user.role_class%]

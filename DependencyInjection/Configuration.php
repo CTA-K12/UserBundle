@@ -15,7 +15,18 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('mesd_user');
+        $rootNode = $treeBuilder->root('mesd_user')
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('user_class')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('role_class')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
