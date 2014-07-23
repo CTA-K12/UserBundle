@@ -33,7 +33,7 @@ abstract class Group implements GroupInterface
 
     public function __construct()
     {
-        $this->roles  = new Doctrine\Common\Collections\ArrayCollection();
+        $this->roles  = new ArrayCollection();
     }
 
     /**
@@ -44,7 +44,7 @@ abstract class Group implements GroupInterface
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = strtoupper($name);
 
         return $this;
     }

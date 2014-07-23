@@ -23,6 +23,11 @@ abstract class Role implements RoleInterface
     protected $description;
 
 
+    public function __construct()
+    {
+    }
+
+
     /**
      * Set name
      *
@@ -31,7 +36,7 @@ abstract class Role implements RoleInterface
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = strtoupper($name);
 
         return $this;
     }

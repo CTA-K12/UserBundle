@@ -102,15 +102,31 @@ abstract class User implements UserInterface
     public function __construct()
     {
         $this->salt               = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->enabled            = false;
+        $this->enabled            = true;
         $this->locked             = false;
         $this->expired            = false;
         $this->credentialsExpired = false;
 
-        $this->roles  = new Doctrine\Common\Collections\ArrayCollection();
-        $this->groups = new Doctrine\Common\Collections\ArrayCollection();
+        $this->roles  = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
+
+    public function __toString()
+    {
+        return (string) $this->getUsername();
+    }
+
+
+    /**
+     * Get getId
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set username
@@ -468,6 +484,9 @@ abstract class User implements UserInterface
             $roles = array_merge($roles, $group->getRoles());
         }
 
+        // ensure all users get default role
+        $roles[] = 'ROLE_DEFAULT';
+
         return array_unique($roles);
     }
 
@@ -653,7 +672,6 @@ abstract class User implements UserInterface
         return serialize(array(
             $this->password,
             $this->salt,
-            $this->usernameCanonical,
             $this->username,
             $this->expired,
             $this->locked,
@@ -675,7 +693,6 @@ abstract class User implements UserInterface
         list(
             $this->password,
             $this->salt,
-            $this->usernameCanonical,
             $this->username,
             $this->expired,
             $this->locked,
