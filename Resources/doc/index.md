@@ -171,7 +171,7 @@ Acme\UserBundle\Entity\User:
         id:
             type: integer
             generator:
-            strategy: AUTO
+                strategy: AUTO
 
     manyToMany:
         roles:
@@ -286,7 +286,7 @@ Acme\UserBundle\Entity\Role:
         id:
             type: integer
             generator:
-            strategy: AUTO
+                strategy: AUTO
 ```
 
 
