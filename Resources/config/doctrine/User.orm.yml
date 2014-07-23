@@ -5,18 +5,8 @@ Mesd\UserBundle\Entity\User:
       type: string
       length: 255
       nullable: false
-    usernameCanonical:
-      column: username_canonical
-      type: string
-      length: 255
-      nullable: false
       unique: true
     email:
-      type: string
-      length: 255
-      nullable: false
-    emailCanonical:
-      column: email_canonical
       type: string
       length: 255
       nullable: false

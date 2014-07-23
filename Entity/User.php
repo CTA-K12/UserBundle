@@ -5,14 +5,14 @@ namespace Mesd\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Mesd\UserBundle\Model\GroupInterface;
 use Mesd\UserBundle\Model\RoleInterface;
+use Mesd\UserBundle\Model\UserInterface;
 
 /**
  * User
  */
-abstract class User implements AdvancedUserInterface, \Serializable
+abstract class User implements UserInterface
 {
     protected $id;
 
@@ -24,17 +24,7 @@ abstract class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      */
-    protected $usernameCanonical;
-
-    /**
-     * @var string
-     */
     protected $email;
-
-    /**
-     * @var string
-     */
-    protected $emailCanonical;
 
     /**
      * @var boolean
@@ -130,7 +120,7 @@ abstract class User implements AdvancedUserInterface, \Serializable
      */
     public function setUsername($username)
     {
-        $this->username = $username;
+        $this->username = mb_convert_case($username, MB_CASE_LOWER, mb_detect_encoding($username));
 
         return $this;
     }
@@ -146,29 +136,6 @@ abstract class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set usernameCanonical
-     *
-     * @param string $usernameCanonical
-     * @return User
-     */
-    public function setUsernameCanonical($usernameCanonical)
-    {
-        $this->usernameCanonical = strtolower($usernameCanonical);
-
-        return $this;
-    }
-
-    /**
-     * Get usernameCanonical
-     *
-     * @return string
-     */
-    public function getUsernameCanonical()
-    {
-        return $this->usernameCanonical;
-    }
-
-    /**
      * Set email
      *
      * @param string $email
@@ -176,7 +143,7 @@ abstract class User implements AdvancedUserInterface, \Serializable
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = mb_convert_case($email, MB_CASE_LOWER, mb_detect_encoding($email));
 
         return $this;
     }
@@ -189,29 +156,6 @@ abstract class User implements AdvancedUserInterface, \Serializable
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * Set emailCanonical
-     *
-     * @param string $emailCanonical
-     * @return User
-     */
-    public function setEmailCanonical($emailCanonical)
-    {
-        $this->emailCanonical = strtolower($emailCanonical);
-
-        return $this;
-    }
-
-    /**
-     * Get emailCanonical
-     *
-     * @return string
-     */
-    public function getEmailCanonical()
-    {
-        return $this->emailCanonical;
     }
 
     /**
@@ -505,6 +449,7 @@ abstract class User implements AdvancedUserInterface, \Serializable
      */
     public function addRole(RoleInterface $role)
     {
+        $role = strtoupper($role);
         $this->roles[] = $role;
 
         return $this;
@@ -513,7 +458,7 @@ abstract class User implements AdvancedUserInterface, \Serializable
     /**
      * Get roles as array
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
     public function getRoles()
     {
@@ -589,7 +534,7 @@ abstract class User implements AdvancedUserInterface, \Serializable
     /**
      * Get groups as array
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
     public function getGroups()
     {
@@ -638,8 +583,61 @@ abstract class User implements AdvancedUserInterface, \Serializable
     }
 
 
+
     /**
-     * UserInterface Required Methods
+     * AdvancedUserInterface additionaly required methods
+     *
+     */
+
+    /**
+     * Removes sensitive data from the user.
+     */
+    public function eraseCredentials()
+    {
+        $this->plainPassword = null;
+    }
+
+
+    public function isAccountNonExpired()
+    {
+        if (true === $this->expired) {
+            return false;
+        }
+
+        if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return !$this->locked;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        if (true === $this->credentialsExpired) {
+            return false;
+        }
+
+        if (null !== $this->credentialsExpireAt && $this->credentialsExpireAt->getTimestamp() < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+
+
+    /**
+     * Serializable Required Methods
      *
      */
 
@@ -685,57 +683,6 @@ abstract class User implements AdvancedUserInterface, \Serializable
             $this->enabled,
             $this->id
         ) = $data;
-    }
-
-    /**
-     * Removes sensitive data from the user.
-     */
-    public function eraseCredentials()
-    {
-        $this->plainPassword = null;
-    }
-
-
-
-    /**
-     * AdvancedUserInterface Required Methods
-     *
-     */
-
-    public function isAccountNonExpired()
-    {
-        if (true === $this->expired) {
-            return false;
-        }
-
-        if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() < time()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function isAccountNonLocked()
-    {
-        return !$this->locked;
-    }
-
-    public function isCredentialsNonExpired()
-    {
-        if (true === $this->credentialsExpired) {
-            return false;
-        }
-
-        if (null !== $this->credentialsExpireAt && $this->credentialsExpireAt->getTimestamp() < time()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function isEnabled()
-    {
-        return $this->enabled;
     }
 
 }

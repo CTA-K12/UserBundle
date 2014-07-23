@@ -2,7 +2,6 @@
 
 namespace Mesd\UserBundle\Model;
 
-
 /**
  * Role Interface
  */
