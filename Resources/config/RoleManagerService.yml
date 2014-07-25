@@ -1,0 +1,7 @@
+parameters:
+    mesd_user.role_manager.class: Mesd\UserBundle\Model\RoleManager
+
+services:
+    mesd_user.role_manager:
+        class: %mesd_user.role_manager.class%
+        arguments: [@doctrine, %mesd_user.role_class%]

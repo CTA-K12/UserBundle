@@ -24,6 +24,7 @@ class MesdUserExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('UserManagerService.yml');
+        $loader->load('RoleManagerService.yml');
 
         if ($container->hasParameter('mesd_user.group_class')) {
             $loader->load('GroupManagerService.yml');
