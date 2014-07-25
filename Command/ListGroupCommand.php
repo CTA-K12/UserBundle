@@ -18,7 +18,7 @@ class ListGroupCommand extends ContainerAwareCommand
     {
         $this
             ->setName('mesd:user:group:list')
-            ->setDescription('List groups')
+            ->setDescription('List groups and their roles')
             ->setDefinition(array())
             ->setHelp(<<<EOT
 The <info>mesd:user:group:list</info> command lists security groups
@@ -43,14 +43,31 @@ EOT
 
         if (is_array($groups)) {
             $table = $this->getHelper('table');
-            $table->setHeaders(array('Group', 'Description'));
+            $table->setHeaders(array('Group', 'Description', 'Roles'));
             foreach ($groups as $group) {
+                $roleNames = $group->getRoleNames();
+                sort($roleNames);
                 $table->addRow(
                     array(
                         $group->getName(),
-                        $group->getDescription()
-                        )
-                    );
+                        $group->getDescription(),
+                        (0 < count($roleNames)) ? $roleNames[0] : '[No Role Assigned]'
+                    )
+                );
+
+                unset($roleNames[0]);
+
+                if (0 < count($roleNames)) {
+                    foreach ($roleNames as $role) {
+                        $table->addRow(
+                            array(
+                                '',
+                                '',
+                                $role
+                            )
+                        );
+                    }
+                }
             }
 
             $table->render($output);
