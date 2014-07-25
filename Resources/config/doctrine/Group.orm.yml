@@ -5,5 +5,7 @@ Mesd\UserBundle\Entity\Group:
       type: string
       length: 255
       nullable: false
+      unique: true
     description:
       type: text
+      nullable: true
