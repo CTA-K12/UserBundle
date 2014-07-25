@@ -27,6 +27,10 @@ abstract class Role implements RoleInterface
     {
     }
 
+    public function __toString()
+    {
+        return (string) $this->getName();
+    }
 
     /**
      * Set name

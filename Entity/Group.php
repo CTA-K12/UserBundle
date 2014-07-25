@@ -138,8 +138,8 @@ abstract class Group implements GroupInterface
      */
     public function removeRole(RoleInterface $role)
     {
-        if ($this->getRoleCollection()->contains($role)) {
-            $this->getRoleCollection()->removeElement($role);
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
         }
 
         return $this;

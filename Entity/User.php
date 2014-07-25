@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Mesd\UserBundle\Model\GroupInterface;
 use Mesd\UserBundle\Model\RoleInterface;
 use Mesd\UserBundle\Model\UserInterface;
+use Mesd\UserBundle\Entity\Role;
 
 /**
  * User
@@ -465,7 +466,6 @@ abstract class User implements UserInterface
      */
     public function addRole(RoleInterface $role)
     {
-        $role = strtoupper($role);
         $this->roles[] = $role;
 
         return $this;
@@ -474,28 +474,68 @@ abstract class User implements UserInterface
     /**
      * Get roles as array
      *
+     * This method is required by the Symfony2 UserInterface
+     * and is called at user login time.
+     *
+     * Symfony2 expects a user to have at least one role,
+     * so ROLE_DEFUALT is always added by this method.
+     *
      * @return array
      */
     public function getRoles()
     {
-        $roles = $this->roles->toArray();
-
-        foreach ($this->getGroupCollection() as $group) {
-            $roles = array_merge($roles, $group->getRoles());
-        }
-
-        // ensure all users get default role
+        $roles   = $this->getRoleNames();
         $roles[] = 'ROLE_DEFAULT';
 
-        return array_unique($roles);
+        return $roles;
     }
 
     /**
-     * Get role
+     * Get RoleCollection
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getRoleCollection()
+    {
+        $roles =  $this->roles->toArray();
+
+        foreach ($this->getGroupCollection() as $group) {
+            $roles = array_merge($roles, $group->getRoleCollection()->toArray());
+        }
+
+        $roles = array_unique($roles);
+
+        return new ArrayCollection($roles);
+    }
+
+    /**
+     * Get RoleCollectionFromGroups
+     *
+     * This method does not load roles included from groups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoleCollectionFromGroups()
+    {
+        $roles = array();
+
+        foreach ($this->getGroupCollection() as $group) {
+            $roles = array_merge($roles, $group->getRoleCollection()->toArray());
+        }
+
+        $roles = array_unique($roles);
+
+        return new ArrayCollection($roles);
+    }
+
+    /**
+     * Get RoleCollectionStandalone
+     *
+     * This method does not load roles included from groups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoleCollectionStandalone()
     {
         return $this->roles;
     }
@@ -516,6 +556,40 @@ abstract class User implements UserInterface
     }
 
     /**
+     * Get role names from groups as array
+     *
+     * This method does not load standalone roles
+     *
+     * @return array
+     */
+    public function getRoleNamesFromGroups()
+    {
+        $names = array();
+        foreach ($this->getRoleCollectionFromGroups() as $role) {
+            $names[] = $role->getName();
+        }
+
+        return $names;
+    }
+
+    /**
+     * Get stand alone role names as array
+     *
+     * This method does not load roles included from groups
+     *
+     * @return array
+     */
+    public function getRoleNamesStandalone()
+    {
+        $names = array();
+        foreach ($this->getRoleCollectionStandalone() as $role) {
+            $names[] = $role->getName();
+        }
+
+        return $names;
+    }
+
+    /**
      * Remove role
      *
      * @param RoleInterface $role
@@ -523,8 +597,8 @@ abstract class User implements UserInterface
      */
     public function removeRole(RoleInterface $role)
     {
-        if ($this->getRoleCollection()->contains($role)) {
-            $this->getRoleCollection()->removeElement($role);
+        if($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
         }
 
         return $this;
