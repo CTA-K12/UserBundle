@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class PromoteUserCommand extends ContainerAwareCommand
@@ -41,9 +42,28 @@ EOT
         $roleName  = $input->getArgument('roleName');
 
         $userManager =  $this->getContainer()->get("mesd_user.user_manager");
-        $userManager->promoteUser($userName, $roleName);
 
-        $output->writeln(sprintf('<comment>Promoted user <info>%s</info> to have role <info>%s</info></comment>', $userName, $roleName));
+        $style = new OutputFormatterStyle('magenta');
+        $output->getFormatter()->setStyle('warning', $style);
+
+        // Check to see if user has this role standalone
+        if ($userManager->hasRoleStandalone($userName, $roleName)) {
+            $output->writeln(sprintf('<error>Error: User %s aleady has standalone role %s</error>', $userName, $roleName));
+        }
+        // If no, then add role
+        else {
+            $userManager->promoteUser($userName, $roleName);
+            $output->writeln(sprintf('<comment>Promoted user <info>%s</info> to have role <info>%s</info></comment>', $userName, $roleName));
+        }
+
+        // Check if groups are in use, and if yes,
+        // check if user has role via group.
+        if ($this->getContainer()->hasParameter("mesd_user.group_class")) {
+            if ($userManager->hasRoleFromGroups($userName, $roleName)) {
+                $output->writeln(sprintf('<info>Info: User %s has role %s from group as well</info>', $userName, $roleName));
+            }
+        }
+
     }
 
     /**

@@ -40,15 +40,23 @@ EOT
         $groupName = $input->getArgument('groupName');
         $roleName  = $input->getArgument('roleName');
 
+        // Verify the group manager has been enabled
         try {
             $groupManager =  $this->getContainer()->get("mesd_user.group_manager");
         } catch (\Exception $e) {
             throw new \Exception("mesd_user.group_manager service could not be found. Did you define a group_class under the mesd_user config?", 0, $e);
         }
 
-        $groupManager->demoteGroup($groupName, $roleName);
+        // Check to see if the group has this role
+        if (!$groupManager->hasRole($groupName, $roleName)) {
+            $output->writeln(sprintf('<error>Error: Group %s does not have role %s</error>', $groupName, $roleName));
+        }
+        // If yes, then remove role
+        else {
+            $groupManager->demoteGroup($groupName, $roleName);
+            $output->writeln(sprintf('<comment>Demoted group <info>%s</info> removing role <info>%s</info></comment>', $groupName, $roleName));
+        }
 
-        $output->writeln(sprintf('<comment>Demoted group <info>%s</info> removing role <info>%s</info></comment>', $groupName, $roleName));
     }
 
     /**

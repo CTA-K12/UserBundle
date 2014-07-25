@@ -69,6 +69,28 @@ class GroupManager {
     }
 
 
+    public function hasRole($groupName, $roleName)
+    {
+        $group = $this->objectManager
+            ->getRepository($this->groupClass)
+            ->findOneByName($groupName);
+
+        if(!$group) {
+            throw new \Exception (sprintf("Group %s not found.", $groupName));
+        }
+
+        $role = $this->objectManager
+            ->getRepository($this->roleClass)
+            ->findOneByName($roleName);
+
+        if(!$role) {
+            throw new \Exception (sprintf("Role %s not found.", $roleName));
+        }
+
+        return in_array($roleName,$group->getRoleNames());
+    }
+
+
     public function promoteGroup($groupName, $roleName)
     {
         $group = $this->objectManager

@@ -40,15 +40,24 @@ EOT
         $groupName = $input->getArgument('groupName');
         $roleName  = $input->getArgument('roleName');
 
+        // Verify the group manager has been enabled
         try {
             $groupManager =  $this->getContainer()->get("mesd_user.group_manager");
         } catch (\Exception $e) {
             throw new \Exception("mesd_user.group_manager service could not be found. Did you define a group_class under the mesd_user config?", 0, $e);
         }
 
-        $groupManager->promoteGroup($groupName, $roleName);
 
-        $output->writeln(sprintf('<comment>Promoted group <info>%s</info> to include role <info>%s</info></comment>', $groupName, $roleName));
+        // Check to see if the group already has this role
+        if ($groupManager->hasRole($groupName, $roleName)) {
+            $output->writeln(sprintf('<error>Error: Group %s already has role %s</error>', $groupName, $roleName));
+        }
+        // If no, then add role
+        else {
+            $groupManager->promoteGroup($groupName, $roleName);
+            $output->writeln(sprintf('<comment>Promoted group <info>%s</info> to include role <info>%s</info></comment>', $groupName, $roleName));
+        }
+
     }
 
     /**
