@@ -5,9 +5,6 @@ allows you to load users from configuration, a database, or anywhere else
 you can imagine. The MesdUserBundle builds on top of this to make it quick
 and easy to store users in a database.
 
-If you need to persist and fetch the users in your system to and from
-a database, then you're in the right place.
-
 ### Prerequisites
 
 Symfony 2.3+
@@ -63,7 +60,7 @@ public function registerBundles()
 #### Step 3: Create your User class
 
 The goal of this bundle is to persist some `User` class to a database (MySql,
-PostgreSQL, etc). Your first job, then, is to create the `User` class
+PostgreSQL, etc). Your first job is to create the `User` class
 for your application. This class can look and act however you want: add any
 properties or methods you find useful. This is *your* `User` class.
 
@@ -89,7 +86,7 @@ look.
 
 > The doc uses a bundle named `AcmeUserBundle`. If you want to use the same
 > name, you need to register it in your kernel. But you can of course place
-> your user class in the bundle you want.
+> your user class in any bundle you want.
 
 **Warning:**
 
@@ -189,9 +186,10 @@ Acme\UserBundle\Entity\User:
 
 #### Step 3: Create your Role class
 
-The Role entity will be a many to many join to the User entity. Each ueser can belong
-to as many roles as needed. The symfony2 security component will handle role security
-for us, we just need a place to store the roles.
+The Role entity will be *joined* to the User entity. Each ueser can belong
+to as many roles as needed. The symfony2 security component will handle the
+loading of roles at login and also provides methods for checking roles access.
+We just need a place to store the roles and their user relationships.
 
 1. Extend the base `Role` class from the ``Entity`` folder.
 2. Map the `id` field. It must be protected as it is inherited from the parent class.
@@ -437,37 +435,17 @@ Add the following configuration to your `config.yml` file:
 ``` yaml
 # app/config/config.yml
 mesd_user:
-    db_driver: orm
-    firewall_name: main
     user_class: Acme\UserBundle\Entity\User
+    role_class: Acme\UserBundle\Entity\Role
 ```
 
-Or if you prefer XML:
+Only two configuration values are required to use the bundle:
 
-``` xml
-<!-- app/config/config.xml -->
-
-<mesd_user:config
-    db-driver="orm"
-    firewall-name="main"
-    user-class="Acme\UserBundle\Entity\User"
-/>
-```
-
-Only three configuration values are required to use the bundle:
-
-* The type of datastore you are using: `orm`
-* The firewall name which you configured in Step 4.
 * The fully qualified class name (FQCN) of the `User` class which you created in Step 3.
+* The fully qualified class name (FQCN) of the `Role` class which you created in Step 4.
 
-**Note:**
 
-> MesdUserBundle uses a compiler pass to register mappings for the base
-> User and Group model classes with the object manager that you configured
-> it to use. (Unless specified explicitly, this is the default manager
-> of your doctrine configuration.)
-
-### Step 6: Import MesdUserBundle routing files
+#### Step 7: Import MesdUserBundle routing files
 
 Now that you have activated and configured the bundle, all that is left to do is
 import the MesdUserBundle routing files.
@@ -504,7 +482,7 @@ MesdPresentationBundle_change_password:
 > In order to use the built-in email functionality (confirmation of the account,
 > resetting of the password), you must activate and configure the SwiftmailerBundle.
 
-#### Step87: Update your database schema
+#### Step8: Update your database schema
 
 Now that the bundle is configured, the last thing you need to do is update your
 database schema because you have added a new entity, the `User` class which you
