@@ -7,9 +7,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
-class ListGroupCommand extends ContainerAwareCommand
+class ListUserCommand extends ContainerAwareCommand
 {
     /**
      * @see Command
@@ -17,11 +16,11 @@ class ListGroupCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:group:list')
-            ->setDescription('List groups')
+            ->setName('mesd:user:user:list')
+            ->setDescription('List users')
             ->setDefinition(array())
             ->setHelp(<<<EOT
-The <info>mesd:user:group:list</info> command lists security groups
+The <info>mesd:user:user:list</info> command lists users
 
 EOT
             );
@@ -33,22 +32,22 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        try {
-            $groupManager =  $this->getContainer()->get("mesd_user.group_manager");
-        } catch (\Exception $e) {
-            throw new \Exception("mesd_user.group_manager service could not be found. Did you define a group_class under the mesd_user config?", 0, $e);
-        }
+        $userManager =  $this->getContainer()->get("mesd_user.user_manager");
 
-        $groups = $groupManager->getGroups();
+        $users = $userManager->getUsers();
 
-        if (is_array($groups)) {
+        if (is_array($users)) {
             $table = $this->getHelper('table');
-            $table->setHeaders(array('Group', 'Description'));
-            foreach ($groups as $group) {
+            $table->setHeaders(array('Username', 'Email', 'Enabled', 'Locked','Expired', 'Cred. Exp.'));
+            foreach ($users as $user) {
                 $table->addRow(
                     array(
-                        $group->getName(),
-                        $group->getDescription()
+                        $user->getUsername(),
+                        $user->getEmail(),
+                        $user->getEnabled() ? 'True' : 'False',
+                        $user->getLocked()  ? 'True' : 'False',
+                        $user->getExpired() ? 'True' : 'False',
+                        $user->getCredentialsExpired() ? 'True' : 'False',
                         )
                     );
             }
@@ -56,7 +55,7 @@ EOT
             $table->render($output);
         }
         else {
-            $output->writeln(sprintf('<comment>No groups exist. Use <info>mesd:user:group:create</info> to create a new group.<comment>'));
+            $output->writeln(sprintf('<comment>No users exist. Use <info>mesd:user:user:create</info> to create a new user.<comment>'));
         }
     }
 

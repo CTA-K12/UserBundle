@@ -7,9 +7,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
-class ListGroupCommand extends ContainerAwareCommand
+class ListRoleCommand extends ContainerAwareCommand
 {
     /**
      * @see Command
@@ -17,11 +16,11 @@ class ListGroupCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:group:list')
-            ->setDescription('List groups')
+            ->setName('mesd:user:role:list')
+            ->setDescription('List roles')
             ->setDefinition(array())
             ->setHelp(<<<EOT
-The <info>mesd:user:group:list</info> command lists security groups
+The <info>mesd:user:role:list</info> command lists security roles
 
 EOT
             );
@@ -33,22 +32,18 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        try {
-            $groupManager =  $this->getContainer()->get("mesd_user.group_manager");
-        } catch (\Exception $e) {
-            throw new \Exception("mesd_user.group_manager service could not be found. Did you define a group_class under the mesd_user config?", 0, $e);
-        }
+        $roleManager =  $this->getContainer()->get("mesd_user.role_manager");
 
-        $groups = $groupManager->getGroups();
+        $roles = $roleManager->getRoles();
 
-        if (is_array($groups)) {
+        if (is_array($roles)) {
             $table = $this->getHelper('table');
-            $table->setHeaders(array('Group', 'Description'));
-            foreach ($groups as $group) {
+            $table->setHeaders(array('Role', 'Description'));
+            foreach ($roles as $role) {
                 $table->addRow(
                     array(
-                        $group->getName(),
-                        $group->getDescription()
+                        $role->getName(),
+                        $role->getDescription()
                         )
                     );
             }
@@ -56,7 +51,7 @@ EOT
             $table->render($output);
         }
         else {
-            $output->writeln(sprintf('<comment>No groups exist. Use <info>mesd:user:group:create</info> to create a new group.<comment>'));
+            $output->writeln(sprintf('<comment>No roles exist. Use <info>mesd:user:role:create</info> to create a new role.<comment>'));
         }
     }
 

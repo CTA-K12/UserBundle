@@ -39,8 +39,8 @@ EOT
         $name          = $input->getArgument('name');
         $description   = $input->getArgument('description');
 
-        $userManager =  $this->getContainer()->get("mesd_user.user_manager");
-        $userManager->createRole($name, $description);
+        $roleManager =  $this->getContainer()->get("mesd_user.role_manager");
+        $roleManager->createRole($name, $description);
 
         $output->writeln(sprintf('Created role <comment>%s</comment>', $name));
     }
