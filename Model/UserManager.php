@@ -5,12 +5,6 @@ namespace Mesd\UserBundle\Model;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-// use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
-// use Symfony\Component\Security\Core\User\UserProviderInterface;
-// use Mesd\UserBundle\Model\GroupInterface;
-// use Mesd\UserBundle\Model\RoleInterface;
-// use Mesd\UserBundle\Model\UserInterface;
-
 
 class UserManager {
 
@@ -41,6 +35,30 @@ class UserManager {
         $this->objectManager->flush();
     }
 
+
+    public function demoteUser($username, $roleName)
+    {
+        $user = $this->objectManager
+            ->getRepository($this->userClass)
+            ->findOneByUsername($username);
+
+        if(!$user) {
+            throw new \Exception (sprintf("User %s not found.", $username));
+        }
+
+        $role = $this->objectManager
+            ->getRepository($this->roleClass)
+            ->findOneByName($roleName);
+
+        if(!$role) {
+            throw new \Exception (sprintf("Role %s not found.", $roleName));
+        }
+
+        $user->removeRole($role);
+        $this->objectManager->flush();
+    }
+
+
     public function getUsers()
     {
         return $this->objectManager
@@ -51,17 +69,73 @@ class UserManager {
                     );
     }
 
-    public function promoteUser($username, $role)
+
+    public function hasRoleFromGroups($username, $roleName)
     {
-        // $user = new $this->userClass();
-        // $user->setUsername($name);
-        // $user->setEmail($email);
-        // $user->setPlainPassword($password);
-        // $encoder = $this->encoderFactory->getEncoder($user);
-        // $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-        // $user->eraseCredentials();
-        // $this->objectManager->persist($user);
-        // $this->objectManager->flush();
+        $user = $this->objectManager
+            ->getRepository($this->userClass)
+            ->findOneByUsername($username);
+
+        if(!$user) {
+            throw new \Exception (sprintf("User %s not found.", $username));
+        }
+
+        $role = $this->objectManager
+            ->getRepository($this->roleClass)
+            ->findOneByName($roleName);
+
+        if(!$role) {
+            throw new \Exception (sprintf("Role %s not found.", $roleName));
+        }
+
+        return in_array($roleName,$user->getRoleNamesFromGroups());
+    }
+
+
+    public function hasRoleStandalone($username, $roleName)
+    {
+        $user = $this->objectManager
+            ->getRepository($this->userClass)
+            ->findOneByUsername($username);
+
+        if(!$user) {
+            throw new \Exception (sprintf("User %s not found.", $username));
+        }
+
+        $role = $this->objectManager
+            ->getRepository($this->roleClass)
+            ->findOneByName($roleName);
+
+        if(!$role) {
+            throw new \Exception (sprintf("Role %s not found.", $roleName));
+        }
+
+        return in_array($roleName,$user->getRoleNamesStandalone());
+    }
+
+
+    public function promoteUser($username, $roleName)
+    {
+        $user = $this->objectManager
+            ->getRepository($this->userClass)
+            ->findOneByUsername($username);
+
+        if(!$user) {
+            throw new \Exception (sprintf("User %s not found.", $username));
+        }
+
+        $role = $this->objectManager
+            ->getRepository($this->roleClass)
+            ->findOneByName($roleName);
+
+        if(!$role) {
+            throw new \Exception (sprintf("Role %s not found.", $roleName));
+        }
+
+        $user->addRole($role);
+
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
     }
 
 }

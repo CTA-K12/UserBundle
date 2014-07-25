@@ -33,6 +33,31 @@ class GroupManager {
     }
 
 
+    public function demoteGroup($groupName, $roleName)
+    {
+        $group = $this->objectManager
+            ->getRepository($this->groupClass)
+            ->findOneByName($groupName);
+
+        if(!$group) {
+            throw new \Exception (sprintf("Group %s not found.", $groupName));
+        }
+
+        $role = $this->objectManager
+            ->getRepository($this->roleClass)
+            ->findOneByName($roleName);
+
+        if(!$role) {
+            throw new \Exception (sprintf("Role %s not found.", $roleName));
+        }
+
+        $group->removeRole($role);
+
+        $this->objectManager->persist($group);
+        $this->objectManager->flush();
+    }
+
+
     public function getGroups()
     {
         return $this->objectManager
@@ -41,6 +66,31 @@ class GroupManager {
                     array(),
                     array('name' => 'ASC')
                     );
+    }
+
+
+    public function promoteGroup($groupName, $roleName)
+    {
+        $group = $this->objectManager
+            ->getRepository($this->groupClass)
+            ->findOneByName($groupName);
+
+        if(!$group) {
+            throw new \Exception (sprintf("Group %s not found.", $groupName));
+        }
+
+        $role = $this->objectManager
+            ->getRepository($this->roleClass)
+            ->findOneByName($roleName);
+
+        if(!$role) {
+            throw new \Exception (sprintf("Role %s not found.", $roleName));
+        }
+
+        $group->addRole($role);
+
+        $this->objectManager->persist($group);
+        $this->objectManager->flush();
     }
 
 }
