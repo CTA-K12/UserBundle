@@ -28,6 +28,16 @@ class UserManager {
     }
 
 
+    public function createGroup($name, $description = null)
+    {
+        $group = new $this->roleClass();
+        $role->setName($name);
+        $role->setDescription($description);
+        $this->objectManager->persist($role);
+        $this->objectManager->flush();
+    }
+
+
     public function createRole($name, $description = null)
     {
         $role = new $this->roleClass();
