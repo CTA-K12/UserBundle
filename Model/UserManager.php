@@ -28,25 +28,6 @@ class UserManager {
     }
 
 
-    public function createGroup($name, $description = null)
-    {
-        $group = new $this->roleClass();
-        $role->setName($name);
-        $role->setDescription($description);
-        $this->objectManager->persist($role);
-        $this->objectManager->flush();
-    }
-
-
-    public function createRole($name, $description = null)
-    {
-        $role = new $this->roleClass();
-        $role->setName($name);
-        $role->setDescription($description);
-        $this->objectManager->persist($role);
-        $this->objectManager->flush();
-    }
-
     public function createUser($username, $email, $password)
     {
         $user = new $this->userClass();
@@ -58,6 +39,16 @@ class UserManager {
         $user->eraseCredentials();
         $this->objectManager->persist($user);
         $this->objectManager->flush();
+    }
+
+    public function getUsers()
+    {
+        return $this->objectManager
+                ->getRepository($this->userClass)
+                ->findBy(
+                    array(),
+                    array('username' => 'ASC')
+                    );
     }
 
     public function promoteUser($username, $role)
