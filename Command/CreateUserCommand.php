@@ -8,8 +8,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Mesd\UserBundle\Model\UserManager;
-
 class CreateUserCommand extends ContainerAwareCommand
 {
     /**
@@ -18,15 +16,15 @@ class CreateUserCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:create-user')
-            ->setDescription('Create a user.')
+            ->setName('mesd:user:user:create')
+            ->setDescription('Create a user')
             ->setDefinition(array(
                 new InputArgument('username', InputArgument::REQUIRED, 'Username'),
-                new InputArgument('email', InputArgument::REQUIRED, 'Email Address'),
+                new InputArgument('email',    InputArgument::REQUIRED, 'Email Address'),
                 new InputArgument('password', InputArgument::REQUIRED, 'Password'),
               ))
             ->setHelp(<<<EOT
-The <info>mesd:user:create-user</info> command creates a user:
+The <info>mesd:user:user:create</info> command creates a user:
 
 This interactive shell will ask you for a username, email and password.
 
