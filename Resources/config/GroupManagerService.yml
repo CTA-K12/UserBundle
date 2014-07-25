@@ -1,0 +1,7 @@
+parameters:
+    mesd_user.group_manager.class: Mesd\UserBundle\Model\GroupManager
+
+services:
+    mesd_user.group_manager:
+        class: %mesd_user.group_manager.class%
+        arguments: [@doctrine, %mesd_user.user_class%, %mesd_user.role_class%, %mesd_user.group_class%]

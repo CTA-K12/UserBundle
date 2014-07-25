@@ -26,6 +26,8 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
+                ->scalarNode('group_class')
+                ->end()
             ->end();
 
         return $treeBuilder;
