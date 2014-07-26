@@ -10,15 +10,17 @@ class UserManager {
 
     private $objectManager;
     private $encoderFactory;
-    private $userClass;
+    private $groupClass;
     private $roleClass;
+    private $userClass;
 
-    public function __construct($objectManager, EncoderFactoryInterface $encoderFactory, $userClass, $roleClass)
+    public function __construct($objectManager, EncoderFactoryInterface $encoderFactory, $userClass, $roleClass, $groupClass = null)
     {
          $this->objectManager  = $objectManager->getEntityManager();
          $this->encoderFactory = $encoderFactory;
          $this->userClass      = $userClass;
          $this->roleClass      = $roleClass;
+         $this->groupClass     = $groupClass;
     }
 
 
@@ -59,6 +61,31 @@ class UserManager {
     }
 
 
+    public function disjoinUser($username, $groupName)
+    {
+        $user = $this->objectManager
+            ->getRepository($this->userClass)
+            ->findOneByUsername($username);
+
+        if(!$user) {
+            throw new \Exception (sprintf("User %s not found.", $username));
+        }
+
+        $group = $this->objectManager
+            ->getRepository($this->groupClass)
+            ->findOneByName($groupName);
+
+        if(!$group) {
+            throw new \Exception (sprintf("Group %s not found.", $groupName));
+        }
+
+        $user->removeGroup($group);
+
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+    }
+
+
     public function getUsers()
     {
         return $this->objectManager
@@ -67,6 +94,28 @@ class UserManager {
                     array(),
                     array('username' => 'ASC')
                     );
+    }
+
+
+    public function hasGroup($username, $groupName)
+    {
+        $user = $this->objectManager
+            ->getRepository($this->userClass)
+            ->findOneByUsername($username);
+
+        if(!$user) {
+            throw new \Exception (sprintf("User %s not found.", $username));
+        }
+
+        $group = $this->objectManager
+            ->getRepository($this->groupClass)
+            ->findOneByName($groupName);
+
+        if(!$group) {
+            throw new \Exception (sprintf("Group %s not found.", $groupName));
+        }
+
+        return in_array($groupName,$user->getGroupNames());
     }
 
 
@@ -111,6 +160,31 @@ class UserManager {
         }
 
         return in_array($roleName,$user->getRoleNamesStandalone());
+    }
+
+
+    public function joinUser($username, $groupName)
+    {
+        $user = $this->objectManager
+            ->getRepository($this->userClass)
+            ->findOneByUsername($username);
+
+        if(!$user) {
+            throw new \Exception (sprintf("User %s not found.", $username));
+        }
+
+        $group = $this->objectManager
+            ->getRepository($this->groupClass)
+            ->findOneByName($groupName);
+
+        if(!$group) {
+            throw new \Exception (sprintf("Group %s not found.", $groupName));
+        }
+
+        $user->addGroup($group);
+
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
     }
 
 

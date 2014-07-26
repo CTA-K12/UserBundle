@@ -4,4 +4,4 @@ parameters:
 services:
     mesd_user.user_manager:
         class: %mesd_user.user_manager.class%
-        arguments: [@doctrine, @security.encoder_factory, %mesd_user.user_class%, %mesd_user.role_class%]
+        arguments: [@doctrine, @security.encoder_factory, %mesd_user.user_class%, %mesd_user.role_class%, %mesd_user.group_class_placeholder%]

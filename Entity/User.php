@@ -668,8 +668,8 @@ abstract class User implements UserInterface
      */
     public function removeGroup(GroupInterface $group)
     {
-        if ($this->getGroupCollection()->contains($group)) {
-            $this->getGroupCollection()->removeElement($group);
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
         }
 
         return $this;
