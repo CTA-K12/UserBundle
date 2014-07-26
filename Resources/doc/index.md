@@ -299,9 +299,10 @@ in your application:
 
 **Note:**
 
-> Make sure to change the `default_target_path`, under the `firewalls` -> `main`
-> directive to a route name that you want users directed to after they
-> sucsessfully log in.
+> Make sure to change the `class` under `providers` -> `mesd_user` to the `User` entity
+> class you created in step 3, and the `default_target_path`, under the
+> `firewalls` -> `main` directive to a route name that you want users directed to after
+> they sucsessfully log in.
 
 ``` yaml
 # app/config/security.yml
@@ -314,9 +315,9 @@ security:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
-        mesd_userbundle:
-            id: mesd_user.user_provider.username
-
+        mesd_user:
+            entity: { class: AcmeUserBundle:User }
+            
     firewalls:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js|ico)/
@@ -329,12 +330,13 @@ security:
         main:
             pattern:    ^/
             form_login:
-                provider: mesd_userbundle
                 csrf_provider: form.csrf_provider
-                default_target_path: place_your_applications_default_route_here
+                login_path: MesdUserBundle_login
+                check_path: MesdUserBundle_check
+                default_target_path: %your_applications_default_route%
             logout:
-                path:   mesd_user_security_logout
-                target: mesd_user_security_login
+                path:   MesdUserBundle_logout
+                target: MesdUserBundle_login
 
     #access_control:
         #- { path: ^/admin, roles: ROLE_ADMIN }
@@ -459,28 +461,7 @@ In YAML:
 # app/config/routing.yml
 mesd_user_security:
     resource: "@MesdUserBundle/Resources/config/routing/security.yml"
-
-mesd_user_profile:
-    resource: "@MesdUserBundle/Resources/config/routing/profile.yml"
-    prefix: /profile
-
-mesd_user_register:
-    resource: "@MesdUserBundle/Resources/config/routing/registration.yml"
-    prefix: /register
-
-mesd_user_resetting:
-    resource: "@MesdUserBundle/Resources/config/routing/resetting.yml"
-    prefix: /resetting
-
-MesdPresentationBundle_change_password:
-    resource: "@MesdUserBundle/Resources/config/routing/change_password.yml"
-    prefix: /profile
 ```
-
-**Note:**
-
-> In order to use the built-in email functionality (confirmation of the account,
-> resetting of the password), you must activate and configure the SwiftmailerBundle.
 
 #### Step8: Update your database schema
 
@@ -505,18 +486,3 @@ of the bundle.
 The following documents are available:
 
 - [Using with the MesdPresentationBundle](using_with_mesd_presenation_bundle.md)
-- [Overriding Templates](overriding_templates.md)
-- [Hooking into the controllers](controller_events.md)
-- [Overriding Controllers](overriding_controllers.md)
-- [Overriding Forms](overriding_forms.md)
-- [Using the UserManager](user_manager.md)
-- [Command Line Tools](command_line_tools.md)
-- [Logging by username or email](logging_by_username_or_email.md)
-- [Transforming a username to a user in forms](form_type.md)
-- [Emails](emails.md)
-- [Using the groups](groups.md)
-- [More about the Doctrine implementations](doctrine.md)
-- [Supplemental Documentation](supplemental.md)
-- [Replacing the canonicalizer](canonicalizer.md)
-- [Configuration Reference](configuration_reference.md)
-- [Adding invitations to registration](adding_invitation_registration.md)
