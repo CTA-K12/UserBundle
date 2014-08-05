@@ -60,7 +60,7 @@ interface GroupInterface
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRoleCollection();
+    public function getRole();
 
     /**
      * Get role names as array

@@ -224,7 +224,7 @@ interface UserInterface extends AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRoleCollection();
+    public function getRole();
 
     /**
      * Get role names as array
@@ -268,7 +268,7 @@ interface UserInterface extends AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getGroupCollection();
+    public function getGroup();
 
     /**
      * Get group names as array
