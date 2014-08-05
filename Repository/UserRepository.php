@@ -6,37 +6,58 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
-    public function loadUserByUsername($username)
+
+    private $authCredentialType;
+
+    function __construct($doctrine, $userClass, $authCredentialType) {
+        parent::__construct($doctrine->getEntityManager(), new ClassMetadata($userClass));
+        $this->authCredentialType = $authCredentialType;
+    }
+
+
+    public function loadUserByUsername($authCredential)
     {
+        $authCredential = mb_convert_case($authCredential, MB_CASE_LOWER, mb_detect_encoding($authCredential));
 
-        $username = mb_convert_case($username, MB_CASE_LOWER, mb_detect_encoding($username));
+        $q = $this->createQueryBuilder('u');
 
-        $q = $this
-            ->createQueryBuilder('u')
-            ->where('u.username = :username OR u.email = :email')
-            ->setParameter('username', $username)
-            ->setParameter('email', $username)
-            ->getQuery();
+        if ('email' == $this->authCredentialType) {
+            $q->where('u.email = :email')
+              ->setParameter('email', $authCredential);
+        }
+        elseif ('username_email' == $this->authCredentialType) {
+            $q->where('u.username = :username OR u.email = :email')
+              ->setParameter('username', $authCredential)
+              ->setParameter('email', $authCredential);
+        }
+        else {
+            $q->where('u.username = :username')
+              ->setParameter('username', $authCredential);
+        }
+
+        $result = $q->getQuery();
 
         try {
             // The Query::getSingleResult() method throws an exception
             // if there is no record matching the criteria.
-            $user = $q->getSingleResult();
+            $user = $result->getSingleResult();
         } catch (NoResultException $e) {
             $message = sprintf(
                 'Unable to find an active MesdUserBundle:User object identified by "%s".',
-                $username
+                $authCredential
             );
             throw new UsernameNotFoundException($message, 0, $e);
         }
 
         return $user;
     }
+
 
     public function refreshUser(UserInterface $user)
     {
@@ -52,6 +73,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $this->find($user->getId());
     }
+
 
     public function supportsClass($class)
     {

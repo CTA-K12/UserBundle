@@ -37,6 +37,7 @@ class MesdUserExtension extends Extension
         // Load user and role services
         $loader->load('UserManagerService.yml');
         $loader->load('RoleManagerService.yml');
+        $loader->load('UserProviderService.yml');
 
     }
 }

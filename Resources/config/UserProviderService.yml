@@ -1,0 +1,15 @@
+parameters:
+    mesd_user.user_provider.class: Mesd\UserBundle\Repository\UserRepository
+
+services:
+    mesd_user.user_provider.username:
+        class: %mesd_user.user_provider.class%
+        arguments: [@doctrine, %mesd_user.user_class%, 'username']
+
+    mesd_user.user_provider.email:
+        class: %mesd_user.user_provider.class%
+        arguments: [@doctrine, %mesd_user.user_class%, 'email']
+
+    mesd_user.user_provider.username_email:
+        class: %mesd_user.user_provider.class%
+        arguments: [@doctrine, %mesd_user.user_class%, 'username_email']
