@@ -491,16 +491,16 @@ abstract class User implements UserInterface
     }
 
     /**
-     * Get RoleCollection
+     * Get Role
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRoleCollection()
+    public function getRole()
     {
         $roles =  $this->roles->toArray();
 
-        foreach ($this->getGroupCollection() as $group) {
-            $roles = array_merge($roles, $group->getRoleCollection()->toArray());
+        foreach ($this->getGroup() as $group) {
+            $roles = array_merge($roles, $group->getRole()->toArray());
         }
 
         $roles = array_unique($roles);
@@ -509,18 +509,18 @@ abstract class User implements UserInterface
     }
 
     /**
-     * Get RoleCollectionFromGroups
+     * Get RoleFromGroups
      *
      * This method does not load roles included from groups
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRoleCollectionFromGroups()
+    public function getRoleFromGroups()
     {
         $roles = array();
 
-        foreach ($this->getGroupCollection() as $group) {
-            $roles = array_merge($roles, $group->getRoleCollection()->toArray());
+        foreach ($this->getGroup() as $group) {
+            $roles = array_merge($roles, $group->getRole()->toArray());
         }
 
         $roles = array_unique($roles);
@@ -529,13 +529,13 @@ abstract class User implements UserInterface
     }
 
     /**
-     * Get RoleCollectionStandalone
+     * Get RoleStandalone
      *
      * This method does not load roles included from groups
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRoleCollectionStandalone()
+    public function getRoleStandalone()
     {
         return $this->roles;
     }
@@ -548,7 +548,7 @@ abstract class User implements UserInterface
     public function getRoleNames()
     {
         $names = array();
-        foreach ($this->getRoleCollection() as $role) {
+        foreach ($this->getRole() as $role) {
             $names[] = $role->getName();
         }
 
@@ -565,7 +565,7 @@ abstract class User implements UserInterface
     public function getRoleNamesFromGroups()
     {
         $names = array();
-        foreach ($this->getRoleCollectionFromGroups() as $role) {
+        foreach ($this->getRoleFromGroups() as $role) {
             $names[] = $role->getName();
         }
 
@@ -582,7 +582,7 @@ abstract class User implements UserInterface
     public function getRoleNamesStandalone()
     {
         $names = array();
-        foreach ($this->getRoleCollectionStandalone() as $role) {
+        foreach ($this->getRoleStandalone() as $role) {
             $names[] = $role->getName();
         }
 
@@ -640,7 +640,7 @@ abstract class User implements UserInterface
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getGroupCollection()
+    public function getGroup()
     {
         return $this->groups;
     }
@@ -653,7 +653,7 @@ abstract class User implements UserInterface
     public function getGroupNames()
     {
         $names = array();
-        foreach ($this->getGroupCollection() as $group) {
+        foreach ($this->getGroup() as $group) {
             $names[] = $group->getName();
         }
 

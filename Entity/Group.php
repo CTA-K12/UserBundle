@@ -110,7 +110,7 @@ abstract class Group implements GroupInterface
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRoleCollection()
+    public function getRole()
     {
         return $this->roles;
     }
@@ -123,7 +123,7 @@ abstract class Group implements GroupInterface
     public function getRoleNames()
     {
         $names = array();
-        foreach ($this->getRoleCollection() as $role) {
+        foreach ($this->getRole() as $role) {
             $names[] = $role->getName();
         }
 

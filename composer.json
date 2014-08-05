@@ -9,10 +9,6 @@
         {
             "name": "David Cramblett",
             "email": "dcramble@mesd.k12.or.us"
-        },
-        {
-            "name": "Curtis Hanson",
-            "email": "chanson@mesd.k12.or.us"
         }
     ],
     "minimum-stability": "dev",
