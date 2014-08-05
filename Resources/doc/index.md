@@ -302,10 +302,8 @@ in your application:
 
 **Note:**
 
-> Make sure to change the `class` under `providers` -> `mesd_user` to the `User` entity
-> class you created in step 3, and the `default_target_path`, under the
-> `firewalls` -> `main` directive to a route name that you want users directed to after
-> they sucsessfully log in.
+> Make sure to set `default_target_path` directive, under `firewalls` -> `main`,
+> to a route name that you want users directed to after they sucsessfully log in.
 
 ``` yaml
 # app/config/security.yml
@@ -319,7 +317,7 @@ security:
 
     providers:
         mesd_user:
-            entity: { class: AcmeUserBundle:User }
+            mesd_user.user_provider.username
 
     firewalls:
         dev:
@@ -363,7 +361,7 @@ and thus also includes `ROLE_USER` as well.
 ###### Providers:
 
 Under the `providers` section, you are making the bundle's packaged user provider
-service available via the alias `mesd_userbundle`. The id of the bundle's user
+service available via the alias `mesd_user`. The id of the bundle's user
 provider service is `mesd_user.user_provider.username`. The `.username` configuration
 sets the login form to expect the user to enter their username to log in. You could
 change this to `mesd_user.user_provider.email` to force users to use their email
@@ -433,7 +431,7 @@ security component [documentation](http://symfony.com/doc/current/book/security.
 
 Now that you have properly configured your application's `security.yml` to work
 with the MesdUserBundle, the next step is to configure the bundle to work with
-the specific needs of your application.
+the specific entities you configured for your application.
 
 Add the following configuration to your `config.yml` file:
 
@@ -462,7 +460,7 @@ In YAML:
 
 ``` yaml
 # app/config/routing.yml
-mesd_user_security:
+MesdUserBundle_security:
     resource: "@MesdUserBundle/Resources/config/routing/security.yml"
 ```
 
@@ -488,4 +486,5 @@ of the bundle.
 
 The following documents are available:
 
-- [Using with the MesdPresentationBundle](using_with_mesd_presenation_bundle.md)
+- [Using forms from the MesdPresentationBundle](using_with_mesd_presenation_bundle.md)
+- [Using the Groups capability](using_groups.md)
