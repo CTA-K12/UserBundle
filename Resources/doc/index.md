@@ -85,7 +85,7 @@ look.
 **Note:**
 
 > The doc uses a bundle named `AcmeUserBundle`. If you want to use the same
-> name, you need to register it in your kernel. But you can of course place
+> name, you need to register it in your kernel. But you can, of course, place
 > your user class in any bundle you want.
 
 **Warning:**
@@ -198,6 +198,10 @@ We just need a place to store the roles and their user relationships.
 
 > When you extend from the mapped superclass provided by the bundle, don't
 > redefine the mapping for the other fields as it is provided by the bundle.
+>
+> If you override the __construct() method in your User class, be sure
+> to call parent::__construct(), as the base User class depends on
+> this to initialize some fields.
 
 In the following sections, you'll see examples of how your `Role` class should
 look.
@@ -205,14 +209,13 @@ look.
 **Note:**
 
 > The doc uses a bundle named `AcmeUserBundle`. If you want to use the same
-> name, you need to register it in your kernel. But you can of course place
-> your user class in the bundle you want.
+> name, you need to register it in your kernel. But you can, of course, place
+> your user class in any bundle you want.
+>
+> The doc asumes you use the entity name `Role`. If you use a different entity
+> name, you'll need to update the join in the `User` entity we already defined.
 
-**Warning:**
 
-> If you override the __construct() method in your User class, be sure
-> to call parent::__construct(), as the base User class depends on
-> this to initialize some fields.
 
 ##### Doctrine ORM User class
 
@@ -317,7 +320,7 @@ security:
     providers:
         mesd_user:
             entity: { class: AcmeUserBundle:User }
-            
+
     firewalls:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js|ico)/
