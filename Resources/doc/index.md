@@ -393,21 +393,19 @@ access is not enabled on these routes.
 The last firewall has been named `main` and has a pattern that covers every route in the
 application. As such, it must come after the `login` and `dev` firewalls or it will prevent
 access to the routes they cover. You can name your firewalls whatever you would like.
-However, later when you configure the `MesdUserBundle` you'll need to specify the name
-you used here for the route desginated `main` above. By specifying `form_login`, you have
-told the Symfony2 framework that any time a request is made to this firewall that leads to the
-user needing to authenticate, the user will be redirected to a form where they're able to
-enter their credentials. It should come as no surprise then that you have specified the user
-provider service we declared earlier as the `provider` for the firewall to use as part of the
-authentication process. The `csrf_provider` directive tells the Symfony2 security component to
-enable [Cross-site request forgery](http://symfony.com/doc/current/cookbook/security/csrf_in_login_form.html)
-protection on the login form. The `default_target_path` directive tells the security component
-what route the user should be sent to after sucsessfull login. Make sure you change the route
-name above to a route in your application. The `logout` key allows us to specify the `path` in
-our application that users will be routed to for logout purposes. The `MesdUserBundle` has a
-route `mesd_user_security_logout` pre-configured for logout. The `target` directive tells the
-security component where to route users after they logout. In this example above, we send them
-onto the login route `mesd_user_security_login`.
+By specifying `form_login` you have told the Symfony2 framework that any time a request is
+made to this firewall that leads to the user needing to authenticate, the user will be
+redirected to a form where they're able to enter their credentials. The `csrf_provider`
+directive tells the Symfony2 security component to enable [Cross-site request forgery](http://symfony.com/doc/current/cookbook/security/csrf_in_login_form.html)
+protection on the login form. `login_path` specifies the route to the login form and
+`check_path` specifies the route that checks the users credentails. The `default_target_path`
+directive tells the security component what route the user should be sent to after a
+sucsessfull login. Make sure you change the route name to a route in your application.
+The `logout` key allows us to specify the `path` in our application that users will be routed
+to for logout purposes. The `MesdUserBundle` has a route `MesdUserBundle_logout`
+pre-configured for logout. The `target` directive tells the security component where to route
+users after they logout. In this example above, we send them onto the login route
+`MesdUserBundle_login`.
 
 **Note:**
 
