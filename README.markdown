@@ -1,11 +1,11 @@
-Mesd/UserBundle
-=============
+#Mesd/UserBundle
+
 
 MesdUserBundle
 
 
-Documentation
--------------
+#Documentation
+
 
 The documentation is stored in the `Resources/doc/index.md`
 file in this bundle:
@@ -14,22 +14,22 @@ file in this bundle:
 
 
 
-Installation
-------------
+#Installation
+
 
 All the installation instructions are located in the documentation.
 
 
-License
--------
+#License
+
 
 This bundle is under the MIT license. See the complete license in the bundle:
 
     Resources/meta/LICENSE
 
 
-About
------
+#About
+
 
 MesdUserBundle (https://github.com/MESD)
 
