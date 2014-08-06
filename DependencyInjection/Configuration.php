@@ -26,7 +26,11 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
-                ->scalarNode('group_class')
+                ->scalarNode('group_class')->end()
+                ->arrayNode('templates')
+                    ->children()
+                        ->scalarNode('login_form')->end()
+                    ->end()
                 ->end()
             ->end();
 

@@ -17,10 +17,20 @@ class MesdUserExtension extends Extension
         // Store mesd_user config parameters in container
         foreach( $config as $parameter => $value ) {
 
-            $container->setParameter(
-                'mesd_user.' . $parameter,
-                $value
-            );
+            if (is_array($value)) {
+                foreach ($value as $k => $v) {
+                    $container->setParameter(
+                        'mesd_user.' . $parameter . '.' . $k,
+                        $v
+                    );
+                }
+            }
+            else {
+                $container->setParameter(
+                    'mesd_user.' . $parameter,
+                    $value
+                );
+            }
         }
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
