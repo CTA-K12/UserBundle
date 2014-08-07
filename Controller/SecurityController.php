@@ -34,12 +34,8 @@ class SecurityController extends ContainerAware
             ? $this->container->get('form.csrf_provider')->generateCsrfToken('authenticate')
             : null;
 
-        $template = ($this->container->hasParameter('mesd_user.templates.login_form')
-                    ? $this->container->getParameter('mesd_user.templates.login_form')
-                    : 'MesdUserBundle::login.html.twig');
-
         return $this->container->get('templating')->renderResponse(
-            $template,
+            $this->container->getParameter('mesd_user.login.template'),
             array(
                 // last username entered by the user
                 'last_username' => $lastUsername,
