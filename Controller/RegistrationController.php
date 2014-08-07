@@ -28,7 +28,7 @@ class RegistrationController extends Controller
         );
 
         return $this->render(
-            'MesdUserBundle:registration:register.html.twig',
+            $this->container->getParameter('mesd_user.registration.template.register'),
             array('form' => $form->createView())
             );
     }
@@ -56,13 +56,13 @@ class RegistrationController extends Controller
             $userManager->updateUser($user);
 
             return $this->render(
-                'MesdUserBundle:registration:confirm.html.twig',
+                $this->container->getParameter('mesd_user.registration.template.confirm'),
                 array('form' => $form->createView())
             );
         }
 
         return $this->render(
-            'MesdUserBundle:registration:register.html.twig',
+            $this->container->getParameter('mesd_user.registration.template.register'),
             array('form' => $form->createView())
         );
     }

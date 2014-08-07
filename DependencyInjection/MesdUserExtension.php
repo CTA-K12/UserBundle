@@ -20,11 +20,21 @@ class MesdUserExtension extends Extension
         foreach( $config as $parameter => $value ) {
 
             if (is_array($value)) {
-                foreach ($value as $k => $v) {
-                    $container->setParameter(
-                        'mesd_user.' . $parameter . '.' . $k,
-                        $v
-                    );
+                foreach ($value as $key => $val) {
+                    if (is_array($val)) {
+                        foreach ($val as $k => $v) {
+                            $container->setParameter(
+                                'mesd_user.' . $parameter . '.' . $key . '.' . $k,
+                                $v
+                            );
+                        }
+                    }
+                    else {
+                        $container->setParameter(
+                            'mesd_user.' . $parameter . '.' . $key,
+                            $val
+                        );
+                    }
                 }
             }
             else {
