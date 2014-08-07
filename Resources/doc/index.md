@@ -325,7 +325,7 @@ security:
             security: false
 
         login:
-            pattern:  ^/(login$|register|reset)
+            pattern:  ^/(login$|registration|reset)
             anonymous:  true
 
         main:

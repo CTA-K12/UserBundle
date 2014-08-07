@@ -11,17 +11,21 @@
     <form action="{{ path("MesdUserBundle_check") }}" method="post">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
-        <label for="username">Username</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
+        <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
+        </div>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" name="_password" required="required" />
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="_password" required="required" />
+        </div>
 
         <input type="submit" id="_submit" name="_submit" value="Login" />
     </form>
 
     {% if mesd_user_registration_enabled %}
-        <a href="{{ path("MesdUserBundle_registration") }}" class="btn btn-link">{{ mesd_user_registration_text }}</a>
+        <a href="{{ path("MesdUserBundle_registration_new") }}" class="btn btn-link">{{ mesd_user_registration_text }}</a>
     {% endif %}
     {% if mesd_user_reset_enabled %}
         <a href="{{ path("MesdUserBundle_reset") }}" class="btn btn-link">{{ mesd_user_reset_text }}</a>

@@ -1,3 +1,7 @@
-MesdUserBundle_registration:
-    pattern: /register
-    defaults: { _controller: MesdUserBundle:Registration:register }
+MesdUserBundle_registration_new:
+    pattern: /new
+    defaults: { _controller: MesdUserBundle:Registration:new }
+
+MesdUserBundle_registration_create:
+    pattern: /create
+    defaults: { _controller: MesdUserBundle:Registration:create }
