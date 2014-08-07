@@ -9,7 +9,7 @@ use Mesd\UserBundle\Form\Type\RegistrationFormType;
 class RegistrationController extends Controller
 {
 
-    public function registerAction(Request $request)
+    public function newAction(Request $request)
     {
         $userManager = $this->container->get('mesd_user.user_manager');
 
@@ -20,7 +20,11 @@ class RegistrationController extends Controller
             new RegistrationFormType(
                 $this->container->getParameter('mesd_user.user_class')
                 ),
-            $user
+            $user,
+            array(
+                'action' => $this->generateUrl('MesdUserBundle_registration_create'),
+                'method' => 'POST',
+            )
         );
 
         return $this->render(
@@ -33,17 +37,28 @@ class RegistrationController extends Controller
     public function createAction(Request $request)
     {
         $userManager = $this->container->get('mesd_user.user_manager');
-
         $user = $userManager->createUser();
-        //$user->setEnabled(true);
 
-        $form = new RegistrationFormType($this->container->getParameter('mesd_user.user_class'));
+        $form = $this->createForm(
+            new RegistrationFormType(
+                    $this->container->getParameter('mesd_user.user_class')
+            ),
+            $user,
+            array(
+                'action' => $this->generateUrl('MesdUserBundle_registration_create'),
+                'method' => 'POST',
+            )
+        );
 
-        $form->handle($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $userManager->updateUser($user);
-            return $response;
+
+            return $this->render(
+                'MesdUserBundle:registration:confirm.html.twig',
+                array('form' => $form->createView())
+            );
         }
 
         return $this->render(
