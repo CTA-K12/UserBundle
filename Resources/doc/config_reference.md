@@ -13,10 +13,13 @@ mesd_user:
     login:
         template:       MesdUserBundle:security:login.html.twig
     registration:
-        enabled:        false # Enable user registration form
+        enabled:        false
         template:       MesdUserBundle:security:registration.html.twig
+        text:           'Create Account'
+
     resetting:
-        enabled:        false # Enable password reset form
+        enabled:        false
         template:       MesdUserBundle:security:resetting.html.twig
+        text:           'Reset Password'
 
 ```
