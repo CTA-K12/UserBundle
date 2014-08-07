@@ -325,7 +325,7 @@ security:
             security: false
 
         login:
-            pattern:  ^/(login$|register|resetting)
+            pattern:  ^/(login$|register|reset)
             anonymous:  true
 
         main:
@@ -486,3 +486,4 @@ The following documents are available:
 
 - [Using forms from the MesdPresentationBundle](using_with_mesd_presenation_bundle.md)
 - [Using the Groups capability](using_groups.md)
+- [Configuration Reference](config_reference.md)
