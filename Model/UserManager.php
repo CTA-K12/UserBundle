@@ -5,6 +5,7 @@ namespace Mesd\UserBundle\Model;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Mesd\UserBundle\Model\UserInterface;
 
 class UserManager {
 
@@ -24,17 +25,11 @@ class UserManager {
     }
 
 
-    public function createUser($username, $email, $password)
+    public function createUser()
     {
         $user = new $this->userClass();
-        $user->setUsername($username);
-        $user->setEmail($email);
-        $user->setPlainPassword($password);
-        $encoder = $this->encoderFactory->getEncoder($user);
-        $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-        $user->eraseCredentials();
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+
+        return $user;
     }
 
 
@@ -208,6 +203,24 @@ class UserManager {
 
         $user->addRole($role);
 
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+    }
+
+
+    public function updatePassword(UserInterface $user)
+    {
+        if (0 !== strlen($password = $user->getPlainPassword())) {
+            $encoder = $this->encoderFactory->getEncoder($user);
+            $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+            $user->eraseCredentials();
+        }
+    }
+
+
+    public function updateUser(UserInterface $user)
+    {
+        $this->updatePassword($user);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }

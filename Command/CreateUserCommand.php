@@ -42,7 +42,12 @@ EOT
         $password = $input->getArgument('password');
 
         $userManager =  $this->getContainer()->get("mesd_user.user_manager");
-        $userManager->createUser($username, $email, $password);
+
+        $user = $userManager->createUser();
+        $user->setUsername($username);
+        $user->setEmail($email);
+        $user->setPlainPassword($password);
+        $userManager->updateUser($user);
 
         $output->writeln(sprintf('Created user <comment>%s</comment>', $username));
     }
