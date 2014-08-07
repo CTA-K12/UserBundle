@@ -1,0 +1,3 @@
+MesdUserBundle_reset:
+    pattern: /reset
+    defaults: { _controller: MesdUserBundle:Reset:index }

@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
 class MesdUserExtension extends Extension
 {
@@ -13,6 +14,7 @@ class MesdUserExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+
 
         // Store mesd_user config parameters in container
         foreach( $config as $parameter => $value ) {
@@ -44,10 +46,11 @@ class MesdUserExtension extends Extension
             $container->setParameter('mesd_user.group_class_placeholder', null);
         }
 
-        // Load user and role services
+        // Load default services
         $loader->load('UserManagerService.yml');
         $loader->load('RoleManagerService.yml');
         $loader->load('UserProviderService.yml');
+        $loader->load('TwigExtensions.yml');
 
     }
 }

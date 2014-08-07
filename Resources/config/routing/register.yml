@@ -1,0 +1,3 @@
+MesdUserBundle_registration:
+    pattern: /register
+    defaults: { _controller: MesdUserBundle:Register:index }
