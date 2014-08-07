@@ -10,8 +10,10 @@ mesd_user:
     user_class:         ~ # Required - Your applications user entity class
     role_class:         ~ # Required - Your applications role entity class
     group_class:        ~ # Your applications group entity class
+
     login:
         template:       MesdUserBundle:security:login.html.twig
+
     registration:
         enabled:        false
         template:       MesdUserBundle:security:registration.html.twig
