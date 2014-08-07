@@ -1,0 +1,9 @@
+parameters:
+    mesd_user.config.class: Mesd\UserBundle\Twig\MesdUserConfigExtension
+
+services:
+    mesd_user.twig.config_extension:
+        class: %mesd_user.config.class%
+        arguments: [@service_container]
+        tags:
+            - { name: twig.extension }
