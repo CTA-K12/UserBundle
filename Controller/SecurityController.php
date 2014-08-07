@@ -2,11 +2,11 @@
 
 namespace Mesd\UserBundle\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
-class SecurityController extends ContainerAware
+class SecurityController extends Controller
 {
     public function loginAction(Request $request)
     {
@@ -34,7 +34,7 @@ class SecurityController extends ContainerAware
             ? $this->container->get('form.csrf_provider')->generateCsrfToken('authenticate')
             : null;
 
-        return $this->container->get('templating')->renderResponse(
+        return $this->render(
             $this->container->getParameter('mesd_user.login.template'),
             array(
                 // last username entered by the user
