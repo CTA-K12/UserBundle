@@ -15,6 +15,7 @@ mesd_user:
         template:           MesdUserBundle:security:login.html.twig
 
     registration:
+        approval_required:  false
         enabled:            false
         mail_confirmation:  false
         mail_from:          webmaster@example.com

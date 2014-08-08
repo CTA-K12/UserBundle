@@ -40,6 +40,13 @@ class RegistrationController extends Controller
         $userManager = $this->get('mesd_user.user_manager');
         $user = $userManager->createUser();
 
+        $requireAdminApproval  = $this->container->getParameter('mesd_user.registration.approval_required');
+        $sendConfirmationEmail = $this->container->getParameter('mesd_user.registration.mail_confirmation');
+
+        if (true === $sendConfirmationEmail || true === $requireAdminApproval) {
+            $user->setEnabled(false);
+        }
+
         $form = $this->createForm(
             new RegistrationFormType(
                     $this->container->getParameter('mesd_user.user_class')
@@ -53,13 +60,10 @@ class RegistrationController extends Controller
 
         $form->handleRequest($request);
 
-        $sendEmail = $this->container->getParameter('mesd_user.registration.mail_confirmation');
-
         if ($form->isValid()) {
             $userManager->updateUser($user);
 
-            if (true === $sendEmail) {
-
+            if (true === $sendConfirmationEmail) {
                 $user->generateConfirmationToken();
                 $userManager->updateUser($user);
                 $mailer = new Mailer(
@@ -83,7 +87,7 @@ class RegistrationController extends Controller
                 $this->container->getParameter('mesd_user.registration.template.confirm'),
                 array(
                     'form' => $form->createView(),
-                    'send_mail' => $sendEmail
+                    'send_mail' => $sendConfirmationEmail
                 )
             );
         }
