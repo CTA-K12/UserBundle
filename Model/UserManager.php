@@ -81,6 +81,16 @@ class UserManager {
     }
 
 
+    public function findUserByConfirmationToken($token)
+    {
+        return $this->objectManager
+                ->getRepository($this->userClass)
+                ->findOneByConfirmationToken(
+                    array($token)
+                );
+    }
+
+
     public function getUsers()
     {
         return $this->objectManager

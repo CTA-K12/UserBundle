@@ -10,31 +10,6 @@ use Mesd\UserBundle\Model\Mailer;
 class RegistrationController extends Controller
 {
 
-    public function newAction()
-    {
-        $userManager = $this->get('mesd_user.user_manager');
-
-        $user = $userManager->createUser();
-        //$user->setEnabled(true);
-
-        $form = $this->createForm(
-            new RegistrationFormType(
-                $this->container->getParameter('mesd_user.user_class')
-                ),
-            $user,
-            array(
-                'action' => $this->generateUrl('MesdUserBundle_registration_create'),
-                'method' => 'POST',
-            )
-        );
-
-        return $this->render(
-            $this->container->getParameter('mesd_user.registration.template.register'),
-            array('form' => $form->createView())
-            );
-    }
-
-
     public function createAction(Request $request)
     {
         $userManager = $this->get('mesd_user.user_manager');
@@ -84,13 +59,61 @@ class RegistrationController extends Controller
             }
 
             return $this->render(
-                $this->container->getParameter('mesd_user.registration.template.confirm'),
+                $this->container->getParameter('mesd_user.registration.template.summary'),
                 array(
                     'form' => $form->createView(),
                     'send_mail' => $sendConfirmationEmail
                 )
             );
         }
+
+        return $this->render(
+            $this->container->getParameter('mesd_user.registration.template.register'),
+            array('form' => $form->createView())
+        );
+    }
+
+
+    public function confirmAction($token)
+    {
+        $message = 'Account not found';
+
+        $userManager = $this->get('mesd_user.user_manager');
+        $user = $userManager->findUserByConfirmationToken($token);
+
+        if ($user && null !== $user) {
+            $user->setEnabled(true);
+            $user->setConfirmationToken(null);
+            $userManager->updateUser($user);
+            $message = 'Your account has been confirmed';
+        }
+
+        return $this->render(
+            $this->container->getParameter('mesd_user.registration.template.confirm'),
+            array(
+                'message' => $message
+            )
+        );
+    }
+
+
+    public function newAction()
+    {
+        $userManager = $this->get('mesd_user.user_manager');
+
+        $user = $userManager->createUser();
+        //$user->setEnabled(true);
+
+        $form = $this->createForm(
+            new RegistrationFormType(
+                $this->container->getParameter('mesd_user.user_class')
+                ),
+            $user,
+            array(
+                'action' => $this->generateUrl('MesdUserBundle_registration_create'),
+                'method' => 'POST',
+            )
+        );
 
         return $this->render(
             $this->container->getParameter('mesd_user.registration.template.register'),

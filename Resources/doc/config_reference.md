@@ -24,6 +24,7 @@ mesd_user:
         template:
             confirm:        MesdUserBundle:registration:confirm.html.twig
             register:       MesdUserBundle:registration:register.html.twig
+            summary:        MesdUserBundle:registration:summary.html.twig
         text:               'Create Account'
 
     resetting:
