@@ -16,7 +16,10 @@ mesd_user:
 
     registration:
         enabled:            false
-        mailConfirmation:   false
+        mail_confirmation:  false
+        mail_from:          webmaster@example.com
+        mail_subject:       'Account Created'
+        mail_template:      MesdUserBundle:registration:email.txt.twig
         template:
             confirm:        MesdUserBundle:registration:confirm.html.twig
             register:       MesdUserBundle:registration:register.html.twig
