@@ -5,6 +5,7 @@ namespace Mesd\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\Util\SecureRandom;
 use Mesd\UserBundle\Model\GroupInterface;
 use Mesd\UserBundle\Model\RoleInterface;
 use Mesd\UserBundle\Model\UserInterface;
@@ -368,6 +369,19 @@ abstract class User implements UserInterface
     public function setConfirmationToken($confirmationToken)
     {
         $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
+
+    public function generateConfirmationToken()
+    {
+        $generator = new SecureRandom();
+        $random = $generator->nextBytes(32);
+
+        $this->setConfirmationToken(
+            rtrim(strtr(base64_encode($random), '+/', '-_'), '=')
+        );
 
         return $this;
     }
