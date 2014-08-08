@@ -5,3 +5,7 @@ MesdUserBundle_registration_new:
 MesdUserBundle_registration_create:
     pattern: /create
     defaults: { _controller: MesdUserBundle:Registration:create }
+
+MesdUserBundle_registration_confirm:
+    pattern: /confirm/{token}
+    defaults: { _controller: MesdUserBundle:Registration:confirm }

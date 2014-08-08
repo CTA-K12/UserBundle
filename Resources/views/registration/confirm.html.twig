@@ -4,7 +4,9 @@
 
     <div>
         <p>User account {{ form.username.vars.value }} has been created.</p>
+        {% if send_mail %}
         <p>A confirmation email was sent to {{ form.email['first'].vars.value }}</p>
+        {% endif %}
     </div>
 
 {% endblock mesd_user_content %}

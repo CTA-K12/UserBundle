@@ -5,13 +5,14 @@ namespace Mesd\UserBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Mesd\UserBundle\Form\Type\RegistrationFormType;
+use Mesd\UserBundle\Model\Mailer;
 
 class RegistrationController extends Controller
 {
 
     public function newAction(Request $request)
     {
-        $userManager = $this->container->get('mesd_user.user_manager');
+        $userManager = $this->get('mesd_user.user_manager');
 
         $user = $userManager->createUser();
         //$user->setEnabled(true);
@@ -36,7 +37,7 @@ class RegistrationController extends Controller
 
     public function createAction(Request $request)
     {
-        $userManager = $this->container->get('mesd_user.user_manager');
+        $userManager = $this->get('mesd_user.user_manager');
         $user = $userManager->createUser();
 
         $form = $this->createForm(
@@ -52,12 +53,38 @@ class RegistrationController extends Controller
 
         $form->handleRequest($request);
 
+        $sendEmail = $this->container->getParameter('mesd_user.registration.mail_confirmation');
+
         if ($form->isValid()) {
             $userManager->updateUser($user);
 
+            if (true === $sendEmail) {
+
+                $user->generateConfirmationToken();
+                $userManager->updateUser($user);
+                $mailer = new Mailer(
+                    $this->get('mailer'),
+                    $this->get('router'),
+                    $this->get('templating')
+                );
+
+                $mailer->sendConfirmationEmailMessage(
+                    $user,
+                    array(
+                        'from'     => $this->container->getParameter('mesd_user.registration.mail_from'),
+                        'to'       => $user->getEmail(),
+                        'subject'  => $this->container->getParameter('mesd_user.registration.mail_subject'),
+                        'template' => $this->container->getParameter('mesd_user.registration.mail_template')
+                    )
+                );
+            }
+
             return $this->render(
                 $this->container->getParameter('mesd_user.registration.template.confirm'),
-                array('form' => $form->createView())
+                array(
+                    'form' => $form->createView(),
+                    'send_mail' => $sendEmail
+                )
             );
         }
 
