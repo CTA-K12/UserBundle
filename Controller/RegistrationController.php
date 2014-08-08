@@ -10,7 +10,7 @@ use Mesd\UserBundle\Model\Mailer;
 class RegistrationController extends Controller
 {
 
-    public function newAction(Request $request)
+    public function newAction()
     {
         $userManager = $this->get('mesd_user.user_manager');
 
