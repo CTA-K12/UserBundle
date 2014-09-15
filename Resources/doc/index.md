@@ -317,7 +317,7 @@ security:
 
     providers:
         mesd_user:
-            mesd_user.user_provider.username
+            id: mesd_user.user_provider.username
 
     firewalls:
         dev:
