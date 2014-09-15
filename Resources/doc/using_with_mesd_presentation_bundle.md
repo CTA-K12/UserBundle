@@ -67,7 +67,7 @@ Next you need to import those routes into your applications routing configuratio
 **Note:**
 
 > If you already imported the `MesdUserBundle` routes into your application, you'll need
-> to remove the route import lines for the `MesdUserBundle` specefic to security.yml.
+> to remove the route import lines for the `MesdUserBundle` specific to security.yml.
 
 ``` yaml
 # app/config/routing.yml
@@ -83,7 +83,7 @@ AcmeUserBundle_security:
 ### Step 3: Update the Security configuration
 
 Update the `security.yml` file for your application. This configuration is similar
-to the standard `MesdUserBundle` security configurtion, accept we're removing the
+to the standard `MesdUserBundle` security configuration, accept we're removing the
 `provider` and specifing a `login_path` that uses your application specific user
 bundle route. This allows us to override the controllers, forms, and templates.
 Since we're removing the `provider`, we also have to specify a `check_path` that
