@@ -117,6 +117,7 @@ security:
         login:
             pattern:  ^/(login$|register|resetting)
             anonymous:  true
+            security: false
 
         main:
             pattern:    ^/

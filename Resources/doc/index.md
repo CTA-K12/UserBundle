@@ -152,10 +152,52 @@ use Mesd\UserBundle\Entity\User as BaseUser;
  */
 class User extends BaseUser
 {
+
+    /**
+     * @var integer
+     */
+    protected $id;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $role;
+    
     public function __construct()
     {
         parent::__construct();
         // your own logic
+    }
+
+    /**
+     * Add role
+     *
+     * @param RoleInterface $role
+     * @return EskillsUser
+     */
+    public function addRole(RoleInterface $role)
+    {
+        return parent::addRole($role);
+    }
+
+    /**
+     * Remove role
+     *
+     * @param RoleInterface $role
+     */
+    public function removeRole(RoleInterface $role)
+    {
+        parent::removeRole();
+    }
+
+    /**
+     * Get role
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRole()
+    {
+        return parent::getRole();
     }
 }
 ```
@@ -271,6 +313,11 @@ use Mesd\UserBundle\Entity\Role as BaseRole;
  */
 class Role extends BaseRole
 {
+    /**
+     * @var integer
+     */
+    protected $id;
+
     public function __construct()
     {
         parent::__construct();
@@ -460,6 +507,14 @@ In YAML:
 # app/config/routing.yml
 MesdUserBundle_security:
     resource: "@MesdUserBundle/Resources/config/routing/security.yml"
+
+MesdUserBundle_registration:
+    resource: "@MesdUserBundle/Resources/config/routing/registration.yml"
+    prefix: /registration
+
+MesdUserBundle_reset:
+    resource: "@MesdUserBundle/Resources/config/routing/reset.yml"
+    prefix: /reset
 ```
 
 #### Step8: Update your database schema
