@@ -168,37 +168,6 @@ class User extends BaseUser
         parent::__construct();
         // your own logic
     }
-
-    /**
-     * Add role
-     *
-     * @param RoleInterface $role
-     * @return EskillsUser
-     */
-    public function addRole(RoleInterface $role)
-    {
-        return parent::addRole($role);
-    }
-
-    /**
-     * Remove role
-     *
-     * @param RoleInterface $role
-     */
-    public function removeRole(RoleInterface $role)
-    {
-        parent::removeRole();
-    }
-
-    /**
-     * Get role
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getRole()
-    {
-        return parent::getRole();
-    }
 }
 ```
 ```yaml
