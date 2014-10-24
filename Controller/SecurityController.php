@@ -5,6 +5,7 @@ namespace Mesd\UserBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class SecurityController extends Controller
 {
@@ -23,10 +24,22 @@ class SecurityController extends Controller
             $error = '';
         }
 
+        // this converts error messages into strings, we would prefer
+        // to pass the error object instead, see below
+        /*
         if ($error) {
             // TODO: this is a potential security risk (see http://trac.symfony-project.org/ticket/9523)
             $error = $error->getMessage();
         }
+        */
+       
+        // prior to this update, the user bundle was converting error messages
+        // to a string. we now check to ensure the error is an instance of
+        // authentication exception or we pass null to the error object
+        if (!$error instanceof AuthenticationException) {
+            $error = null; // Return only values from the Symfony security component
+        }
+
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
 

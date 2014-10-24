@@ -340,23 +340,30 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js|ico)/
             security: false
 
-        login:
-            pattern:  ^/(login$|registration|reset)
-            anonymous:  true
+        # This has been removed in favor of using access control
+        # see the documentation below for more information.
+        # login:
+        #     pattern:   ^/(login$|register|reset)
+        #     anonymous: true
 
         main:
-            pattern:    ^/
+            pattern:   ^/
+            anonymous: true
             form_login:
-                csrf_provider: form.csrf_provider
-                login_path: MesdUserBundle_login
-                check_path: MesdUserBundle_check
+                csrf_provider:       form.csrf_provider
+                login_path:          MesdUserBundle_login
+                check_path:          MesdUserBundle_check
                 default_target_path: %your_applications_default_route%
             logout:
                 path:   MesdUserBundle_logout
                 target: MesdUserBundle_login
 
-    #access_control:
-        #- { path: ^/admin, roles: ROLE_ADMIN }
+    access_control:
+        - { path: ^/login$,   role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset,    role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin,    role: ROLE_ADMIN }
+        - { path: ^/,         role: ROLE_USER }
 ```
 
 Lets walk through how this security configuration above is going to function:
@@ -401,10 +408,21 @@ directive tells Symfony2 to not require authentication for these routes. This is
 if you want access to the Symfony2 profiler for troubleshooting routes even when you have
 not logged in.
 
-The `login` firewall, similarly to `dev`, makes sure Symfony2 doesn't require authentication
+The following paragraph is deprecated.
+
+~~The `login` firewall, similarly to `dev`, makes sure Symfony2 doesn't require authentication
 to reach the login, user registration, or password reset routes. The `MesdUserBundle` has
 `remember_me` functionality enabled by default which will throw an exception if anonymous
-access is not enabled on these routes.
+access is not enabled on these routes.~~
+
+The `login` firewall, has been removed. We want to authenticate a user anonymously
+if they are not already logged in. But if they are already logged in, one of two
+things should happen:
+
+1. the user is redirected to the homepage or a designated page in the application, or
+2. a message is displayed to the user indicating they are already logged in.
+
+It is unexpected behavior for an application to allow a user to login repeated times.
 
 The last firewall has been named `main` and has a pattern that covers every route in the
 application. As such, it must come after the `login` and `dev` firewalls or it will prevent
@@ -412,7 +430,8 @@ access to the routes they cover. You can name your firewalls whatever you would 
 By specifying `form_login` you have told the Symfony2 framework that any time a request is
 made to this firewall that leads to the user needing to authenticate, the user will be
 redirected to a form where they're able to enter their credentials. The `csrf_provider`
-directive tells the Symfony2 security component to enable [Cross-site request forgery](http://symfony.com/doc/current/cookbook/security/csrf_in_login_form.html)
+directive tells the Symfony2 security component to enable
+[Cross-site request forgery](http://symfony.com/doc/current/cookbook/security/csrf_in_login_form.html)
 protection on the login form. `login_path` specifies the route to the login form and
 `check_path` specifies the route that checks the users credentails. The `default_target_path`
 directive tells the security component what route the user should be sent to after a
@@ -430,12 +449,18 @@ users after they logout. In this example above, we send them onto the login rout
 > Please read the Symfony2 Security component documentation for more information on the
 > other types of authentication methods.
 
-###### Access Controll:
+###### Access Control:
 
 The `access_control` section is where you specify the credentials necessary for users trying
-to access specific parts of your application. You can see in the commented out example we have
+to access specific parts of your application. ~~You can see in the commented out example we have
 specified that any request beginning with `/admin` will require a user to have the `ROLE_ADMIN`
-role.
+role.~~
+
+We add our three routes: `login`, `register`, and `reset` here with the role:
+`IS_AUTHENTICATED_ANONYMOUSLY`. This allows anonymous users to access these
+pages without requiring `ROLE_USER` or other application specific roles. In
+addition, we add demonstrate how to lock down every other remaining route
+requiring your users to have, at a minimum, the `ROLE_USER` role.
 
 For more information on configuring the `security.yml` file please read the Symfony2
 security component [documentation](http://symfony.com/doc/current/book/security.html).
@@ -479,7 +504,7 @@ MesdUserBundle_security:
 
 MesdUserBundle_registration:
     resource: "@MesdUserBundle/Resources/config/routing/registration.yml"
-    prefix: /registration
+    prefix: /register
 
 MesdUserBundle_reset:
     resource: "@MesdUserBundle/Resources/config/routing/reset.yml"
