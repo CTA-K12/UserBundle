@@ -162,7 +162,7 @@ class User extends BaseUser
      * @var \Doctrine\Common\Collections\Collection
      */
     private $role;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -341,15 +341,17 @@ security:
             security: false
 
         login:
-            pattern:  ^/(login$|registration|reset)
+            context:    default_context
+            pattern:    ^/(login$|registration|reset)
             anonymous:  true
 
         main:
+            context:    default_context
             pattern:    ^/
             form_login:
-                csrf_provider: form.csrf_provider
-                login_path: MesdUserBundle_login
-                check_path: MesdUserBundle_check
+                csrf_provider:       form.csrf_provider
+                login_path:          MesdUserBundle_login
+                check_path:          MesdUserBundle_check
                 default_target_path: %your_applications_default_route%
             logout:
                 path:   MesdUserBundle_logout
@@ -430,7 +432,7 @@ users after they logout. In this example above, we send them onto the login rout
 > Please read the Symfony2 Security component documentation for more information on the
 > other types of authentication methods.
 
-###### Access Controll:
+###### Access Control:
 
 The `access_control` section is where you specify the credentials necessary for users trying
 to access specific parts of your application. You can see in the commented out example we have
@@ -479,7 +481,7 @@ MesdUserBundle_security:
 
 MesdUserBundle_registration:
     resource: "@MesdUserBundle/Resources/config/routing/registration.yml"
-    prefix: /registration
+    prefix: /register
 
 MesdUserBundle_reset:
     resource: "@MesdUserBundle/Resources/config/routing/reset.yml"

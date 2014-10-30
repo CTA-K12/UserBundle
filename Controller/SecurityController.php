@@ -5,12 +5,13 @@ namespace Mesd\UserBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class SecurityController extends Controller
 {
     public function loginAction(Request $request)
     {
-        /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
+
         $session = $request->getSession();
 
         // get the error if any (works with forward and redirect -- see below)
@@ -20,13 +21,13 @@ class SecurityController extends Controller
             $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR);
             $session->remove(SecurityContextInterface::AUTHENTICATION_ERROR);
         } else {
-            $error = '';
+            $error = null;
         }
 
-        if ($error) {
-            // TODO: this is a potential security risk (see http://trac.symfony-project.org/ticket/9523)
-            $error = $error->getMessage();
+        if (!$error instanceof AuthenticationException) {
+            $error = null; // The value does not come from the security component.
         }
+
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
 
