@@ -16,7 +16,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     private $authCredentialType;
 
     function __construct($doctrine, $userClass, $authCredentialType) {
-        parent::__construct($doctrine->getEntityManager(), new ClassMetadata($userClass));
+        parent::__construct($doctrine->getManager(), new ClassMetadata($userClass));
         $this->authCredentialType = $authCredentialType;
     }
 

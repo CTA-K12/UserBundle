@@ -8,6 +8,13 @@
         {% endif %}
     {% endif %}
 
+    <div>
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            Logged in as: {{  app.user.username }}
+            <a href="{{ path("MesdUserBundle_logout") }}">Logout</a>
+        {% endif %}
+    </div>
+
     <form action="{{ path("MesdUserBundle_check") }}" method="post">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 

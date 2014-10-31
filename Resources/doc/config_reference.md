@@ -12,7 +12,9 @@ mesd_user:
     group_class:            ~ # Your applications group entity class
 
     login:
-        template:           MesdUserBundle:security:login.html.twig
+        revisit_behavior:           status   # logout | redirect | status
+        revisit_redirect_target:    ~
+        template:                   MesdUserBundle:security:login.html.twig
 
     registration:
         approval_required:  false
