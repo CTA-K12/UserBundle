@@ -95,6 +95,22 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                #->arrayNode('password')
+                #    ->addDefaultsIfNotSet()
+                #    ->children()
+                #        ->scalarNode('min')
+                #        ->scalarNode('max')
+                #        ->scalarNode('min_upper')
+                #        ->scalarNode('min_lower')
+                #        ->scalarNode('min_number')
+                #        ->scalarNode('min_special')
+                #        ->scalarNode('whitelisted_chars')
+                #        ->scalarNode('blacklisted_chars')
+                #        ->scalarNode('last_count')
+                #        ->scalarNode('blacklist_class')
+                #        ->scalarNode('dictionary_class')
+                #    ->end()
+                #->end()
             ->end();
 
         return $treeBuilder;

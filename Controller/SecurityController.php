@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 
 class SecurityController extends Controller
 {
@@ -21,9 +22,13 @@ class SecurityController extends Controller
             $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR);
             $session->remove(SecurityContextInterface::AUTHENTICATION_ERROR);
         } else {
-            $error = '';
+            $error = null;
         }
 
+        // check if credentials have expired
+        if ($error instanceof CredentialsExpiredException) {
+            return $this->render($this->container->getParameter('mesd_user.reset.template.reset'), array());
+        }
         // this converts error messages into strings, we would prefer
         // to pass the error object instead, see below
         /*
