@@ -20,6 +20,23 @@ class Mailer
         $this->templating = $templating;
     }
 
+
+    public function sendApprovalEmailMessage(UserInterface $user, array $params)
+    {
+        $from     = $params['from'];
+        $to       = $params['to'];
+        $subject  = $params['subject'];
+        $template = $params['template'];
+        $url      = $this->router->generate('MesdUserBundle_registration_approve', array('token' => $user->getConfirmationToken()), true);
+        $body     = $this->templating->render($template, array(
+            'user'        => $user,
+            'approvalUrl' => $url
+        ));
+
+        $this->sendEmailMessage($from, $to, $subject, $body);
+    }
+
+
     public function sendConfirmationEmailMessage(UserInterface $user, array $params)
     {
         $from     = $params['from'];

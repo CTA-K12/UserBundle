@@ -53,6 +53,10 @@ class RegistrationController extends Controller
         if ($form->isValid()) {
             $userManager->updateUser($user);
 
+            // Determine if approval notice should be
+            // displayed to user, default to false.
+            $approval = false;
+
             if (true === $sendConfirmationEmail) {
                 $user->generateConfirmationToken();
                 $userManager->updateUser($user);
@@ -71,13 +75,37 @@ class RegistrationController extends Controller
                         'template' => $this->container->getParameter('mesd_user.registration.template.confirm_mail')
                     )
                 );
+            } elseif (true === $requireAdminApproval) {
+                if (true === $this->container->getParameter('mesd_user.registration.approval_mail')) {
+                    $user->generateConfirmationToken();
+                    $userManager->updateUser($user);
+                    $mailer = new Mailer(
+                        $this->get('mailer'),
+                        $this->get('router'),
+                        $this->get('templating')
+                    );
+
+                    $mailer->sendApprovalEmailMessage(
+                        $user,
+                        array(
+                            'from'     => $this->container->getParameter('mesd_user.registration.approval_mail_from'),
+                            'to'       => $this->container->getParameter('mesd_user.registration.approval_mail_to'),
+                            'subject'  => $this->container->getParameter('mesd_user.registration.approval_mail_subject'),
+                            'template' => $this->container->getParameter('mesd_user.registration.template.approval_mail')
+                        )
+                    );
+                }
+
+                // Display notice that user approval is needed
+                $approval = true;
             }
 
             return $this->render(
                 $this->container->getParameter('mesd_user.registration.template.summary'),
                 array(
                     'form' => $form->createView(),
-                    'send_mail' => $sendConfirmationEmail
+                    'send_mail' => $sendConfirmationEmail,
+                    'approval'  => $approval
                 )
             );
         }
@@ -89,6 +117,29 @@ class RegistrationController extends Controller
     }
 
 
+    public function approveAction($token)
+    {
+        $message = 'Account not found';
+
+        $userManager = $this->get('mesd_user.user_manager');
+        $user = $userManager->findUserByConfirmationToken($token);
+
+        if ($user && null !== $user) {
+            $message = 'Account has been approved.';
+            $user->setConfirmationToken(null);
+            $user->setEnabled(true);
+            $userManager->updateUser($user);
+        }
+
+        return $this->render(
+            $this->container->getParameter('mesd_user.registration.template.approve'),
+            array(
+                'message' => $message
+            )
+        );
+    }
+
+
     public function confirmAction($token)
     {
         $message = 'Account not found';
@@ -96,15 +147,35 @@ class RegistrationController extends Controller
         $userManager = $this->get('mesd_user.user_manager');
         $user = $userManager->findUserByConfirmationToken($token);
 
-        $message = 'Your account has been confirmed.';
-
         if ($user && null !== $user) {
+            $message = 'Your account has been confirmed.';
+            $user->setConfirmationToken(null);
+
             if (false === $this->container->getParameter('mesd_user.registration.approval_required')) {
                 $user->setEnabled(true);
             } else {
                 $message .= ' However, it remains disabled until approved by an administrator.';
+
+                if (true === $this->container->getParameter('mesd_user.registration.approval_mail')) {
+                    $user->generateConfirmationToken();
+                    $mailer = new Mailer(
+                        $this->get('mailer'),
+                        $this->get('router'),
+                        $this->get('templating')
+                    );
+
+                    $mailer->sendApprovalEmailMessage(
+                        $user,
+                        array(
+                            'from'     => $this->container->getParameter('mesd_user.registration.approval_mail_from'),
+                            'to'       => $this->container->getParameter('mesd_user.registration.approval_mail_to'),
+                            'subject'  => $this->container->getParameter('mesd_user.registration.approval_mail_subject'),
+                            'template' => $this->container->getParameter('mesd_user.registration.template.approval_mail')
+                        )
+                    );
+                }
             }
-            $user->setConfirmationToken(null);
+
             $userManager->updateUser($user);
         }
 

@@ -21,12 +21,14 @@ mesd_user:
         approval_mail:          false                       # Send Approval emails to administrator
         approval_mail_from:     webmaster@example.com       # Approval email from address
         approval_mail_subject:  'Account Needs Approval'    # Approval email subject
+        approval_mail_to:       ~                           # Approval email to address
         enabled:                false                       # Enable Registration Functionality
         link_text:              'Create Account'            # Acount Registration link text on login form
         mail_confirmation:      false                       # Send Confirmation emails to user
         mail_from:              webmaster@example.com       # Confirmation email from address
         mail_subject:           'Account Created'           # Confirmation email subject
         template:                                           # Registration process templates
+            approve:            MesdUserBundle:registration:approve.html.twig
             confirm:            MesdUserBundle:registration:confirm.html.twig
             register:           MesdUserBundle:registration:register.html.twig
             summary:            MesdUserBundle:registration:summary.html.twig
