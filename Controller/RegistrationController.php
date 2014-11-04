@@ -68,7 +68,7 @@ class RegistrationController extends Controller
                         'from'     => $this->container->getParameter('mesd_user.registration.mail_from'),
                         'to'       => $user->getEmail(),
                         'subject'  => $this->container->getParameter('mesd_user.registration.mail_subject'),
-                        'template' => $this->container->getParameter('mesd_user.registration.mail_template')
+                        'template' => $this->container->getParameter('mesd_user.registration.template.confirm_mail')
                     )
                 );
             }
