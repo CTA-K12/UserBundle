@@ -45,5 +45,5 @@ mesd_presentation:
     login_path:           MesdUserBundle_login
     login_check_path:     MesdUserBundle_check
     logout_path:          MesdUserBundle_logout
-    user_profile_path:    MesdPresentationBundle_profile
+
 ```

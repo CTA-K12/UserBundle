@@ -2,6 +2,7 @@
 
 namespace Mesd\UserBundle\Controller;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Mesd\UserBundle\Form\Type\RegistrationFormType;
@@ -9,6 +10,20 @@ use Mesd\UserBundle\Model\Mailer;
 
 class RegistrationController extends Controller
 {
+
+
+    // Override setContainer so we can determine if registration is
+    // enabled before running any controller actions.
+    public function setContainer(ContainerInterface $container = null)
+    {
+        parent::setContainer($container);
+
+        // If registration is not enabled, throw page not found error
+        if (false === $this->container->getParameter('mesd_user.registration.enabled')) {
+            throw $this->createNotFoundException();
+        }
+    }
+
 
     public function createAction(Request $request)
     {
@@ -81,11 +96,16 @@ class RegistrationController extends Controller
         $userManager = $this->get('mesd_user.user_manager');
         $user = $userManager->findUserByConfirmationToken($token);
 
+        $message = 'Your account has been confirmed.';
+
         if ($user && null !== $user) {
-            $user->setEnabled(true);
+            if (false === $this->container->getParameter('mesd_user.registration.approval_required')) {
+                $user->setEnabled(true);
+            } else {
+                $message .= ' However, it remains disabled until approved by an administrator.';
+            }
             $user->setConfirmationToken(null);
             $userManager->updateUser($user);
-            $message = 'Your account has been confirmed';
         }
 
         return $this->render(
@@ -102,7 +122,6 @@ class RegistrationController extends Controller
         $userManager = $this->get('mesd_user.user_manager');
 
         $user = $userManager->createUser();
-        //$user->setEnabled(true);
 
         $form = $this->createForm(
             new RegistrationFormType(
