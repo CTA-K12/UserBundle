@@ -1,0 +1,19 @@
+{% extends "MesdUserBundle::layout.html.twig" %}
+
+{% block mesd_user_content %}
+
+    {% if form_errors is defined %}
+        {% if form_errors %}
+            <div>{{ form_errors }}</div>
+        {% endif %}
+    {% endif %}
+
+    {% if invalid_username is defined %}
+        {% if invalid_username %}
+            <div>No user {{ invalid_username }} found.</div>
+        {% endif %}
+    {% endif %}
+
+    {{ form(form) }}
+
+{% endblock mesd_user_content %}

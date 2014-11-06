@@ -5,7 +5,9 @@ namespace Mesd\UserBundle\Model;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Doctrine\ORM\NoResultException;
 use Mesd\UserBundle\Model\UserInterface;
+
 
 class UserManager {
 
@@ -17,7 +19,7 @@ class UserManager {
 
     public function __construct($objectManager, EncoderFactoryInterface $encoderFactory, $userClass, $roleClass, $groupClass = null)
     {
-         $this->objectManager  = $objectManager->getEntityManager();
+         $this->objectManager  = $objectManager->getManager();
          $this->encoderFactory = $encoderFactory;
          $this->userClass      = $userClass;
          $this->roleClass      = $roleClass;
@@ -88,6 +90,37 @@ class UserManager {
                 ->findOneByConfirmationToken(
                     array($token)
                 );
+    }
+
+
+    public function findOneByUsernameOrEmail($credential)
+    {
+        $credential = mb_convert_case(
+            $credential,
+            MB_CASE_LOWER,
+            mb_detect_encoding($credential)
+        );
+
+        $q = $this->objectManager
+                ->getRepository($this->userClass)
+                ->createQueryBuilder('u');
+
+        $q->where('u.username = :username OR u.email = :email')
+            ->setParameter('username', $credential)
+            ->setParameter('email', $credential)
+        ;
+
+        $result = $q->getQuery();
+
+        try {
+            // The Query::getSingleResult() method throws an exception
+            // if there is no record matching the criteria.
+            $user = $result->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+
+        return $user;
     }
 
 

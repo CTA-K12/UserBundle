@@ -23,46 +23,40 @@ class Mailer
 
     public function sendApprovalEmailMessage(UserInterface $user, array $params)
     {
-        $from     = $params['from'];
-        $to       = $params['to'];
-        $subject  = $params['subject'];
-        $template = $params['template'];
         $url      = $this->router->generate('MesdUserBundle_registration_approve', array('token' => $user->getConfirmationToken()), true);
-        $body     = $this->templating->render($template, array(
+        $body     = $this->templating->render($params['template'], array(
             'user'        => $user,
             'approvalUrl' => $url
         ));
 
-        $this->sendEmailMessage($from, $to, $subject, $body);
+        $this->sendEmailMessage($params['from'], $params['to'], $params['subject'], $body);
     }
 
 
     public function sendConfirmationEmailMessage(UserInterface $user, array $params)
     {
-        $from     = $params['from'];
-        $to       = $params['to'];
-        $subject  = $params['subject'];
-        $template = $params['template'];
         $url      = $this->router->generate('MesdUserBundle_registration_confirm', array('token' => $user->getConfirmationToken()), true);
-        $body     = $this->templating->render($template, array(
+        $body     = $this->templating->render($params['template'], array(
             'user' => $user,
             'confirmationUrl' =>  $url
         ));
 
-        $this->sendEmailMessage($from, $to, $subject, $body);
+        $this->sendEmailMessage($params['from'], $user->getEmail(), $params['subject'], $body);
     }
 
-/*    public function sendResettingEmailMessage(UserInterface $user)
+
+    public function sendPasswordResetEmailMessage(UserInterface $user, array $params)
     {
-        $template = $this->parameters['resetting.template'];
-        $url = $this->router->generate('fos_user_resetting_reset', array('token' => $user->getConfirmationToken()), true);
-        $rendered = $this->templating->render($template, array(
+        $url      = $this->router->generate('MesdUserBundle_reset_new_password', array('token' => $user->getConfirmationToken()), true);
+        $body     = $this->templating->render($params['template'], array(
             'user' => $user,
-            'confirmationUrl' => $url
+            'confirmationUrl' =>  $url
         ));
-        $this->sendEmailMessage($rendered, $this->parameters['from_email']['resetting'], $user->getEmail());
+
+        $this->sendEmailMessage($params['from'], $user->getEmail(), $params['subject'], $body);
     }
-*/
+
+
     protected function sendEmailMessage($from, $to, $subject, $body)
     {
         $message = \Swift_Message::newInstance()

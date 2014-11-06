@@ -16,7 +16,7 @@ class GroupManager {
 
     public function __construct($objectManager, $userClass, $roleClass, $groupClass)
     {
-         $this->objectManager = $objectManager->getEntityManager();
+         $this->objectManager = $objectManager->getManager();
          $this->userClass     = $userClass;
          $this->roleClass     = $roleClass;
          $this->groupClass    = $groupClass;

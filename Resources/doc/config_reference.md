@@ -14,7 +14,7 @@ mesd_user:
     login:
         revisit_behavior:        status   # Behavior if user is authenticated - logout | redirect | status
         revisit_redirect_target: ~        # If behavior is redirect, what route should be used
-        template:                MesdUserBundle:security:login.html.twig # Login Form template
+        template:                MesdUserBundle:Security:login.html.twig # Login Form template
 
     registration:
         approval_required:      false                       # Enable Approval Functionality
@@ -28,17 +28,25 @@ mesd_user:
         mail_from:              webmaster@example.com       # Confirmation email from address
         mail_subject:           'Account Created'           # Confirmation email subject
         template:                                           # Registration process templates
-            approve:            MesdUserBundle:registration:approve.html.twig
-            confirm:            MesdUserBundle:registration:confirm.html.twig
-            register:           MesdUserBundle:registration:register.html.twig
-            summary:            MesdUserBundle:registration:summary.html.twig
-            approval_mail:      MesdUserBundle:registration:approvalEmail.txt.twig
-            confirm_mail:       MesdUserBundle:registration:confirmEmail.txt.twig
-
+            approve:            MesdUserBundle:Registration:approve.html.twig
+            confirm:            MesdUserBundle:Registration:confirm.html.twig
+            register:           MesdUserBundle:Registration:register.html.twig
+            summary:            MesdUserBundle:Registration:summary.html.twig
+            approval_mail:      MesdUserBundle:Registration:approvalEmail.txt.twig
+            confirm_mail:       MesdUserBundle:Registration:confirmEmail.txt.twig
 
     resetting:
         enabled:                false                       # Enable Password Reset Functionality
         link_text:              'Reset Password'            # Password reset link text on login form
+        mail_from:              webmaster@example.com       # Reset email from address
+        mail_subject:           'Account Password Reset'    # Reset email subject
         template:
-            reset           MesdUserBundle:reset:reset.html.twig
+            already_requested:  MesdUserBundle:Reset:passwordAlreadyRequested.html.twig
+            check_email:        MesdUserBundle:Reset:checkEmail.html.twig
+            new_password:       MesdUserBundle:Reset:newPassword.html.twig
+            request:            MesdUserBundle:Reset:request.html.twig
+            reset_mail:         MesdUserBundle:Reset:resetEmail.txt.twig
+            success:            MesdUserBundle:Reset:success.html.twig
+        token_ttl:              86400                       # Reset token time to live
 ```
+success
