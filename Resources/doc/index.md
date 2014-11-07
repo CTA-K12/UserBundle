@@ -342,7 +342,7 @@ security:
 
         login:
             context:    default_context
-            pattern:    ^/(login$|registration|reset)
+            pattern:    ^/(login$|register|reset)
             anonymous:  true
 
         main:
