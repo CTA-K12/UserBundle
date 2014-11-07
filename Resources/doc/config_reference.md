@@ -49,4 +49,3 @@ mesd_user:
             success:            MesdUserBundle:Reset:success.html.twig
         token_ttl:              86400                       # Reset token time to live
 ```
-success
