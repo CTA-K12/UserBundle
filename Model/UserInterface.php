@@ -12,6 +12,8 @@ use Mesd\UserBundle\Model\RoleInterface;
 interface UserInterface extends AdvancedUserInterface, \Serializable
 {
 
+    const ROLE_DEFAULT = 'ROLE_USER';
+
     /**
      * Set username
      *
@@ -213,10 +215,10 @@ interface UserInterface extends AdvancedUserInterface, \Serializable
     /**
      * Add role
      *
-     * @param RoleInterface
+     * @param  string $role
      * @return User
      */
-    public function addRole(RoleInterface $role);
+    public function addRole($role);
 
 
     /**
@@ -224,7 +226,7 @@ interface UserInterface extends AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRole();
+    //public function getRole();
 
     /**
      * Get role names as array
@@ -236,10 +238,10 @@ interface UserInterface extends AdvancedUserInterface, \Serializable
     /**
      * Remove role
      *
-     * @param RoleInterface $role
+     * @param  string $role
      * @return User
      */
-    public function removeRole(RoleInterface $role);
+    public function removeRole($role);
 
 
 

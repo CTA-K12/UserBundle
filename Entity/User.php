@@ -1,7 +1,5 @@
 <?php
-
 namespace Mesd\UserBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,96 +8,78 @@ use Mesd\UserBundle\Model\GroupInterface;
 use Mesd\UserBundle\Model\RoleInterface;
 use Mesd\UserBundle\Model\UserInterface;
 use Mesd\UserBundle\Entity\Role;
-
 /**
  * User
  */
 abstract class User implements UserInterface
 {
     protected $id;
-
     /**
      * @var string
      */
     protected $username;
-
     /**
      * @var string
      */
     protected $email;
-
     /**
      * @var boolean
      */
     protected $enabled;
-
     /**
      * @var string
      */
     protected $salt;
-
     /**
      * @var string
      */
     protected $password;
-
     /**
      * This property is never persisted
      *
      * @var string
      */
     protected $plainPassword;
-
     /**
      * @var \DateTime
      */
     protected $lastLogin;
-
     /**
      * @var boolean
      */
     protected $locked;
-
     /**
      * @var boolean
      */
     protected $expired;
-
     /**
      * @var \DateTime
      */
     protected $expiresAt;
-
     /**
      * @var string
      */
     protected $confirmationToken;
-
     /**
      * @var \DateTime
      */
     protected $passwordRequestedAt;
-
     /**
      * @var boolean
      */
     protected $credentialsExpired;
-
     /**
      * @var \DateTime
      */
     protected $credentialsExpireAt;
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
     protected $roles;
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
     protected $groups;
-
 
     public function __construct()
     {
@@ -108,18 +88,13 @@ abstract class User implements UserInterface
         $this->locked             = false;
         $this->expired            = false;
         $this->credentialsExpired = false;
-
-        $this->roles  = new ArrayCollection();
-        $this->groups = new ArrayCollection();
+        $this->roles              = new ArrayCollection();
+        $this->groups             = new ArrayCollection();
     }
-
-
     public function __toString()
     {
         return (string) $this->getUsername();
     }
-
-
     /**
      * Get getId
      *
@@ -129,7 +104,6 @@ abstract class User implements UserInterface
     {
         return $this->id;
     }
-
     /**
      * Set username
      *
@@ -139,10 +113,8 @@ abstract class User implements UserInterface
     public function setUsername($username)
     {
         $this->username = mb_convert_case($username, MB_CASE_LOWER, mb_detect_encoding($username));
-
         return $this;
     }
-
     /**
      * Get username
      *
@@ -152,7 +124,6 @@ abstract class User implements UserInterface
     {
         return $this->username;
     }
-
     /**
      * Set email
      *
@@ -162,10 +133,8 @@ abstract class User implements UserInterface
     public function setEmail($email)
     {
         $this->email = mb_convert_case($email, MB_CASE_LOWER, mb_detect_encoding($email));
-
         return $this;
     }
-
     /**
      * Get email
      *
@@ -175,7 +144,6 @@ abstract class User implements UserInterface
     {
         return $this->email;
     }
-
     /**
      * Set enabled
      *
@@ -185,10 +153,8 @@ abstract class User implements UserInterface
     public function setEnabled($enabled)
     {
         $this->enabled = $enabled;
-
         return $this;
     }
-
     /**
      * Get enabled
      *
@@ -198,7 +164,6 @@ abstract class User implements UserInterface
     {
         return $this->enabled;
     }
-
     /**
      * Set salt
      *
@@ -208,10 +173,8 @@ abstract class User implements UserInterface
     public function setSalt($salt)
     {
         $this->salt = $salt;
-
         return $this;
     }
-
     /**
      * Get salt
      *
@@ -221,7 +184,6 @@ abstract class User implements UserInterface
     {
         return $this->salt;
     }
-
     /**
      * Set password
      *
@@ -231,10 +193,8 @@ abstract class User implements UserInterface
     public function setPassword($password)
     {
         $this->password = $password;
-
         return $this;
     }
-
     /**
      * Get password
      *
@@ -244,7 +204,6 @@ abstract class User implements UserInterface
     {
         return $this->password;
     }
-
     /**
      * Set plainPassword
      *
@@ -254,10 +213,8 @@ abstract class User implements UserInterface
     public function setPlainPassword($password)
     {
         $this->plainPassword = $password;
-
         return $this;
     }
-
     /**
      * Get plainPassword
      *
@@ -267,7 +224,6 @@ abstract class User implements UserInterface
     {
         return $this->plainPassword;
     }
-
     /**
      * Set lastLogin
      *
@@ -277,10 +233,8 @@ abstract class User implements UserInterface
     public function setLastLogin($lastLogin)
     {
         $this->lastLogin = $lastLogin;
-
         return $this;
     }
-
     /**
      * Get lastLogin
      *
@@ -290,7 +244,6 @@ abstract class User implements UserInterface
     {
         return $this->lastLogin;
     }
-
     /**
      * Set locked
      *
@@ -300,10 +253,8 @@ abstract class User implements UserInterface
     public function setLocked($locked)
     {
         $this->locked = $locked;
-
         return $this;
     }
-
     /**
      * Get locked
      *
@@ -313,7 +264,6 @@ abstract class User implements UserInterface
     {
         return $this->locked;
     }
-
     /**
      * Set expired
      *
@@ -323,10 +273,8 @@ abstract class User implements UserInterface
     public function setExpired($expired)
     {
         $this->expired = $expired;
-
         return $this;
     }
-
     /**
      * Get expired
      *
@@ -336,7 +284,6 @@ abstract class User implements UserInterface
     {
         return $this->expired;
     }
-
     /**
      * Set expiresAt
      *
@@ -346,10 +293,8 @@ abstract class User implements UserInterface
     public function setExpiresAt($expiresAt)
     {
         $this->expiresAt = $expiresAt;
-
         return $this;
     }
-
     /**
      * Get expiresAt
      *
@@ -359,7 +304,6 @@ abstract class User implements UserInterface
     {
         return $this->expiresAt;
     }
-
     /**
      * Set confirmationToken
      *
@@ -369,23 +313,17 @@ abstract class User implements UserInterface
     public function setConfirmationToken($confirmationToken)
     {
         $this->confirmationToken = $confirmationToken;
-
         return $this;
     }
-
-
     public function generateConfirmationToken()
     {
         $generator = new SecureRandom();
         $random = $generator->nextBytes(32);
-
         $this->setConfirmationToken(
             rtrim(strtr(base64_encode($random), '+/', '-_'), '=')
         );
-
         return $this;
     }
-
     /**
      * Get confirmationToken
      *
@@ -395,7 +333,6 @@ abstract class User implements UserInterface
     {
         return $this->confirmationToken;
     }
-
     /**
      * Set passwordRequestedAt
      *
@@ -405,10 +342,8 @@ abstract class User implements UserInterface
     public function setPasswordRequestedAt($passwordRequestedAt)
     {
         $this->passwordRequestedAt = $passwordRequestedAt;
-
         return $this;
     }
-
     /**
      * Get passwordRequestedAt
      *
@@ -418,7 +353,6 @@ abstract class User implements UserInterface
     {
         return $this->passwordRequestedAt;
     }
-
     /**
      * Set credentialsExpired
      *
@@ -428,10 +362,8 @@ abstract class User implements UserInterface
     public function setCredentialsExpired($credentialsExpired)
     {
         $this->credentialsExpired = $credentialsExpired;
-
         return $this;
     }
-
     /**
      * Get credentialsExpired
      *
@@ -441,7 +373,6 @@ abstract class User implements UserInterface
     {
         return $this->credentialsExpired;
     }
-
     /**
      * Set credentialsExpireAt
      *
@@ -451,10 +382,8 @@ abstract class User implements UserInterface
     public function setCredentialsExpireAt($credentialsExpireAt)
     {
         $this->credentialsExpireAt = $credentialsExpireAt;
-
         return $this;
     }
-
     /**
      * Get credentialsExpireAt
      *
@@ -464,22 +393,25 @@ abstract class User implements UserInterface
     {
         return $this->credentialsExpireAt;
     }
-
-
-
     /**
      * Role Methods
      *
      */
-
     /**
      * Add role
      *
-     * @param RoleInterface
+     * @param  string $role
      * @return User
      */
-    public function addRole(RoleInterface $role)
+    public function addRole($role)
     {
+        
+        foreach ($this->roles as $key => $value) {
+            if ($role->getName() === $value->getName()) {
+                return $this;
+            }
+        }
+
         $this->roles[] = $role;
 
         return $this;
@@ -498,28 +430,40 @@ abstract class User implements UserInterface
      */
     public function getRoles()
     {
-        $roles   = $this->getRoleNames();
-        $roles[] = 'ROLE_DEFAULT';
+        $roles = [];
 
-        return $roles;
+        foreach ($this->roles as $role) {
+            //var_dump($role);
+            if (is_string($role)) {
+                $roles[] = $role;
+            }
+            else {
+                $roles[] = $role->getName();
+            }
+        }
+        //exit;
+
+        // we need to make sure to have at least one role
+        $roles[] = static::ROLE_DEFAULT;
+
+        return array_unique($roles);
     }
 
     /**
-     * Get Role
+     * Never use this to check if this user has access to anything!
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * Use the SecurityContext, or an implementation of AccessDecisionManager
+     * instead, e.g.
+     *
+     *         $securityContext->isGranted('ROLE_USER');
+     *
+     * @param string $role
+     *
+     * @return boolean
      */
-    public function getRole()
+    public function hasRole($role)
     {
-        $roles =  $this->roles->toArray();
-
-        foreach ($this->getGroup() as $group) {
-            $roles = array_merge($roles, $group->getRole()->toArray());
-        }
-
-        $roles = array_unique($roles);
-
-        return new ArrayCollection($roles);
+        return in_array(strtoupper($role), $this->getRoles(), true);
     }
 
     /**
@@ -532,16 +476,12 @@ abstract class User implements UserInterface
     public function getRoleFromGroups()
     {
         $roles = array();
-
         foreach ($this->getGroup() as $group) {
             $roles = array_merge($roles, $group->getRole()->toArray());
         }
-
         $roles = array_unique($roles);
-
         return new ArrayCollection($roles);
     }
-
     /**
      * Get RoleStandalone
      *
@@ -553,7 +493,6 @@ abstract class User implements UserInterface
     {
         return $this->roles;
     }
-
     /**
      * Get role names as array
      *
@@ -565,10 +504,8 @@ abstract class User implements UserInterface
         foreach ($this->getRole() as $role) {
             $names[] = $role->getName();
         }
-
         return $names;
     }
-
     /**
      * Get role names from groups as array
      *
@@ -582,10 +519,8 @@ abstract class User implements UserInterface
         foreach ($this->getRoleFromGroups() as $role) {
             $names[] = $role->getName();
         }
-
         return $names;
     }
-
     /**
      * Get stand alone role names as array
      *
@@ -599,32 +534,37 @@ abstract class User implements UserInterface
         foreach ($this->getRoleStandalone() as $role) {
             $names[] = $role->getName();
         }
-
         return $names;
     }
-
     /**
      * Remove role
      *
-     * @param RoleInterface $role
+     * @param  string $role
      * @return User
      */
-    public function removeRole(RoleInterface $role)
+    public function removeRole($role)
     {
-        if($this->roles->contains($role)) {
-            $this->roles->removeElement($role);
+        foreach ($this->roles as $key => &$value) {
+            if(strtoupper($role) === $value->getName()) {
+                unset($this->roles[$key]);
+            }
         }
-
-        return $this;
     }
 
-
+    public function setRoles(array $roles)
+    {
+        $this->roles = array();
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
+        return $this;
+    }
 
     /**
      * Group Methods
      *
      */
-
+    
     /**
      * Add group
      *
@@ -634,10 +574,8 @@ abstract class User implements UserInterface
     public function addGroup(GroupInterface $group)
     {
         $this->groups[] = $group;
-
         return $this;
     }
-
     /**
      * Get groups as array
      *
@@ -645,10 +583,8 @@ abstract class User implements UserInterface
      */
     public function getGroups()
     {
-
         return $this->groups->toArray();
     }
-
     /**
      * Get groups as Collection
      *
@@ -658,7 +594,6 @@ abstract class User implements UserInterface
     {
         return $this->groups;
     }
-
     /**
      * Get group names as array
      *
@@ -670,10 +605,8 @@ abstract class User implements UserInterface
         foreach ($this->getGroup() as $group) {
             $names[] = $group->getName();
         }
-
         return $names;
     }
-
     /**
      * Remove group
      *
@@ -685,17 +618,12 @@ abstract class User implements UserInterface
         if ($this->groups->contains($group)) {
             $this->groups->removeElement($group);
         }
-
         return $this;
     }
-
-
-
     /**
      * AdvancedUserInterface additionaly required methods
      *
      */
-
     /**
      * Removes sensitive data from the user.
      */
@@ -704,17 +632,14 @@ abstract class User implements UserInterface
         $this->plainPassword = null;
     }
 
-
     public function isAccountNonExpired()
     {
         if (true === $this->expired) {
             return false;
         }
-
         if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() < time()) {
             return false;
         }
-
         return true;
     }
 
@@ -728,11 +653,9 @@ abstract class User implements UserInterface
         if (true === $this->credentialsExpired) {
             return false;
         }
-
         if (null !== $this->credentialsExpireAt && $this->credentialsExpireAt->getTimestamp() < time()) {
             return false;
         }
-
         return true;
     }
 
@@ -741,13 +664,11 @@ abstract class User implements UserInterface
         return $this->enabled;
     }
 
-
-
     /**
      * Serializable Required Methods
      *
      */
-
+    
     /**
      * Serializes the user.
      *
@@ -777,7 +698,6 @@ abstract class User implements UserInterface
     public function unserialize($serialized)
     {
         $data = unserialize($serialized);
-
         list(
             $this->password,
             $this->salt,
@@ -789,5 +709,4 @@ abstract class User implements UserInterface
             $this->id
         ) = $data;
     }
-
 }

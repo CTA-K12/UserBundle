@@ -25,11 +25,11 @@ class RoleManager {
     public function getRoles()
     {
         return $this->objectManager
-                ->getRepository($this->roleClass)
-                ->findBy(
-                    array(),
-                    array('name' => 'ASC')
-                    );
+            ->getRepository($this->roleClass)
+            ->findBy(
+                array(),
+                array('name' => 'ASC')
+            );
     }
 
 }
