@@ -10,7 +10,6 @@ Mesd\UserBundle\Entity\User:
       type: string
       length: 255
       nullable: false
-      unique: true
     enabled:
       type: boolean
       nullable: false
