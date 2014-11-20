@@ -9,7 +9,7 @@ Mesd\UserBundle\Entity\User:
     email:
       type: string
       length: 255
-      nullable: false
+      nullable: true
     enabled:
       type: boolean
       nullable: false
