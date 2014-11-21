@@ -60,6 +60,11 @@ class UserManager {
 
     public function disjoinUser($username, $groupName)
     {
+        if (null === $this->groupClass) {
+            throw new \Exception (sprintf("Group Entity Class not defined."));
+        }
+
+
         $user = $this->objectManager
             ->getRepository($this->userClass)
             ->findOneByUsername($username);
@@ -137,6 +142,10 @@ class UserManager {
 
     public function hasGroup($username, $groupName)
     {
+        if (null === $this->groupClass) {
+            throw new \Exception (sprintf("Group Entity Class not defined."));
+        }
+
         $user = $this->objectManager
             ->getRepository($this->userClass)
             ->findOneByUsername($username);
@@ -159,6 +168,10 @@ class UserManager {
 
     public function hasRoleFromGroups($username, $roleName)
     {
+        if (null === $this->groupClass) {
+            throw new \Exception (sprintf("Group Entity Class not defined."));
+        }
+
         $user = $this->objectManager
             ->getRepository($this->userClass)
             ->findOneByUsername($username);
@@ -203,6 +216,10 @@ class UserManager {
 
     public function joinUser($username, $groupName)
     {
+        if (null === $this->groupClass) {
+            throw new \Exception (sprintf("Group Entity Class not defined."));
+        }
+
         $user = $this->objectManager
             ->getRepository($this->userClass)
             ->findOneByUsername($username);
