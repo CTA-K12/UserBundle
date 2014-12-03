@@ -608,8 +608,11 @@ abstract class User implements UserInterface
     public function getRoleNamesStandalone()
     {
         $names = array();
-        foreach ($this->getRoleStandalone() as $role) {
-            $names[] = $role->getName();
+
+        if (is_array($this->getRoleStandalone())) {
+            foreach ($this->getRoleStandalone() as $role) {
+                $names[] = $role->getName();
+            }
         }
 
         return $names;
