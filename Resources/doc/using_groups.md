@@ -98,8 +98,9 @@ Acme\UserBundle\Entity\Group:
 
 
 
-#### Step 2: Update your User class and ORM file, adding the group section to
-the exisiting manyToMany section.
+#### Step 2: Update your User class
+
+Add the group section to the exisiting manyToMany section of your ORM file.
 
 ``` yaml
 # src/Acme/UserBundle/Resources/config/doctrine/User.orm.yml
@@ -133,4 +134,16 @@ Acme\UserBundle\Entity\User:
                 inverseJoinColumns:
                     group_id:
                         referencedColumnName: id
+```
+
+#### Step 3: Add Group class to config.yml
+
+Add the `group_class` configuration to your `config.yml` file:
+
+``` yaml
+# app/config/config.yml
+mesd_user:
+    user_class:  Acme\UserBundle\Entity\User
+    role_class:  Acme\UserBundle\Entity\Role
+    group_class: Acme\UserBundle\Entity\Group
 ```
