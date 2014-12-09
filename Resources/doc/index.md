@@ -153,16 +153,6 @@ use Mesd\UserBundle\Entity\User as BaseUser;
 class User extends BaseUser
 {
 
-    /**
-     * @var integer
-     */
-    protected $id;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $role;
-
     public function __construct()
     {
         parent::__construct();
@@ -170,6 +160,7 @@ class User extends BaseUser
     }
 }
 ```
+
 ```yaml
 # src/Acme/UserBundle/Resources/config/doctrine/User.orm.yml
 Acme\UserBundle\Entity\User:

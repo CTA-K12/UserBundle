@@ -1,5 +1,4 @@
-Using the MesdPresentationBundle
-=================================
+##Using the MesdPresentationBundle
 
 The `MesdUserBundle` forms and templates do not have CSS layout or presentation embedded.
 This is done intentionally so you can style the templates to match your application.
@@ -10,15 +9,15 @@ The MesdPresentationBundle aims to provide a graphical business application layo
 CSS Grids, Jquery, Bootstrap, menus, toolbars, forms, and icons "out of the box".
 
 
-## Installation of MesdPresentationBundle
+### Installation of MesdPresentationBundle
 
 Take a look at the bundle [ documentation ](https://github.com/MESD/PresentationBundle).
 
 
-## Setup to use the MesdPresentationBundle
+### Setup to use the MesdPresentationBundle
 
 
-### Step 1: Update the `MesdUserBundle` configuration
+#### Step 1: Update the `MesdUserBundle` configuration
 
 ``` yaml
 # app/config/config.yml
@@ -32,7 +31,7 @@ mesd_user:
         template:     MesdPresentationBundle::login.html.twig
 ```
 
-### Step 2: Update the `MesdPresentationBundle` configuration
+#### Step 2: Update the `MesdPresentationBundle` configuration
 
 ``` yaml
 # app/config/config.yml
