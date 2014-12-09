@@ -99,7 +99,7 @@ look.
 Your `User` class should live in the `Entity` namespace of your bundle and look like this to
 start:
 
-###### Option A) Annotations:
+##### Option A) Annotations:
 
 ``` php
 // src/Acme/UserBundle/Entity/User.php
@@ -135,7 +135,7 @@ class User extends BaseUser
 > `User` is a reserved keyword in SQL so you cannot use it as table name.
 
 
-###### Option B) yaml:
+##### Option B) yaml:
 
 If you use yml to configure Doctrine you must add two files. The Entity and the orm.yml:
 
@@ -224,7 +224,7 @@ look.
 Your `Role` class should live in the `Entity` namespace of your bundle and look like this to
 start:
 
-###### Option A) Annotations:
+##### Option A) Annotations:
 
 ``` php
 // src/Acme/UserBundle/Entity/Role.php
@@ -256,7 +256,7 @@ class Role extends BaseRole
 ```
 
 
-###### Option B) yaml:
+##### Option B) yaml:
 
 If you use yml to configure Doctrine you must add two files. The Entity and the orm.yml:
 

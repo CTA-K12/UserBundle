@@ -15,7 +15,7 @@ roles as *Permisions* apposed to roles as *User Types*
 Your `Group` class should live in the `Entity` namespace of your bundle and look like this to
 start:
 
-###### Option A) Annotations:
+##### Option A) Annotations:
 
 ``` php
 // src/Acme/UserBundle/Entity/Group.php
@@ -46,7 +46,7 @@ class Group extends BaseGroup
 }
 ```
 
-###### Option B) yaml:
+##### Option B) yaml:
 
 If you use yml to configure Doctrine you must add two files. The Entity and the orm.yml:
 
