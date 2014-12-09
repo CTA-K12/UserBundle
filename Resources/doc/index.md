@@ -182,7 +182,7 @@ Acme\UserBundle\Entity\User:
                 strategy: AUTO
 
     manyToMany:
-        roles:
+        role:
             targetEntity: Role
             joinTable:
                 name: demo_user_role

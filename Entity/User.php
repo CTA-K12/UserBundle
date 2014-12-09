@@ -93,12 +93,12 @@ abstract class User implements UserInterface
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    protected $roles;
+    protected $role;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    protected $groups;
+    protected $group;
 
 
     public function __construct()
@@ -109,8 +109,8 @@ abstract class User implements UserInterface
         $this->expired            = false;
         $this->credentialsExpired = false;
 
-        $this->roles  = new ArrayCollection();
-        $this->groups = new ArrayCollection();
+        $this->role  = new ArrayCollection();
+        $this->group = new ArrayCollection();
     }
 
 
@@ -492,7 +492,7 @@ abstract class User implements UserInterface
      */
     public function addRole(RoleInterface $role)
     {
-        $this->roles[] = $role;
+        $this->role[] = $role;
 
         return $this;
     }
@@ -510,10 +510,10 @@ abstract class User implements UserInterface
      */
     public function getRoles()
     {
-        $roles   = $this->getRoleNames();
-        $roles[] = 'ROLE_DEFAULT';
+        $role   = $this->getRoleNames();
+        $role[] = 'ROLE_DEFAULT';
 
-        return $roles;
+        return $role;
     }
 
     /**
@@ -523,15 +523,15 @@ abstract class User implements UserInterface
      */
     public function getRole()
     {
-        $roles =  $this->roles->toArray();
+        $role =  $this->role->toArray();
 
         foreach ($this->getGroup() as $group) {
-            $roles = array_merge($roles, $group->getRole()->toArray());
+            $role = array_merge($role, $group->getRole()->toArray());
         }
 
-        $roles = array_unique($roles);
+        $role = array_unique($role);
 
-        return new ArrayCollection($roles);
+        return new ArrayCollection($role);
     }
 
     /**
@@ -543,15 +543,15 @@ abstract class User implements UserInterface
      */
     public function getRoleFromGroups()
     {
-        $roles = array();
+        $role = array();
 
         foreach ($this->getGroup() as $group) {
-            $roles = array_merge($roles, $group->getRole()->toArray());
+            $role = array_merge($role, $group->getRole()->toArray());
         }
 
-        $roles = array_unique($roles);
+        $role = array_unique($role);
 
-        return new ArrayCollection($roles);
+        return new ArrayCollection($role);
     }
 
     /**
@@ -563,7 +563,7 @@ abstract class User implements UserInterface
      */
     public function getRoleStandalone()
     {
-        return $this->roles;
+        return $this->role;
     }
 
     /**
@@ -623,8 +623,8 @@ abstract class User implements UserInterface
      */
     public function removeRole(RoleInterface $role)
     {
-        if($this->roles->contains($role)) {
-            $this->roles->removeElement($role);
+        if($this->role->contains($role)) {
+            $this->role->removeElement($role);
         }
 
         return $this;
@@ -645,7 +645,7 @@ abstract class User implements UserInterface
      */
     public function addGroup(GroupInterface $group)
     {
-        $this->groups[] = $group;
+        $this->group[] = $group;
 
         return $this;
     }
@@ -658,7 +658,7 @@ abstract class User implements UserInterface
     public function getGroups()
     {
 
-        return $this->groups->toArray();
+        return $this->group->toArray();
     }
 
     /**
@@ -668,7 +668,7 @@ abstract class User implements UserInterface
      */
     public function getGroup()
     {
-        return $this->groups;
+        return $this->group;
     }
 
     /**
@@ -694,8 +694,8 @@ abstract class User implements UserInterface
      */
     public function removeGroup(GroupInterface $group)
     {
-        if ($this->groups->contains($group)) {
-            $this->groups->removeElement($group);
+        if ($this->group->contains($group)) {
+            $this->group->removeElement($group);
         }
 
         return $this;
