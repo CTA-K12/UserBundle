@@ -16,7 +16,7 @@ class ListRoleCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:role:list')
+            ->setName('mesd-user:role:list')
             ->setDescription('List roles')
             ->setDefinition(array())
             ->setHelp(<<<EOT

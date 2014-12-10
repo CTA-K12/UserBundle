@@ -18,7 +18,7 @@ class PromoteUserCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:user:promote')
+            ->setName('mesd-user:user:promote')
             ->setDescription('Promote user to have a role')
             ->setDefinition(array(
                 new InputArgument('userName', InputArgument::REQUIRED, 'Username'),

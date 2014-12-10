@@ -525,8 +525,10 @@ abstract class User implements UserInterface
     {
         $role =  $this->role->toArray();
 
-        foreach ($this->getGroup() as $group) {
-            $role = array_merge($role, $group->getRole()->toArray());
+        if (0 < count($this->getGroup())) {
+            foreach ($this->getGroup() as $group) {
+                $role = array_merge($role, $group->getRole()->toArray());
+            }
         }
 
         $role = array_unique($role);
@@ -545,8 +547,10 @@ abstract class User implements UserInterface
     {
         $role = array();
 
-        foreach ($this->getGroup() as $group) {
-            $role = array_merge($role, $group->getRole()->toArray());
+        if (0 < count($this->getGroup())) {
+            foreach ($this->getGroup() as $group) {
+                $role = array_merge($role, $group->getRole()->toArray());
+            }
         }
 
         $role = array_unique($role);

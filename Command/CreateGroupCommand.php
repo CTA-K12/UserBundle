@@ -11,13 +11,14 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class CreateGroupCommand extends ContainerAwareCommand
 {
+
     /**
      * @see Command
      */
     protected function configure()
     {
         $this
-            ->setName('mesd:user:group:create')
+            ->setName('mesd-user:group:create')
             ->setDescription('Create a group')
             ->setDefinition(array(
                 new InputArgument('name',        InputArgument::REQUIRED, 'Group Name'),
@@ -37,14 +38,18 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $name          = $input->getArgument('name');
-        $description   = $input->getArgument('description');
 
+        // Verify the group manager has been enabled
         try {
             $groupManager =  $this->getContainer()->get("mesd_user.group_manager");
+
         } catch (\Exception $e) {
             throw new \Exception("mesd_user.group_manager service could not be found. Did you define a group_class under the mesd_user config?", 0, $e);
         }
+
+        $name          = $input->getArgument('name');
+        $description   = $input->getArgument('description');
+
 
         $groupManager->createGroup($name, $description);
 

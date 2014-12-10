@@ -17,7 +17,7 @@ class ListGroupCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:group:list')
+            ->setName('mesd-user:group:list')
             ->setDescription('List groups and their roles')
             ->setDefinition(array())
             ->setHelp(<<<EOT
@@ -33,6 +33,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
+        // Verify the group manager has been enabled
         try {
             $groupManager =  $this->getContainer()->get("mesd_user.group_manager");
         } catch (\Exception $e) {

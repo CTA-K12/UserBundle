@@ -16,7 +16,7 @@ class CreateRoleCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:role:create')
+            ->setName('mesd-user:role:create')
             ->setDescription('Create a role')
             ->setDefinition(array(
                 new InputArgument('name',        InputArgument::REQUIRED, 'Role Name'),

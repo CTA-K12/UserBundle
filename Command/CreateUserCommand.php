@@ -16,7 +16,7 @@ class CreateUserCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:user:create')
+            ->setName('mesd-user:user:create')
             ->setDescription('Create a user')
             ->setDefinition(array(
                 new InputArgument('username', InputArgument::REQUIRED, 'Username'),

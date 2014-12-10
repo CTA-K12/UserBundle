@@ -17,7 +17,7 @@ class DemoteGroupCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:group:demote')
+            ->setName('mesd-user:group:demote')
             ->setDescription('Demote group to remove role')
             ->setDefinition(array(
                 new InputArgument('groupName', InputArgument::REQUIRED, 'Group Name'),

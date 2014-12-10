@@ -17,7 +17,7 @@ class PromoteGroupCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:group:promote')
+            ->setName('mesd-user:group:promote')
             ->setDescription('Promote group to include role')
             ->setDefinition(array(
                 new InputArgument('groupName', InputArgument::REQUIRED, 'Group Name'),
@@ -46,7 +46,6 @@ EOT
         } catch (\Exception $e) {
             throw new \Exception("mesd_user.group_manager service could not be found. Did you define a group_class under the mesd_user config?", 0, $e);
         }
-
 
         // Check to see if the group already has this role
         if ($groupManager->hasRole($groupName, $roleName)) {

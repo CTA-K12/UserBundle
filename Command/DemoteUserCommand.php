@@ -18,7 +18,7 @@ class DemoteUserCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:user:demote')
+            ->setName('mesd-user:user:demote')
             ->setDescription('Demote user to remove a role')
             ->setDefinition(array(
                 new InputArgument('userName', InputArgument::REQUIRED, 'Username'),

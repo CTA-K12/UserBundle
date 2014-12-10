@@ -18,7 +18,7 @@ class DisjoinUserCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('mesd:user:user:disjoin')
+            ->setName('mesd-user:user:disjoin')
             ->setDescription('Disjoin user from group')
             ->setDefinition(array(
                 new InputArgument('userName',  InputArgument::REQUIRED, 'Username'),
@@ -38,6 +38,15 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        // Verify the group manager has been enabled
+        try {
+            $groupManager =  $this->getContainer()->get("mesd_user.group_manager");
+
+        } catch (\Exception $e) {
+            throw new \Exception("mesd_user.group_manager service could not be found. Did you define a group_class under the mesd_user config?", 0, $e);
+        }
+
         $userName  = $input->getArgument('userName');
         $groupName = $input->getArgument('groupName');
 
