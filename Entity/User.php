@@ -541,7 +541,7 @@ abstract class User implements UserInterface
     {
         $role =  $this->role->toArray();
 
-        if (0 < count($this->getGroup())) {
+        if ( $this->isGroupsEnabled() && 0 < count($this->getGroup())) {
             foreach ($this->getGroup() as $group) {
                 $role = array_merge($role, $group->getRole()->toArray());
             }
@@ -563,7 +563,7 @@ abstract class User implements UserInterface
     {
         $role = array();
 
-        if (0 < count($this->getGroup())) {
+        if ($this->isGroupsEnabled() && 0 < count($this->getGroup())) {
             foreach ($this->getGroup() as $group) {
                 $role = array_merge($role, $group->getRole()->toArray());
             }
@@ -594,8 +594,11 @@ abstract class User implements UserInterface
     public function getRoleNames()
     {
         $names = array();
-        foreach ($this->getRole() as $role) {
-            $names[] = $role->getName();
+
+        if (0 < count($this->getRole())) {
+            foreach ($this->getRole() as $role) {
+                $names[] = $role->getName();
+            }
         }
 
         return $names;
@@ -611,8 +614,11 @@ abstract class User implements UserInterface
     public function getRoleNamesFromGroups()
     {
         $names = array();
-        foreach ($this->getRoleFromGroups() as $role) {
-            $names[] = $role->getName();
+
+        if ($this->isGroupsEnabled()) {
+            foreach ($this->getRoleFromGroups() as $role) {
+                $names[] = $role->getName();
+            }
         }
 
         return $names;
@@ -628,8 +634,11 @@ abstract class User implements UserInterface
     public function getRoleNamesStandalone()
     {
         $names = array();
-        foreach ($this->getRoleStandalone() as $role) {
-            $names[] = $role->getName();
+
+        if ( 0 < count($this->getRoleStandalone())) {
+            foreach ($this->getRoleStandalone() as $role) {
+                $names[] = $role->getName();
+            }
         }
 
         return $names;
@@ -665,7 +674,9 @@ abstract class User implements UserInterface
      */
     public function addGroup(GroupInterface $group)
     {
-        $this->group[] = $group;
+        if ($this->isGroupsEnabled()) {
+            $this->group[] = $group;
+        }
 
         return $this;
     }
@@ -699,8 +710,11 @@ abstract class User implements UserInterface
     public function getGroupNames()
     {
         $names = array();
-        foreach ($this->getGroup() as $group) {
-            $names[] = $group->getName();
+
+        if ($this->isGroupsEnabled()) {
+            foreach ($this->getGroup() as $group) {
+                $names[] = $group->getName();
+            }
         }
 
         return $names;
