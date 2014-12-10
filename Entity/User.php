@@ -100,6 +100,11 @@ abstract class User implements UserInterface
      */
     protected $group;
 
+    /**
+     * boolean
+     */
+    public static $groupsEnabled;
+
 
     public function __construct()
     {
@@ -117,6 +122,17 @@ abstract class User implements UserInterface
     public function __toString()
     {
         return (string) $this->getUsername();
+    }
+
+
+    /**
+     * Whether the groups setting is set in the configuration or not
+     *
+     * @return boolean
+     */
+    public function isGroupsEnabled()
+    {
+        return self::$groupsEnabled;
     }
 
 

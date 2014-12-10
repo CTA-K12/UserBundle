@@ -47,13 +47,25 @@ class MesdUserExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
+        //Load the listeners
+        $loader->load('Listeners.yml');
+
+        //Grab the definition to the user load metadata listener
+        $userMetadataListener = $container->getDefinition('mesd_user.listeners.user_load_metadata');
+
         // Check if group configuration is set, load group service if yes
         if ($container->hasParameter('mesd_user.group_class')) {
             $loader->load('GroupManagerService.yml');
             $container->setParameter('mesd_user.group_class_placeholder', $container->getParameter('mesd_user.group_class'));
+
+            //Set the groups enabled on the user metadata listener to true
+            $userMetadataListener->addMethodCall('setGroupsEnabled', array(true));
         }
         else {
             $container->setParameter('mesd_user.group_class_placeholder', null);
+
+            //Set the groups enabled on the user metadata listener to false
+            $userMetadataListener->addMethodCall('setGroupsEnabled', array(false));
         }
 
         // Load default services
@@ -61,6 +73,7 @@ class MesdUserExtension extends Extension
         $loader->load('RoleManagerService.yml');
         $loader->load('UserProviderService.yml');
         $loader->load('TwigExtensions.yml');
+
 
     }
 }
