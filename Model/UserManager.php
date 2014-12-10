@@ -35,6 +35,16 @@ class UserManager {
     }
 
 
+    public function convertCase($credential)
+    {
+        return mb_convert_case(
+            $credential,
+            MB_CASE_LOWER,
+            mb_detect_encoding($credential)
+        );
+    }
+
+
     public function demoteUser($username, $roleName)
     {
         $user = $this->objectManager
@@ -97,14 +107,29 @@ class UserManager {
                 );
     }
 
+    public function findByUsername($username)
+    {
+        $username = $this->convertCase($username);
+
+        $username = str_replace('*', '%', $username);
+
+        $q = $this->objectManager
+                ->getRepository($this->userClass)
+                ->createQueryBuilder('u')
+                ->where('u.username LIKE :username')
+                ->setParameter('username', $username);
+
+        $result = $q->getQuery();
+
+        $user = $result->getResult();
+
+        return $user;
+    }
+
 
     public function findOneByUsernameOrEmail($credential)
     {
-        $credential = mb_convert_case(
-            $credential,
-            MB_CASE_LOWER,
-            mb_detect_encoding($credential)
-        );
+        $credential = $this->convertCase($credential);
 
         $q = $this->objectManager
                 ->getRepository($this->userClass)
