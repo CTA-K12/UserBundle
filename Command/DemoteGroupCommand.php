@@ -49,7 +49,7 @@ EOT
 
         // Check to see if the group has this role
         if (!$groupManager->hasRole($groupName, $roleName)) {
-            $output->writeln(sprintf('<error>Error: Group %s does not have role %s</error>', $groupName, $roleName));
+            $output->writeln(sprintf('<comment>Warning: Group %s did not have role %s</comment>', $groupName, $roleName));
         }
         // If yes, then remove role
         else {

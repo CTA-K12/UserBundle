@@ -48,7 +48,7 @@ EOT
 
         // Check to see if user has this role standalone
         if (!$userManager->hasRoleStandalone($userName, $roleName)) {
-            $output->writeln(sprintf('<error>Error: User %s does not have standalone role %s</error>', $userName, $roleName));
+            $output->writeln(sprintf('<comment>Warning: User %s did not have standalone role %s</comment>', $userName, $roleName));
         }
         // If yes, then remove role
         else {
