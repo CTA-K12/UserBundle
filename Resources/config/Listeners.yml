@@ -1,8 +1,15 @@
 parameters:
     mesd_user.listeners.user_load_metadata.class: Mesd\UserBundle\Listeners\Doctrine\UserLoadMetadataListener
+    mesd_user.listeners.roles.class: Mesd\UserBundle\Listeners\RoleListener
 
 services:
     mesd_user.listeners.user_load_metadata:
         class: %mesd_user.listeners.user_load_metadata.class%
         tags:
             - { name: doctrine.event_listener, event: loadClassMetadata }
+
+    # mesd_user.listeners.role_listener:
+    #     class: %mesd_user.listeners.roles.class%
+    #     arguments: [@security.context]
+    #     tags:
+    #         - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
