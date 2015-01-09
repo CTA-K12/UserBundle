@@ -2,6 +2,7 @@ parameters:
     mesd_user.listeners.user_load_metadata.class: Mesd\UserBundle\Listeners\Doctrine\UserLoadMetadataListener
     mesd_user.listeners.roles.class: Mesd\UserBundle\Listeners\RoleListener
 
+
 services:
     mesd_user.listeners.user_load_metadata:
         class: %mesd_user.listeners.user_load_metadata.class%
