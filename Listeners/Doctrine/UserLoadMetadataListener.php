@@ -36,7 +36,6 @@ class UserLoadMetadataListener
             // Reflection class is null when generating entities - may be fixed in newer doctrine.
             if (null !== $args->getClassMetadata()->getReflectionClass()) {
                 //Set the static property groups enabled in the configuration
-                var_dump($args->getClassMetadata());exit;
                 $args->getClassMetadata()->getReflectionClass()->getProperty('groupsEnabled')->setValue($this->groupsEnabled);
             }
         }
