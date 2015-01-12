@@ -96,8 +96,8 @@ EOT
                 $output->writeln('<info>      Expired:  </info><comment>' . ($user->getExpired() ? 'True' : 'False') . '</comment>');
                 $output->writeln('<info>   Expires At:  </info><comment>' . $user->getExpiresAt() . '</comment>');
                 $output->writeln('<info>   Cred. Exp.:  </info><comment>' . ($user->getCredentialsExpired() ? 'True' : 'False') . '</comment>');
-                $output->writeln('<info>   Last Login:  </info><comment>' . $user->getLastLogin() . '</comment>');
-                $output->writeln('<info>Paswd Req. At:  </info><comment>' . $user->getLastLogin() . '</comment>');
+                $output->writeln('<info>   Last Login:  </info><comment>' . ($user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d') : '') . '</comment>');
+                $output->writeln('<info>Paswd Req. At:  </info><comment>' . ($user->getpasswordRequestedAt() ? $user->getpasswordRequestedAt()->format('Y-m-d') : '') . '</comment>');
                 $output->writeln('<info>----------------------------------------------</info>');
 
                 // Output User Roles
