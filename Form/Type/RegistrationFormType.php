@@ -20,16 +20,16 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('username', null, array('label' => 'Username'))
             ->add('email', 'repeated', array(
-                'type' => 'email',
-                'first_options' => array('label' => 'Email'),
-                'second_options' => array('label' => 'Email Confirmation'),
+                'type'            => 'email',
+                'first_options'   => array('label' => 'Email'),
+                'second_options'  => array('label' => 'Email Confirmation'),
                 'invalid_message' => 'Email Mismatch'
                 )
             )
             ->add('plainPassword', 'repeated', array(
-                'type' => 'password',
-                'first_options' => array('label' => 'Password'),
-                'second_options' => array('label' => 'Password Confirmation'),
+                'type'            => 'password',
+                'first_options'   => array('label' => 'Password'),
+                'second_options'  => array('label' => 'Password Confirmation'),
                 'invalid_message' => 'Password Mismatch'
                 )
             )

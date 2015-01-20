@@ -354,6 +354,18 @@ abstract class User implements UserInterface
         return $this->passwordRequestedAt;
     }
     /**
+     * Is password request non-expired
+     *
+     * @param integer $ttl
+     * @return \DateTime
+     */
+    public function isPasswordRequestNonExpired($ttl)
+    {
+        return $this->getPasswordRequestedAt() instanceof \DateTime &&
+               $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
+    }
+
+    /**
      * Set credentialsExpired
      *
      * @param boolean $credentialsExpired

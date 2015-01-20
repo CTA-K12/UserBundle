@@ -162,7 +162,7 @@ class User extends BaseUser
      * @var \Doctrine\Common\Collections\Collection
      */
     private $role;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -340,15 +340,14 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js|ico)/
             security: false
 
-        # This has been removed in favor of using access control
-        # see the documentation below for more information.
-        # login:
-        #     pattern:   ^/(login$|register|reset)
-        #     anonymous: true
+        login:
+            context:    default_context
+            pattern:    ^/(login$|register|reset)
+            anonymous:  true
 
         main:
-            pattern:   ^/
-            anonymous: true
+            context:    default_context
+            pattern:    ^/
             form_login:
                 csrf_provider:       form.csrf_provider
                 login_path:          MesdUserBundle_login
