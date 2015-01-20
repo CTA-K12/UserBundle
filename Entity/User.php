@@ -665,6 +665,37 @@ abstract class User implements UserInterface
     }
 
     /**
+     * Equatable Required Methods
+     *
+     */
+
+    /**
+     * is equal to
+     * 
+     * @param  UserInterface $user [description]
+     * @return boolean             [description]
+     */
+    public function isEqualTo(UserInterface $user)
+    {
+        return true;
+        //return
+        //    $this->username === $user->getUsername() &&
+        //    md5(serialize($user->getRoles())) == md5(serialize($this->getRoles()));
+        /*if ($user instanceof UserInterface) {
+            // Check that the roles are the same, in any order
+            $isEqual = count($this->getRoles()) == count($user->getRoles());
+            if ($isEqual) {
+                foreach($this->getRoles() as $role) {
+                    $isEqual = $isEqual && in_array($role, $user->getRoles());
+                }
+            }
+            return $isEqual;
+        }
+        
+        return false;*/
+    }
+
+    /**
      * Serializable Required Methods
      *
      */

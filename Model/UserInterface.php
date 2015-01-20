@@ -3,6 +3,7 @@
 namespace Mesd\UserBundle\Model;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Mesd\UserBundle\Model\GroupInterface;
 use Mesd\UserBundle\Model\RoleInterface;
 
