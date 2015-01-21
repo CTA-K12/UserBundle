@@ -5,6 +5,7 @@ namespace Mesd\UserBundle\Repository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\AuthenticationServiceException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityRepository;
@@ -53,6 +54,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 $authCredential
             );
             throw new UsernameNotFoundException($message, 0, $e);
+        } catch (\Exception $e) {
+            $message = sprintf(
+                'Unable to process authentication.'
+            );
+            throw new AuthenticationServiceException($message, 0, $e);
+
         }
 
         return $user;
