@@ -33,8 +33,11 @@ class UserLoadMetadataListener
     public function loadClassMetadata(LoadClassMetadataEventArgs $args) {
         //We only care about the user entity
         if ('Mesd\UserBundle\Entity\User' === $args->getClassMetadata()->getName()) {
-            //Set the static property groups enabled to be what is set in the configuration
-            $args->getClassMetadata()->getReflectionClass()->getProperty('groupsEnabled')->setValue($this->groupsEnabled);
+            // Reflection class is null when generating entities - may be fixed in newer doctrine.
+            if (null !== $args->getClassMetadata()->getReflectionClass()) {
+                //Set the static property groups enabled in the configuration
+                $args->getClassMetadata()->getReflectionClass()->getProperty('groupsEnabled')->setValue($this->groupsEnabled);
+            }
         }
     }
 

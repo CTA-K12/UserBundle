@@ -57,7 +57,7 @@ EOT
 
         // Check to see if user has this group
         if (!$userManager->hasGroup($userName, $groupName)) {
-            $output->writeln(sprintf('<error>Error: User %s doesn\'t belong to the group %s</error>', $userName, $groupName));
+            $output->writeln(sprintf('<comment>Warning: User %s didn\'t belong to the group %s</comment>', $userName, $groupName));
         }
         // If yes, then disjoin group
         else {
