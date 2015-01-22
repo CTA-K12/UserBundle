@@ -219,8 +219,14 @@ interface UserInterface extends AdvancedUserInterface, \Serializable
      * @param  string $role
      * @return User
      */
-    public function addRole($role);
+    public function addRole(RoleInterface $role);
 
+    /**
+     * Get role as collection
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRole();
 
     /**
      * Get role as collection
@@ -239,10 +245,10 @@ interface UserInterface extends AdvancedUserInterface, \Serializable
     /**
      * Remove role
      *
-     * @param  string $role
+     * @param  RoleInterface $role
      * @return User
      */
-    public function removeRole($role);
+    public function removeRole(RoleInterface $role);
 
 
 

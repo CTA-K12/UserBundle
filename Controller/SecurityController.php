@@ -12,7 +12,6 @@ class SecurityController extends Controller
 {
     public function loginAction(Request $request)
     {
-
         $session = $request->getSession();
 
         // Check if security context is already authenticated
