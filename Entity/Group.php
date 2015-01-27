@@ -28,12 +28,12 @@ abstract class Group implements GroupInterface
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    protected $roles;
+    protected $role;
 
 
     public function __construct()
     {
-        $this->roles  = new ArrayCollection();
+        $this->role  = new ArrayCollection();
     }
 
     /**
@@ -90,7 +90,7 @@ abstract class Group implements GroupInterface
      */
     public function addRole(RoleInterface $role)
     {
-        $this->roles[] = $role;
+        $this->role[] = $role;
 
         return $this;
     }
@@ -102,7 +102,7 @@ abstract class Group implements GroupInterface
      */
     public function getRoles()
     {
-        return $this->roles->toArray();
+        return $this->role->toArray();
     }
 
     /**
@@ -112,7 +112,7 @@ abstract class Group implements GroupInterface
      */
     public function getRole()
     {
-        return $this->roles;
+        return $this->role;
     }
 
     /**
@@ -138,8 +138,8 @@ abstract class Group implements GroupInterface
      */
     public function removeRole(RoleInterface $role)
     {
-        if ($this->roles->contains($role)) {
-            $this->roles->removeElement($role);
+        if ($this->role->contains($role)) {
+            $this->role->removeElement($role);
         }
 
         return $this;

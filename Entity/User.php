@@ -14,72 +14,88 @@ use Mesd\UserBundle\Entity\Role;
 abstract class User implements UserInterface
 {
     protected $id;
+
     /**
      * @var string
      */
     protected $username;
+
     /**
      * @var string
      */
     protected $email;
+
     /**
      * @var boolean
      */
     protected $enabled;
+
     /**
      * @var string
      */
     protected $salt;
+
     /**
      * @var string
      */
     protected $password;
+
     /**
      * This property is never persisted
      *
      * @var string
      */
     protected $plainPassword;
+
     /**
      * @var \DateTime
      */
     protected $lastLogin;
+
     /**
      * @var boolean
      */
     protected $locked;
+
     /**
      * @var boolean
      */
     protected $expired;
+
     /**
      * @var \DateTime
      */
     protected $expiresAt;
+
     /**
      * @var string
      */
     protected $confirmationToken;
+
     /**
      * @var \DateTime
      */
     protected $passwordRequestedAt;
+
     /**
      * @var boolean
      */
     protected $credentialsExpired;
+
     /**
      * @var \DateTime
      */
     protected $credentialsExpireAt;
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    protected $roles;
+    protected $role;
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    protected $groups;
+    protected $group;
 
     public function __construct()
     {
@@ -88,13 +104,15 @@ abstract class User implements UserInterface
         $this->locked             = false;
         $this->expired            = false;
         $this->credentialsExpired = false;
-        $this->roles              = new ArrayCollection();
-        $this->groups             = new ArrayCollection();
+        $this->role               = new ArrayCollection();
+        $this->group              = new ArrayCollection();
     }
+
     public function __toString()
     {
         return (string) $this->getUsername();
     }
+
     /**
      * Get getId
      *
@@ -104,6 +122,7 @@ abstract class User implements UserInterface
     {
         return $this->id;
     }
+
     /**
      * Set username
      *
@@ -115,6 +134,7 @@ abstract class User implements UserInterface
         $this->username = mb_convert_case($username, MB_CASE_LOWER, mb_detect_encoding($username));
         return $this;
     }
+
     /**
      * Get username
      *
@@ -124,6 +144,7 @@ abstract class User implements UserInterface
     {
         return $this->username;
     }
+
     /**
      * Set email
      *
@@ -135,6 +156,7 @@ abstract class User implements UserInterface
         $this->email = mb_convert_case($email, MB_CASE_LOWER, mb_detect_encoding($email));
         return $this;
     }
+
     /**
      * Get email
      *
@@ -144,6 +166,7 @@ abstract class User implements UserInterface
     {
         return $this->email;
     }
+
     /**
      * Set enabled
      *
@@ -164,6 +187,7 @@ abstract class User implements UserInterface
     {
         return $this->enabled;
     }
+
     /**
      * Set salt
      *
@@ -175,6 +199,7 @@ abstract class User implements UserInterface
         $this->salt = $salt;
         return $this;
     }
+
     /**
      * Get salt
      *
@@ -184,6 +209,7 @@ abstract class User implements UserInterface
     {
         return $this->salt;
     }
+
     /**
      * Set password
      *
@@ -195,6 +221,7 @@ abstract class User implements UserInterface
         $this->password = $password;
         return $this;
     }
+
     /**
      * Get password
      *
@@ -204,6 +231,7 @@ abstract class User implements UserInterface
     {
         return $this->password;
     }
+
     /**
      * Set plainPassword
      *
@@ -215,6 +243,7 @@ abstract class User implements UserInterface
         $this->plainPassword = $password;
         return $this;
     }
+
     /**
      * Get plainPassword
      *
@@ -224,6 +253,7 @@ abstract class User implements UserInterface
     {
         return $this->plainPassword;
     }
+
     /**
      * Set lastLogin
      *
@@ -235,6 +265,7 @@ abstract class User implements UserInterface
         $this->lastLogin = $lastLogin;
         return $this;
     }
+
     /**
      * Get lastLogin
      *
@@ -244,6 +275,7 @@ abstract class User implements UserInterface
     {
         return $this->lastLogin;
     }
+
     /**
      * Set locked
      *
@@ -255,6 +287,7 @@ abstract class User implements UserInterface
         $this->locked = $locked;
         return $this;
     }
+
     /**
      * Get locked
      *
@@ -264,6 +297,7 @@ abstract class User implements UserInterface
     {
         return $this->locked;
     }
+
     /**
      * Set expired
      *
@@ -275,6 +309,7 @@ abstract class User implements UserInterface
         $this->expired = $expired;
         return $this;
     }
+
     /**
      * Get expired
      *
@@ -284,6 +319,7 @@ abstract class User implements UserInterface
     {
         return $this->expired;
     }
+
     /**
      * Set expiresAt
      *
@@ -295,6 +331,7 @@ abstract class User implements UserInterface
         $this->expiresAt = $expiresAt;
         return $this;
     }
+
     /**
      * Get expiresAt
      *
@@ -304,6 +341,7 @@ abstract class User implements UserInterface
     {
         return $this->expiresAt;
     }
+
     /**
      * Set confirmationToken
      *
@@ -315,6 +353,7 @@ abstract class User implements UserInterface
         $this->confirmationToken = $confirmationToken;
         return $this;
     }
+
     public function generateConfirmationToken()
     {
         $generator = new SecureRandom();
@@ -324,6 +363,7 @@ abstract class User implements UserInterface
         );
         return $this;
     }
+
     /**
      * Get confirmationToken
      *
@@ -333,6 +373,7 @@ abstract class User implements UserInterface
     {
         return $this->confirmationToken;
     }
+
     /**
      * Set passwordRequestedAt
      *
@@ -344,6 +385,7 @@ abstract class User implements UserInterface
         $this->passwordRequestedAt = $passwordRequestedAt;
         return $this;
     }
+
     /**
      * Get passwordRequestedAt
      *
@@ -353,6 +395,19 @@ abstract class User implements UserInterface
     {
         return $this->passwordRequestedAt;
     }
+
+    /**
+     * Is password request non-expired
+     *
+     * @param integer $ttl
+     * @return \DateTime
+     */
+    public function isPasswordRequestNonExpired($ttl)
+    {
+        return $this->getPasswordRequestedAt() instanceof \DateTime &&
+               $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
+    }
+
     /**
      * Set credentialsExpired
      *
@@ -364,6 +419,7 @@ abstract class User implements UserInterface
         $this->credentialsExpired = $credentialsExpired;
         return $this;
     }
+
     /**
      * Get credentialsExpired
      *
@@ -373,6 +429,7 @@ abstract class User implements UserInterface
     {
         return $this->credentialsExpired;
     }
+
     /**
      * Set credentialsExpireAt
      *
@@ -384,6 +441,7 @@ abstract class User implements UserInterface
         $this->credentialsExpireAt = $credentialsExpireAt;
         return $this;
     }
+
     /**
      * Get credentialsExpireAt
      *
@@ -393,27 +451,27 @@ abstract class User implements UserInterface
     {
         return $this->credentialsExpireAt;
     }
+
     /**
      * Role Methods
      *
      */
+    
     /**
-     * Add role
+     * Add Role
      *
-     * @param  string $role
+     * Adds Role object to array of Roles if not exists.
+     * 
+     * Compares Role object to array of Role objects.
+     * If passed, User object returned, else, Role object
+     * added to array of Role objects and User object returned.
+     *
+     * @param  RoleInterface $role
      * @return User
      */
-    public function addRole($role)
+    public function addRole(RoleInterface $role)
     {
-        
-        foreach ($this->roles as $key => $value) {
-            if ($role->getName() === $value->getName()) {
-                return $this;
-            }
-        }
-
-        $this->roles[] = $role;
-
+        $this->role[] = $role;
         return $this;
     }
 
@@ -430,23 +488,46 @@ abstract class User implements UserInterface
      */
     public function getRoles()
     {
-        $roles = [];
 
-        foreach ($this->roles as $role) {
-            //var_dump($role);
-            if (is_string($role)) {
-                $roles[] = $role;
-            }
-            else {
-                $roles[] = $role->getName();
-            }
-        }
-        //exit;
+        // declare empty role array
+        $role = $this->getRoleNames();
+
+        // first get all roles inherited from assigned groups
+        //foreach ($this->getGroups() as $group) {
+        //    $roles = array_merge($roles, $group->getRoles());
+        //}
+
+        // then get any roles assigned directly to user
+        //foreach ($this->role->toArray() as $role) {
+        //    $roles = array_merge($roles, array($role->getRole()));
+        //}
 
         // we need to make sure to have at least one role
-        $roles[] = static::ROLE_DEFAULT;
+        $role[] = static::ROLE_DEFAULT;
 
-        return array_unique($roles);
+        // return a unique array
+        return array_unique($role);
+
+    }
+
+    /**
+     * Get Role
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRole()
+    {
+        return $this->role->toArray();
+    }
+
+    /**
+     * Remove role
+     *
+     * @param \Mesd\UserBundle\Entity\Role $role
+     */
+    public function removeRole(RoleInterface $role)
+    {
+        $this->role->removeElement($role);
     }
 
     /**
@@ -482,6 +563,7 @@ abstract class User implements UserInterface
         $roles = array_unique($roles);
         return new ArrayCollection($roles);
     }
+
     /**
      * Get RoleStandalone
      *
@@ -491,8 +573,9 @@ abstract class User implements UserInterface
      */
     public function getRoleStandalone()
     {
-        return $this->roles;
+        return $this->role;
     }
+
     /**
      * Get role names as array
      *
@@ -506,6 +589,7 @@ abstract class User implements UserInterface
         }
         return $names;
     }
+
     /**
      * Get role names from groups as array
      *
@@ -521,6 +605,7 @@ abstract class User implements UserInterface
         }
         return $names;
     }
+
     /**
      * Get stand alone role names as array
      *
@@ -536,24 +621,10 @@ abstract class User implements UserInterface
         }
         return $names;
     }
-    /**
-     * Remove role
-     *
-     * @param  string $role
-     * @return User
-     */
-    public function removeRole($role)
-    {
-        foreach ($this->roles as $key => &$value) {
-            if(strtoupper($role) === $value->getName()) {
-                unset($this->roles[$key]);
-            }
-        }
-    }
 
     public function setRoles(array $roles)
     {
-        $this->roles = array();
+        $this->role = array();
         foreach ($roles as $role) {
             $this->addRole($role);
         }
@@ -576,6 +647,7 @@ abstract class User implements UserInterface
         $this->groups[] = $group;
         return $this;
     }
+
     /**
      * Get groups as array
      *
@@ -583,8 +655,9 @@ abstract class User implements UserInterface
      */
     public function getGroups()
     {
-        return $this->groups->toArray();
+        return $this->group->toArray();
     }
+
     /**
      * Get groups as Collection
      *
@@ -592,8 +665,9 @@ abstract class User implements UserInterface
      */
     public function getGroup()
     {
-        return $this->groups;
+        return $this->group;
     }
+
     /**
      * Get group names as array
      *
@@ -607,6 +681,7 @@ abstract class User implements UserInterface
         }
         return $names;
     }
+
     /**
      * Remove group
      *
@@ -620,10 +695,12 @@ abstract class User implements UserInterface
         }
         return $this;
     }
+
     /**
      * AdvancedUserInterface additionaly required methods
      *
      */
+    
     /**
      * Removes sensitive data from the user.
      */
@@ -662,6 +739,37 @@ abstract class User implements UserInterface
     public function isEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * Equatable Required Methods
+     *
+     */
+
+    /**
+     * is equal to
+     * 
+     * @param  UserInterface $user [description]
+     * @return boolean             [description]
+     */
+    public function isEqualTo(UserInterface $user)
+    {
+        return true;
+        //return
+        //    $this->username === $user->getUsername() &&
+        //    md5(serialize($user->getRoles())) == md5(serialize($this->getRoles()));
+        /*if ($user instanceof UserInterface) {
+            // Check that the roles are the same, in any order
+            $isEqual = count($this->getRoles()) == count($user->getRoles());
+            if ($isEqual) {
+                foreach($this->getRoles() as $role) {
+                    $isEqual = $isEqual && in_array($role, $user->getRoles());
+                }
+            }
+            return $isEqual;
+        }
+        
+        return false;*/
     }
 
     /**

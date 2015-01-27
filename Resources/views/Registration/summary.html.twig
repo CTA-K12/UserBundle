@@ -7,6 +7,9 @@
         {% if send_mail %}
         <p>A confirmation email was sent to {{ form.email['first'].vars.value }}</p>
         {% endif %}
+        {% if approval %}
+        <p>However, account approval is required and your account is locked.</p>
+        {% endif %}
     </div>
 
 {% endblock mesd_user_content %}

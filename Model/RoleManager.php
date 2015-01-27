@@ -9,7 +9,7 @@ class RoleManager {
 
     public function __construct($objectManager, $roleClass)
     {
-         $this->objectManager  = $objectManager->getEntityManager();
+         $this->objectManager  = $objectManager->getManager();
          $this->roleClass      = $roleClass;
     }
 

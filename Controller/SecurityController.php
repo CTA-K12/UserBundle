@@ -12,10 +12,25 @@ class SecurityController extends Controller
 {
     public function loginAction(Request $request)
     {
-        /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
 
-        // get the error if any (works with forward and redirect -- see below)
+        // Check if security context is already authenticated
+        if (true === $this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $revistBehavior = $this->container
+                ->getParameter('mesd_user.login.revisit_behavior');
+
+            if ('logout' === $revistBehavior) {
+                return $this->redirect($this->generateUrl('MesdUserBundle_logout'));
+            }
+
+            if ('redirect' === $revistBehavior) {
+                $revistTarget = $this->container
+                ->getParameter('mesd_user.login.revisit_redirect_target');
+                return $this->redirect($this->generateUrl($revistTarget));
+            }
+        }
+
+        // Check for errors
         if ($request->attributes->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
             $error = $request->attributes->get(SecurityContextInterface::AUTHENTICATION_ERROR);
         } elseif (null !== $session && $session->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
@@ -29,14 +44,6 @@ class SecurityController extends Controller
         if ($error instanceof CredentialsExpiredException) {
             return $this->render($this->container->getParameter('mesd_user.reset.template.reset'), array());
         }
-        // this converts error messages into strings, we would prefer
-        // to pass the error object instead, see below
-        /*
-        if ($error) {
-            // TODO: this is a potential security risk (see http://trac.symfony-project.org/ticket/9523)
-            $error = $error->getMessage();
-        }
-        */
        
         // prior to this update, the user bundle was converting error messages
         // to a string. we now check to ensure the error is an instance of
@@ -61,7 +68,6 @@ class SecurityController extends Controller
                 'csrf_token'    => $csrfToken
             )
         );
-
     }
 
 

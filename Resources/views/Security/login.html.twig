@@ -4,9 +4,16 @@
 
     {% if error is defined %}
         {% if error %}
-            <div>{{ error }}</div>
+            <div>{{ error.message }}</div>
         {% endif %}
     {% endif %}
+
+    <div>
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            Logged in as: {{  app.user.username }}
+            <a href="{{ path("MesdUserBundle_logout") }}">Logout</a>
+        {% endif %}
+    </div>
 
     <form action="{{ path("MesdUserBundle_check") }}" method="post">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
@@ -25,10 +32,10 @@
     </form>
 
     {% if mesd_user_registration_enabled %}
-        <a href="{{ path("MesdUserBundle_registration_new") }}" class="btn btn-link">{{ mesd_user_registration_text }}</a>
+        <a href="{{ path("MesdUserBundle_registration_new") }}" class="btn btn-link">{{ mesd_user_registration_link_text }}</a>
     {% endif %}
     {% if mesd_user_reset_enabled %}
-        <a href="{{ path("MesdUserBundle_reset") }}" class="btn btn-link">{{ mesd_user_reset_text }}</a>
+        <a href="{{ path("MesdUserBundle_reset_request") }}" class="btn btn-link">{{ mesd_user_reset_link_text }}</a>
     {% endif %}
 
 {% endblock mesd_user_content %}
