@@ -60,6 +60,7 @@ class MesdUserExtension extends Extension
         $loader->load('UserManagerService.yml');
         $loader->load('RoleManagerService.yml');
         $loader->load('UserProviderService.yml');
+        $loader->load('AuthenticationService.yml');
         $loader->load('TwigExtensions.yml');
 
     }

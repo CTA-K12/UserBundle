@@ -1,0 +1,11 @@
+# Resources/config/AuthenticationService.yml
+parameters:
+    mesd_user.authentication_listener.class: Mesd\UserBundle\Listener\AuthenticationListener
+
+# authentication event listener
+services:
+    mesd_user.security.authentication_event_listener:
+        class: %mesd_user.authentication_listener.class%
+        arguments: [@doctrine]
+        tags:
+            - { name: 'kernel.event_listener', event: 'security.interactive_login' }
