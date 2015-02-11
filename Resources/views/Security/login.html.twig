@@ -31,8 +31,8 @@
         <input type="submit" id="_submit" name="_submit" value="Login" />
     </form>
 
-    {% if mesd_user_registration_enabled %}
-        <a href="{{ path("MesdUserBundle_registration_new") }}" class="btn btn-link">{{ mesd_user_registration_link_text }}</a>
+    {% if mesd_user_register_enabled %}
+        <a href="{{ path("MesdUserBundle_register_new") }}" class="btn btn-link">{{ mesd_user_register_link_text }}</a>
     {% endif %}
     {% if mesd_user_reset_enabled %}
         <a href="{{ path("MesdUserBundle_reset_request") }}" class="btn btn-link">{{ mesd_user_reset_link_text }}</a>

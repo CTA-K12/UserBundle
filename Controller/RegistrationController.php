@@ -19,7 +19,7 @@ class RegistrationController extends Controller
         parent::setContainer($container);
 
         // If registration is not enabled, throw page not found error
-        if (false === $this->container->getParameter('mesd_user.registration.enabled')) {
+        if (false === $this->container->getParameter('mesd_user.register.enabled')) {
             throw $this->createNotFoundException();
         }
     }
@@ -30,8 +30,8 @@ class RegistrationController extends Controller
         $userManager = $this->get('mesd_user.user_manager');
         $user = $userManager->createUser();
 
-        $requireAdminApproval  = $this->container->getParameter('mesd_user.registration.approval_required');
-        $sendConfirmationEmail = $this->container->getParameter('mesd_user.registration.mail_confirmation');
+        $requireAdminApproval  = $this->container->getParameter('mesd_user.register.approval_required');
+        $sendConfirmationEmail = $this->container->getParameter('mesd_user.register.mail_confirmation');
 
         if (true === $sendConfirmationEmail || true === $requireAdminApproval) {
             $user->setEnabled(false);
@@ -43,7 +43,7 @@ class RegistrationController extends Controller
             ),
             $user,
             array(
-                'action' => $this->generateUrl('MesdUserBundle_registration_create'),
+                'action' => $this->generateUrl('MesdUserBundle_register_create'),
                 'method' => 'POST',
             )
         );
@@ -69,13 +69,13 @@ class RegistrationController extends Controller
                 $mailer->sendConfirmationEmailMessage(
                     $user,
                     array(
-                        'from'     => $this->container->getParameter('mesd_user.registration.mail_from'),
-                        'subject'  => $this->container->getParameter('mesd_user.registration.mail_subject'),
-                        'template' => $this->container->getParameter('mesd_user.registration.template.confirm_mail')
+                        'from'     => $this->container->getParameter('mesd_user.register.mail_from'),
+                        'subject'  => $this->container->getParameter('mesd_user.register.mail_subject'),
+                        'template' => $this->container->getParameter('mesd_user.register.template.confirm_mail')
                     )
                 );
             } elseif (true === $requireAdminApproval) {
-                if (true === $this->container->getParameter('mesd_user.registration.approval_mail')) {
+                if (true === $this->container->getParameter('mesd_user.register.approval_mail')) {
                     $user->generateConfirmationToken();
                     $userManager->updateUser($user);
                     $mailer = new Mailer(
@@ -87,10 +87,10 @@ class RegistrationController extends Controller
                     $mailer->sendApprovalEmailMessage(
                         $user,
                         array(
-                            'from'     => $this->container->getParameter('mesd_user.registration.approval_mail_from'),
-                            'to'       => $this->container->getParameter('mesd_user.registration.approval_mail_to'),
-                            'subject'  => $this->container->getParameter('mesd_user.registration.approval_mail_subject'),
-                            'template' => $this->container->getParameter('mesd_user.registration.template.approval_mail')
+                            'from'     => $this->container->getParameter('mesd_user.register.approval_mail_from'),
+                            'to'       => $this->container->getParameter('mesd_user.register.approval_mail_to'),
+                            'subject'  => $this->container->getParameter('mesd_user.register.approval_mail_subject'),
+                            'template' => $this->container->getParameter('mesd_user.register.template.approval_mail')
                         )
                     );
                 }
@@ -100,7 +100,7 @@ class RegistrationController extends Controller
             }
 
             return $this->render(
-                $this->container->getParameter('mesd_user.registration.template.summary'),
+                $this->container->getParameter('mesd_user.register.template.summary'),
                 array(
                     'form' => $form->createView(),
                     'send_mail' => $sendConfirmationEmail,
@@ -110,7 +110,7 @@ class RegistrationController extends Controller
         }
 
         return $this->render(
-            $this->container->getParameter('mesd_user.registration.template.register'),
+            $this->container->getParameter('mesd_user.register.template.register'),
             array('form' => $form->createView())
         );
     }
@@ -131,7 +131,7 @@ class RegistrationController extends Controller
         }
 
         return $this->render(
-            $this->container->getParameter('mesd_user.registration.template.approve'),
+            $this->container->getParameter('mesd_user.register.template.approve'),
             array(
                 'message' => $message
             )
@@ -150,12 +150,12 @@ class RegistrationController extends Controller
             $message = 'Your account has been confirmed.';
             $user->setConfirmationToken(null);
 
-            if (false === $this->container->getParameter('mesd_user.registration.approval_required')) {
+            if (false === $this->container->getParameter('mesd_user.register.approval_required')) {
                 $user->setEnabled(true);
             } else {
                 $message .= ' However, it remains disabled until approved by an administrator.';
 
-                if (true === $this->container->getParameter('mesd_user.registration.approval_mail')) {
+                if (true === $this->container->getParameter('mesd_user.register.approval_mail')) {
                     $user->generateConfirmationToken();
                     $mailer = new Mailer(
                         $this->get('mailer'),
@@ -166,10 +166,10 @@ class RegistrationController extends Controller
                     $mailer->sendApprovalEmailMessage(
                         $user,
                         array(
-                            'from'     => $this->container->getParameter('mesd_user.registration.approval_mail_from'),
-                            'to'       => $this->container->getParameter('mesd_user.registration.approval_mail_to'),
-                            'subject'  => $this->container->getParameter('mesd_user.registration.approval_mail_subject'),
-                            'template' => $this->container->getParameter('mesd_user.registration.template.approval_mail')
+                            'from'     => $this->container->getParameter('mesd_user.register.approval_mail_from'),
+                            'to'       => $this->container->getParameter('mesd_user.register.approval_mail_to'),
+                            'subject'  => $this->container->getParameter('mesd_user.register.approval_mail_subject'),
+                            'template' => $this->container->getParameter('mesd_user.register.template.approval_mail')
                         )
                     );
                 }
@@ -179,7 +179,7 @@ class RegistrationController extends Controller
         }
 
         return $this->render(
-            $this->container->getParameter('mesd_user.registration.template.confirm'),
+            $this->container->getParameter('mesd_user.register.template.confirm'),
             array(
                 'message' => $message
             )
@@ -199,13 +199,13 @@ class RegistrationController extends Controller
                 ),
             $user,
             array(
-                'action' => $this->generateUrl('MesdUserBundle_registration_create'),
+                'action' => $this->generateUrl('MesdUserBundle_register_create'),
                 'method' => 'POST',
             )
         );
 
         return $this->render(
-            $this->container->getParameter('mesd_user.registration.template.register'),
+            $this->container->getParameter('mesd_user.register.template.register'),
             array('form' => $form->createView())
         );
     }

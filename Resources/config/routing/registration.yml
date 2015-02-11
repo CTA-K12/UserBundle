@@ -1,18 +1,18 @@
-MesdUserBundle_registration_new:
+MesdUserBundle_register_new:
     pattern: /new
     defaults: { _controller: MesdUserBundle:Registration:new }
 
-MesdUserBundle_registration_create:
+MesdUserBundle_register_create:
     pattern: /create
     defaults: { _controller: MesdUserBundle:Registration:create }
     methods:  [POST]
 
-MesdUserBundle_registration_approve:
+MesdUserBundle_register_approve:
     pattern: /approve/{token}
     defaults: { _controller: MesdUserBundle:Registration:approve }
     methods:  [GET]
 
-MesdUserBundle_registration_confirm:
+MesdUserBundle_register_confirm:
     pattern: /confirm/{token}
     defaults: { _controller: MesdUserBundle:Registration:confirm }
     methods:  [GET]
