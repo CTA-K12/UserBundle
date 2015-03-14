@@ -77,4 +77,9 @@ abstract class Role implements RoleInterface
     {
         return $this->description;
     }
+
+    public function getRole()
+    {
+        return $this->name;
+    }
 }

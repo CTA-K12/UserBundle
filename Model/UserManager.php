@@ -124,6 +124,36 @@ class UserManager {
     }
 
 
+    public function findOneByUsername($credential)
+    {
+        $credential = mb_convert_case(
+            $credential,
+            MB_CASE_LOWER,
+            mb_detect_encoding($credential)
+        );
+
+        $q = $this->objectManager
+                ->getRepository($this->userClass)
+                ->createQueryBuilder('u');
+
+        $q->where('u.username = :username')
+            ->setParameter('username', $credential)
+        ;
+
+        $result = $q->getQuery();
+
+        try {
+            // The Query::getSingleResult() method throws an exception
+            // if there is no record matching the criteria.
+            $user = $result->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+
+        return $user;
+    }
+
+
     public function getUsers()
     {
         return $this->objectManager

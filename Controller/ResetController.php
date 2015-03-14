@@ -62,7 +62,7 @@ class ResetController extends Controller
         if ($form->isValid()) {
             $data       = $form->getData();
             $credential = $data['credential'];
-            $user       = $this->get('mesd_user.user_manager')->findOneByUsernameOrEmail($credential);
+            $user       = $this->get('mesd_user.user_manager')->findOneByUsername($credential);
 
             // If no user found, redirect to request and display error
             if (null === $user) {

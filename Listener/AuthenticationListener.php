@@ -23,7 +23,7 @@ class AuthenticationListener implements EventSubscriberInterface
 
     public function __construct(Doctrine $doctrine)
     {
-        $this->em = $doctrine->getEntityManager();
+        $this->em = $doctrine->getManager();
     }
 
     /*

@@ -16,17 +16,17 @@ class SecurityController extends Controller
 
         // Check if security context is already authenticated
         if (true === $this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $revistBehavior = $this->container
+            $revisitBehavior = $this->container
                 ->getParameter('mesd_user.login.revisit_behavior');
 
-            if ('logout' === $revistBehavior) {
+            if ('logout' === $revisitBehavior) {
                 return $this->redirect($this->generateUrl('MesdUserBundle_logout'));
             }
 
-            if ('redirect' === $revistBehavior) {
-                $revistTarget = $this->container
+            if ('redirect' === $revisitBehavior) {
+                $revisitTarget = $this->container
                 ->getParameter('mesd_user.login.revisit_redirect_target');
-                return $this->redirect($this->generateUrl($revistTarget));
+                return $this->redirect($this->generateUrl($revisitTarget));
             }
         }
 
