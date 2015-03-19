@@ -46,7 +46,7 @@ class RoleHierarchy implements RoleHierarchyInterface
             if (!isset($this->map[$role])) {
                 continue;
             }
-
+ 
             foreach ($this->map[$role] as $r) {
                 $reachableRoles[] = $r;
             }
