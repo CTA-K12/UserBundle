@@ -492,16 +492,6 @@ abstract class User implements UserInterface
         // declare empty role array
         $role = $this->getRoleNames();
 
-        // first get all roles inherited from assigned groups
-        //foreach ($this->getGroups() as $group) {
-        //    $roles = array_merge($roles, $group->getRoles());
-        //}
-
-        // then get any roles assigned directly to user
-        //foreach ($this->role->toArray() as $role) {
-        //    $roles = array_merge($roles, array($role->getRole()));
-        //}
-
         // we need to make sure to have at least one role
         $role[] = static::ROLE_DEFAULT;
 
