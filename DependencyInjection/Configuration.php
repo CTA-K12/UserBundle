@@ -135,7 +135,7 @@ class Configuration implements ConfigurationInterface
                                     ->defaultValue('MesdUserBundle:Reset:resetEmail.txt.twig')
                                 ->end()
                                 ->scalarNode('success')
-                                    ->defaultValue('MesdUserBundle:Reset:success.txt.twig')
+                                    ->defaultValue('MesdUserBundle:Reset:success.html.twig')
                                 ->end()
                             ->end()
                         ->end()
