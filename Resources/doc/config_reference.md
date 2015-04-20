@@ -12,7 +12,7 @@ mesd_user:
     group_class:            ~ # Optional - Your applications group entity class
 
     login:
-        revisit_behavior:        status   # Behavior if user is authenticated - logout | redirect | status
+        revisit_behavior:        status   # Behavior if user is already authenticated - logout | redirect | status
         revisit_redirect_target: ~        # If behavior is redirect, what route should be used
         template:                MesdUserBundle:Security:login.html.twig # Login Form template
 
