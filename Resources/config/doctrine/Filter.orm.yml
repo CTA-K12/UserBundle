@@ -1,0 +1,7 @@
+Mesd\UserBundle\Entity\Filter:
+  type: mappedSuperclass
+  fields:
+    filter:
+      type: json_array
+      nullable: false
+
