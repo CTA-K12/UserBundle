@@ -10,6 +10,7 @@ mesd_user:
     user_class:             ~ # Required - Your applications user entity class
     role_class:             ~ # Required - Your applications role entity class
     group_class:            ~ # Optional - Your applications group entity class
+    filter_class:           ~ # Optional - Your applications filter entity class
 
     login:
         revisit_behavior:        status   # Behavior if user is authenticated - logout | redirect | status

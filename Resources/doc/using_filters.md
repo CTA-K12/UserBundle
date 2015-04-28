@@ -1,35 +1,35 @@
-##Using the Group capability
+##Using the Filter capability
 
-The `MesdUserBundle` supports a `Group` feature which allows you to group both
-Users and Roles. Each group can contain one or more roles and one or more users.
-The group capability can be useful when your application needs to use roles as
-*Permissions* as opposed to roles as *User Types*
+The `MesdUserBundle` supports a `Filter` feature which allows you to filter a
+query based on Users and Roles. Each filter can contains one role and one or
+more users. The filter capability can be useful when your application needs to
+use roles as *Permissions* as opposed to roles as *User Types*
 
 
-### Setup to use the MesdUserBundle for use with Groups
+### Setup to use the MesdUserBundle for use with Filters
 
-#### Step 1: Create your Group class
+#### Step 1: Create your Filter class
 
-##### Doctrine ORM Group class
+##### Doctrine ORM Filter class
 
-Your `Group` class should live in the `Entity` namespace of your bundle and look like this to
+Your `Filter` class should live in the `Entity` namespace of your bundle and look like this to
 start:
 
 ##### Option A) Annotations:
 
 ``` php
-// src/Acme/UserBundle/Entity/Group.php
+// src/Acme/UserBundle/Entity/Filter.php
 
 namespace Acme\UserBundle\Entity;
 
-use Mesd\UserBundle\Entity\Group as BaseGroup;
+use Mesd\UserBundle\Entity\Filter as BaseFilter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="acme_group")
+ * @ORM\Table(name="acme_filter")
  */
-class Group extends BaseGroup
+class Filter extends BaseFilter
 {
     /**
      * @ORM\Id
@@ -40,8 +40,8 @@ class Group extends BaseGroup
 
     /**
      * @ManyToMany(targetEntity="Role")
-     * @JoinTable(name="acme_group__role",
-     *      joinColumns={@JoinColumn(name="group_id", referencedColumnName="id")},
+     * @JoinTable(name="acme_filter__role",
+     *      joinColumns={@JoinColumn(name="filter_id", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
      * )
      **/
@@ -62,7 +62,7 @@ If you use yml to configure Doctrine you must add two files. The Entity and the 
 
 ```php
 <?php
-// src/Acme/UserBundle/Entity/Group.php
+// src/Acme/UserBundle/Entity/Filter.php
 
 namespace Acme\UserBundle\Entity;
 
@@ -83,10 +83,10 @@ class User extends BaseUser
 ```
 
 ```yaml
-# src/Acme/UserBundle/Resources/config/doctrine/Group.orm.yml
-Acme\UserBundle\Entity\Group:
+# src/Acme/UserBundle/Resources/config/doctrine/Filter.orm.yml
+Acme\UserBundle\Entity\Filter:
     type:  entity
-    table: acme_group
+    table: acme_filter
     id:
         id:
             type: integer
@@ -97,9 +97,9 @@ Acme\UserBundle\Entity\Group:
         role:
             targetEntity: Role
             joinTable:
-                name: acme_group__role
+                name: acme_filter_role
                 joinColumns:
-                    group_id:
+                    filter_id:
                         referencedColumnName: id
                 inverseJoinColumns:
                     role_id:
@@ -110,7 +110,7 @@ Acme\UserBundle\Entity\Group:
 
 #### Step 2: Update your User class
 
-Add the group section to the existing manyToMany section of your ORM file.
+Add the filter section to the existing manyToMany section of your ORM file.
 
 ``` yaml
 # src/Acme/UserBundle/Resources/config/doctrine/User.orm.yml
@@ -134,26 +134,26 @@ Acme\UserBundle\Entity\User:
                 inverseJoinColumns:
                     role_id:
                         referencedColumnName: id
-        group:
-            targetEntity: Group
+        filter:
+            targetEntity: Filter
             joinTable:
-                name: demo_user_group
+                name: demo_user_filter
                 joinColumns:
                     user_id:
                         referencedColumnName: id
                 inverseJoinColumns:
-                    group_id:
+                    filter_id:
                         referencedColumnName: id
 ```
 
-#### Step 3: Add Group class to config.yml
+#### Step 3: Add Filter class to config.yml
 
-Add the `group_class` configuration to your `config.yml` file:
+Add the `filter_class` configuration to your `config.yml` file:
 
 ``` yaml
 # app/config/config.yml
 mesd_user:
-    user_class:  Acme\UserBundle\Entity\User
-    role_class:  Acme\UserBundle\Entity\Role
-    group_class: Acme\UserBundle\Entity\Group
+    user_class:   Acme\UserBundle\Entity\User
+    role_class:   Acme\UserBundle\Entity\Role
+    filter_class: Acme\UserBundle\Entity\Filter
 ```

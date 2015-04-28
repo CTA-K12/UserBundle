@@ -28,6 +28,8 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('group_class')
                 ->end()
+                ->scalarNode('filter_class')
+                ->end()
                 ->arrayNode('login')
                     ->addDefaultsIfNotSet()
                     ->children()

@@ -15,7 +15,7 @@ abstract class Filter implements FilterInterface
     /**
      * @var array
      */
-    protected $filter;
+    protected $solvent;
 
 
 
@@ -29,25 +29,25 @@ abstract class Filter implements FilterInterface
     }
 
     /**
-     * Set filter
+     * Set solvent
      *
-     * @param array $filter
+     * @param array $solvent
      * @return Filter
      */
-    public function setFilter($filter)
+    public function setSolvent($solvent)
     {
-        $this->filter = $filter;
+        $this->solvent = $solvent;
 
         return $this;
     }
 
     /**
-     * Get filter
+     * Get solvent
      *
      * @return array
      */
-    public function getFilter()
+    public function getSolvent()
     {
-        return $this->filter;
+        return $this->solvent;
     }
 }

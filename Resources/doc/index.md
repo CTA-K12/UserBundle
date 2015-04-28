@@ -122,9 +122,19 @@ class User extends BaseUser
      */
     protected $id;
 
+    /**
+     * @ManyToMany(targetEntity="Role")
+     * @JoinTable(name="acme_user__role",
+     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
+     * )
+     **/
+    private $role;
+
     public function __construct()
     {
         parent::__construct();
+        $this->role = new \Doctrine\Common\Collections\ArrayCollection();
         // your own logic
     }
 }
@@ -176,7 +186,7 @@ Acme\UserBundle\Entity\User:
         role:
             targetEntity: Role
             joinTable:
-                name: demo_user_role
+                name: acme_user__role
                 joinColumns:
                     user_id:
                         referencedColumnName: id
