@@ -68,6 +68,21 @@ class MesdUserExtension extends Extension
             $userMetadataListener->addMethodCall('setGroupsEnabled', array(false));
         }
 
+        // Check if filter configuration is set, load filter service if yes
+        if ($container->hasParameter('mesd_user.filter_class')) {
+            $loader->load('RoleFilterService.yml');
+            $container->setParameter('mesd_user.filter_class_placeholder', $container->getParameter('mesd_user.filter_class'));
+
+            //Set the filters enabled on the user metadata listener to true
+            $userMetadataListener->addMethodCall('setFiltersEnabled', array(true));
+        }
+        else {
+            $container->setParameter('mesd_user.filter_class_placeholder', null);
+
+            //Set the filters enabled on the user metadata listener to false
+            $userMetadataListener->addMethodCall('setFiltersEnabled', array(false));
+        }
+
         // Load default services
         $loader->load('UserManagerService.yml');
         $loader->load('RoleManagerService.yml');

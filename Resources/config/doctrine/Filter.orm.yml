@@ -4,4 +4,3 @@ Mesd\UserBundle\Entity\Filter:
     solvent:
       type: json_array
       nullable: false
-

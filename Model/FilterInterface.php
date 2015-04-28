@@ -9,17 +9,17 @@ interface FilterInterface
 {
 
     /**
-     * Set filter
+     * Set solvent
      *
-     * @param array $filter
-     * @return Filter
+     * @param array $solvent
+     * @return Solvent
      */
-    public function setFilter($filter);
+    public function setSolvent($solvent);
 
     /**
-     * Get filter
+     * Get solvent
      *
      * @return array
      */
-    public function getFilter();
+    public function getSolvent();
 }

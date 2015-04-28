@@ -39,18 +39,58 @@ class Filter extends BaseFilter
     protected $id;
 
     /**
-     * @ManyToMany(targetEntity="Role")
-     * @JoinTable(name="acme_filter__role",
-     *      joinColumns={@JoinColumn(name="filter_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
-     * )
+     * @ManyToOne(targetEntity="Role", inversedBy="filter")
+     * @JoinColumn(name="role_id", referencedColumnName="id")
      **/
     private $role;
+
+    /**
+     * @ManyToOne(targetEntity="User", inversedBy="filter")
+     * @JoinColumn(name="user_id", referencedColumnName="id")
+     **/
+    private $user;
 
     public function __construct()
     {
         parent::__construct();
-        $this->role = new \Doctrine\Common\Collections\ArrayCollection();
+        // your own logic
+    }
+}
+```
+
+``` php
+// src/Acme/UserBundle/Entity/User.php
+
+    // your own logic
+
+    /**
+     * @OneToMany(targetEntity="Filter", inversedBy="user")
+     **/
+    private $filter;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->filter = new \Doctrine\Common\Collections\ArrayCollection();
+        // your own logic
+    }
+}
+```
+
+``` php
+// src/Acme/UserBundle/Entity/Role.php
+
+    // your own logic
+
+    /**
+     * @OneToMany(targetEntity="Filter", inversedBy="role")
+     **/
+    private $filter;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->filter = new \Doctrine\Common\Collections\ArrayCollection();
         // your own logic
     }
 }
@@ -93,57 +133,47 @@ Acme\UserBundle\Entity\Filter:
             generator:
                 strategy: AUTO
 
-    manyToMany:
+    manyToOne:
         role:
             targetEntity: Role
-            joinTable:
-                name: acme_filter_role
-                joinColumns:
-                    filter_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    role_id:
-                        referencedColumnName: id
+            inversedBy: filter
+            joinColumn:
+                name: role_id
+                referencedColumnName: id
+        user:
+            targetEntity: User
+            inversedBy: filter
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
 ```
 
+#### Step 2: Update your User and Role classes
 
-
-#### Step 2: Update your User class
-
-Add the filter section to the existing manyToMany section of your ORM file.
+Add the filter section to the existing oneToMany section of your ORM file.
 
 ``` yaml
 # src/Acme/UserBundle/Resources/config/doctrine/User.orm.yml
 Acme\UserBundle\Entity\User:
-    type:  entity
-    table: acme_user
-    id:
-        id:
-            type: integer
-            generator:
-                strategy: AUTO
 
-    manyToMany:
-        role:
-            targetEntity: Role
-            joinTable:
-                name: demo_user_role
-                joinColumns:
-                    user_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    role_id:
-                        referencedColumnName: id
+    // your own logic
+
+    oneToMany:
         filter:
             targetEntity: Filter
-            joinTable:
-                name: demo_user_filter
-                joinColumns:
-                    user_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    filter_id:
-                        referencedColumnName: id
+            mappedBy: user
+```
+
+``` yaml
+# src/Acme/UserBundle/Resources/config/doctrine/Role.orm.yml
+Acme\UserBundle\Entity\Role:
+
+    // your own logic
+
+    oneToMany:
+        filter:
+            targetEntity: Filter
+            mappedBy: role
 ```
 
 #### Step 3: Add Filter class to config.yml
