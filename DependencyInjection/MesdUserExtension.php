@@ -70,7 +70,7 @@ class MesdUserExtension extends Extension
 
         // Check if filter configuration is set, load filter service if yes
         if ($container->hasParameter('mesd_user.filter_class')) {
-            $loader->load('RoleFilterService.yml');
+            $loader->load('FilterManagerService.yml');
             $container->setParameter('mesd_user.filter_class_placeholder', $container->getParameter('mesd_user.filter_class'));
 
             //Set the filters enabled on the user metadata listener to true

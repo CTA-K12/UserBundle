@@ -1,0 +1,7 @@
+parameters:
+    mesd_user.filter_manager.class: Mesd\UserBundle\Model\FilterManager
+
+services:
+    mesd_user.filter_manager:
+        class: %mesd_user.filter_manager.class%
+        arguments: [@doctrine, %mesd_user.user_class%, %mesd_user.role_class%, %mesd_user.filter_class%]
