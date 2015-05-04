@@ -2,65 +2,50 @@
 
 namespace Mesd\UserBundle\Model;
 
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-
-
 class FilterManager {
 
     private $objectManager;
     private $filterClass;
     private $roleClass;
     private $userClass;
-
+    private $config;
 
     public function __construct($objectManager, $userClass, $roleClass, $filterClass)
     {
          $this->objectManager = $objectManager->getManager();
          $this->userClass     = $userClass;
          $this->roleClass     = $roleClass;
-         $this->filterClass    = $filterClass;
+         $this->filterClass   = $filterClass;
     }
 
-
-    public function createFilter($name, $description = null)
+    public function applyFilter($queryBuilder)
     {
-        $filter = new $this->filterClass();
-        $filter->setName($name);
-        $filter->setDescription($description);
-        $this->objectManager->persist($filter);
-        $this->objectManager->flush();
+        // foreach($this->config as $role => $config) {
+        //     var_dump('========');
+        //     var_dump($role, $config['filtrate']);
+        //     var_dump('--------');
+        //     foreach($config['solvents'] as $entity => $field) {
+        //         var_dump($entity, $field);
+        //     }
+        // }
+        // var_dump($queryBuilder->getQuery()->getDql());
+        // die();
+
+        $queryBuilder
+            ->andWhere('1 = 1');
+
+        return $queryBuilder;
     }
 
-    public function getFilters()
+    public function setConfig( $config )
     {
-        return $this->objectManager
-                ->getRepository($this->filterClass)
-                ->findBy(
-                    array(),
-                    array('name' => 'ASC')
-                    );
+        $this->config = $config;
+
+        return $this;
     }
 
-
-    public function hasRole($roleName)
+    public function getConfig()
     {
-        $filter = $this->objectManager
-            ->getRepository($this->filterClass)
-            ->findOneByName($filterName);
-
-        if(!$filter) {
-            throw new \Exception (sprintf("Group %s not found.", $filterName));
-        }
-
-        $role = $this->objectManager
-            ->getRepository($this->roleClass)
-            ->findOneByName($roleName);
-
-        if(!$role) {
-            throw new \Exception (sprintf("Role %s not found.", $roleName));
-        }
-
-        return in_array($roleName,$filter->getRoleNames());
+        return $this->config;
     }
 }

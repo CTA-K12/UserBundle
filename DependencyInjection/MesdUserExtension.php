@@ -70,11 +70,17 @@ class MesdUserExtension extends Extension
 
         // Check if filter configuration is set, load filter service if yes
         if ($container->hasParameter('mesd_user.filter_class')) {
+
             $loader->load('FilterManagerService.yml');
             $container->setParameter('mesd_user.filter_class_placeholder', $container->getParameter('mesd_user.filter_class'));
 
             //Set the filters enabled on the user metadata listener to true
             $userMetadataListener->addMethodCall('setFiltersEnabled', array(true));
+
+            // Once the services definition are read, get your service and add a method call to setConfig()
+            $sillyServiceDefinition = $container->getDefinition( 'mesd_user.filter_manager' );
+
+            $sillyServiceDefinition->addMethodCall( 'setConfig', array( $config[ 'filters' ] ) );
         }
         else {
             $container->setParameter('mesd_user.filter_class_placeholder', null);
