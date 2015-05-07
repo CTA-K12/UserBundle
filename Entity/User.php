@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Util\SecureRandom;
+use Mesd\UserBundle\Model\FilterInterface;
 use Mesd\UserBundle\Model\GroupInterface;
 use Mesd\UserBundle\Model\RoleInterface;
 use Mesd\UserBundle\Model\UserInterface;
@@ -99,6 +100,11 @@ abstract class User implements UserInterface
      * @var \Doctrine\Common\Collections\Collection
      */
     protected $group;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    protected $filter;
 
     /**
      * boolean
@@ -736,6 +742,51 @@ abstract class User implements UserInterface
     }
 
 
+    /**
+     * Filter Methods
+     *
+     */
+
+    /**
+     * Add Filter
+     *
+     * @param FilterInterface
+     * @return User
+     */
+    public function addFilter(FilterInterface $filter)
+    {
+        $this->filter->addElement($filter);
+
+        return $this;
+    }
+
+    /**
+     * Get Filter
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFilter()
+    {
+
+        return $this->filter;
+    }
+
+
+    /**
+     * Remove Filter
+     *
+     * @param RoleInterface $filter
+     * @return User
+     */
+    public function removeFilter(FilterInterface $filter)
+    {
+        if($this->filter->contains($filter)) {
+            $this->filter->removeElement($filter);
+        }
+
+        return $this;
+    }
+
 
     /**
      * AdvancedUserInterface additionaly required methods
@@ -786,7 +837,6 @@ abstract class User implements UserInterface
     {
         return $this->enabled;
     }
-
 
 
     /**
