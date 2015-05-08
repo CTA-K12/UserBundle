@@ -22,7 +22,8 @@ class FilterManager {
 
     public function applyFilter($queryBuilder)
     {
-        $this->getFilters('alice');
+        $user = $this->securityContext->getToken()->getUser();
+
         foreach($this->config as $role => $config) {
             var_dump('========');
             var_dump($role, $config['entity']);
@@ -32,21 +33,20 @@ class FilterManager {
             }
         }
 
-        $user = $this->securityContext->getToken()->getUser();
 
         var_dump($user->getRoles());
 
         $filters = $user->getFilter();
         foreach ($filters as $filter) {
             $solvents = $filter->getSolvent();
-            foreach ($solvents as $solvent) {
-                $entityName = $solvent['entity'];
-                $associations = $solvent['associations'];
-                var_dump($entityName);
-                foreach ($associations as $association) {
-                    foreach ($association as $associationName => $associationId) {
-                        var_dump($associationName, $associationId);
-                    }
+            foreach ($solvents as $solventId => $solvent) {
+                var_dump('solventId', $solventId);
+                foreach ($entities as $entityName => $associations) {
+                    var_dump('entityName', $entityName);
+                    // foreach ($associations as $associationName => $id) {
+                    //     var_dump('associationName', $associationName);
+                    //     var_dump('id', $id);
+                    // }
                 }
             }
         }
@@ -55,19 +55,33 @@ class FilterManager {
         $queryBuilder->setParameter('scoreTypeName', 'In District Scoring');
 
         $methods = get_class_methods($queryBuilder);
+        var_dump('expr');
         var_dump(get_class($queryBuilder->expr()));
+        var_dump('getType');
         var_dump($queryBuilder->getType());
+        var_dump('getEntityManager');
         var_dump(get_class($queryBuilder->getEntityManager()));
+        var_dump('getState');
         var_dump($queryBuilder->getState());
+        var_dump('getDQL');
         var_dump($queryBuilder->getDQL());
+        var_dump('getQuery');
         var_dump(get_class($queryBuilder->getQuery()));
+        var_dump('getRootAlias');
         var_dump($queryBuilder->getRootAlias());
+        var_dump('getRootAliases');
         var_dump($queryBuilder->getRootAliases());
+        var_dump('getRootEntities');
         var_dump($queryBuilder->getRootEntities());
+        var_dump('getParameters');
         var_dump($queryBuilder->getParameters());
+        var_dump('getFirstResult');
         var_dump($queryBuilder->getFirstResult());
+        var_dump('getMaxResults');
         var_dump($queryBuilder->getMaxResults());
+        var_dump('getDQLParts');
         var_dump($queryBuilder->getDQLParts());
+        var_dump('__toString');
         var_dump($queryBuilder->__toString());
 
         $parts = $queryBuilder->getDQLParts();
@@ -97,26 +111,5 @@ class FilterManager {
     public function getConfig()
     {
         return $this->config;
-    }
-
-    public function getFilters($username)
-    {
-        $user = $this->objectManager
-            ->getRepository($this->userClass)
-            ->findOneByUsername($username);
-
-        if(is_null($user)) {
-            throw new \Exception (sprintf("User %s not found.", $username));
-        }
-
-        $filters = $this->objectManager
-            ->getRepository($this->filterClass)
-            ->findByEskillsUser($user);
-
-        // if(0 === count($filters)) {
-        //     throw new \Exception (sprintf("Filters for %s not found.", $username));
-        // }
-
-        return $filters;
     }
 }
