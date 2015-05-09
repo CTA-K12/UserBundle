@@ -24,12 +24,15 @@ class FilterManager {
     {
         $user = $this->securityContext->getToken()->getUser();
 
-        foreach($this->config as $role => $config) {
-            var_dump('========');
-            var_dump($role, $config['entity']);
-            var_dump('--------');
-            foreach($config['associations'] as $entity => $field) {
-                var_dump($entity, $field);
+        foreach($this->config as $roleName => $entities) {
+            var_dump('roleName', $roleName);
+            foreach($entities['entities'] as $entity) {
+                foreach($entity as $entityValue) {
+                    var_dump('entityValueName', $entityValue['name']);
+                    foreach($entityValue['joins'] as $join) {
+                        var_dump('join', $join);
+                    }
+                }
             }
         }
 
@@ -37,16 +40,18 @@ class FilterManager {
         var_dump($user->getRoles());
 
         $filters = $user->getFilter();
+
         foreach ($filters as $filter) {
             $solvents = $filter->getSolvent();
-            foreach ($solvents as $solventId => $solvent) {
-                var_dump('solventId', $solventId);
-                foreach ($entities as $entityName => $associations) {
-                    var_dump('entityName', $entityName);
-                    // foreach ($associations as $associationName => $id) {
-                    //     var_dump('associationName', $associationName);
-                    //     var_dump('id', $id);
-                    // }
+            foreach($solvents as $roleName => $entities) {
+                var_dump('roleName', $roleName);
+                var_dump($entities);
+                foreach($entities as $entity) {
+                    var_dump('entityName', $entity['name']);
+                    foreach($entity['joins'] as $joinName => $joinId) {
+                        var_dump('joinName', $joinName);
+                        var_dump('joinId', $joinId);
+                    }
                 }
             }
         }
@@ -87,6 +92,7 @@ class FilterManager {
         $parts = $queryBuilder->getDQLParts();
         if (0 < count($parts['join'])) {
             var_dump($parts['join']);
+            var_dump(__LINE__);
             die();
         }
 
