@@ -4,6 +4,7 @@ namespace Mesd\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Mesd\UserBundle\Model\FilterInterface;
+use Mesd\UserBundle\Model\Solvent\Solvent;
 
 /**
  * Filter
@@ -25,7 +26,7 @@ abstract class Filter implements FilterInterface
 
     public function __toString()
     {
-        return (string) $this->getFilter();
+        return (string) $this->getSolvent();
     }
 
     /**
@@ -49,5 +50,19 @@ abstract class Filter implements FilterInterface
     public function getSolvent()
     {
         return $this->solvent;
+    }
+
+    /**
+     * Get getSolventWrappers
+     *
+     * @return array
+     */
+    public function getSolventWrappers()
+    {
+        $solventWrappers = array();
+        foreach ($this->getSolvent() as $roleName => $entities) {
+            $solventWrappers[] = new Solvent($roleName, $entities);
+        }
+        return $solventWrappers;
     }
 }

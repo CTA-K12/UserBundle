@@ -20,16 +20,23 @@ class FilterManager {
         $this->filterClass     = $filterClass;
     }
 
-    public function applyFilter($queryBuilder)
+    public function applyFilters($queryBuilder)
     {
         $user = $this->securityContext->getToken()->getUser();
 
-        foreach($this->config as $roleName => $entities) {
+        foreach ($user->getFilter() as $filter) {
+            $queryBuilder = $this->applyFilter($queryBuilder, $filter);
+        }
+
+        /*
+        $user = $this->securityContext->getToken()->getUser();
+
+        foreach ($this->config as $roleName => $entities) {
             var_dump('roleName', $roleName);
-            foreach($entities['entities'] as $entity) {
-                foreach($entity as $entityValue) {
+            foreach ($entities['entities'] as $entity) {
+                foreach ($entity as $entityValue) {
                     var_dump('entityValueName', $entityValue['name']);
-                    foreach($entityValue['joins'] as $join) {
+                    foreach ($entityValue['joins'] as $join) {
                         var_dump('join', $join);
                     }
                 }
@@ -43,14 +50,29 @@ class FilterManager {
 
         foreach ($filters as $filter) {
             $solvents = $filter->getSolvent();
-            foreach($solvents as $roleName => $entities) {
+            foreach ($solvents as $roleName => $entities) {
                 var_dump('roleName', $roleName);
                 var_dump($entities);
-                foreach($entities as $entity) {
+                foreach ($entities as $entity) {
                     var_dump('entityName', $entity['name']);
-                    foreach($entity['joins'] as $joinName => $joinId) {
+                    foreach ($entity['joins'] as $joinName => $joinId) {
                         var_dump('joinName', $joinName);
                         var_dump('joinId', $joinId);
+                    }
+                }
+            }
+        }
+
+        var_dump(__LINE__);
+
+        foreach ($user->getFilter() as $filter) {
+            foreach ($filter->getSolventWrappers() as $solvent) {
+                var_dump('solventName: ' . $solvent->getName());
+                foreach ($solvent->getEntity() as $entity) {
+                    var_dump('entityName: ' . $entity->getName());
+                    foreach ($entity->getJoin() as $join) {
+                        var_dump('joinName: ' . $join->getName());
+                        var_dump('joinId: ' . $join->getId());
                     }
                 }
             }
@@ -103,7 +125,13 @@ class FilterManager {
 
         $queryBuilder
             ->andWhere('1 = 1');
+        */
 
+        return $queryBuilder;
+    }
+
+    protected function applyFilter($queryBuilder, $filter)
+    {
         return $queryBuilder;
     }
 
