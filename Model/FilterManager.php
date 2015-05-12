@@ -132,6 +132,9 @@ class FilterManager {
 
     protected function applyFilter($queryBuilder, $filter)
     {
+        foreach ($filter->getSolventWrappers() as $solvent) {
+            $queryBuilder = $solvent->applyToQueryBuilder($queryBuilder);
+        }
         return $queryBuilder;
     }
 

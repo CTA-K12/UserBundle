@@ -13,16 +13,22 @@ class Solvent {
     protected $name;
 
     /**
+     * @var string
+     */
+    protected $unique;
+
+    /**
      * @var array
      */
     protected $entity;
 
-    public function __construct($name, $entities)
+    public function __construct($name, $unique, $entities)
     {
         $this->name = $name;
         $this->entity = array();
-        foreach($entities as $entity) {
-            $this->entity[] = new Entity($entity['name'], $entity['joins']);
+        $length = count($entities);
+        for ($i = 0; $i < $length; $i++) {
+            $this->entity[] = new Entity($entities[$i]['name'], $unique . 'entity' . $i, $entities[$i]['joins']);
         }
     }
 
@@ -45,4 +51,13 @@ class Solvent {
     {
         return $this->entity;
     }
-}
+
+    public function applyToQueryBuilder($queryBuilder)
+    {
+        foreach ($this->entity as $entity) {
+            $entity->applyToQueryBuilder($queryBuilder);
+        }
+
+        return $queryBuilder;
+    }
+   }
