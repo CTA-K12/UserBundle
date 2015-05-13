@@ -23,7 +23,6 @@ class FilterManager {
     public function applyFilters($queryBuilder)
     {
         $user = $this->securityContext->getToken()->getUser();
-
         foreach ($user->getFilter() as $filter) {
             $queryBuilder = $this->applyFilter($queryBuilder, $filter);
         }
@@ -36,6 +35,7 @@ class FilterManager {
         foreach ($filter->getSolventWrappers() as $solvent) {
             $queryBuilder = $solvent->applyToQueryBuilder($queryBuilder);
         }
+
         return $queryBuilder;
     }
 

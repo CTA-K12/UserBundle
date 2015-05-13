@@ -61,8 +61,8 @@ abstract class Filter implements FilterInterface
     {
         $solventWrappers = array();
         $i = 0;
-        foreach ($this->getSolvent() as $roleName => $entities) {
-            $solventWrappers[] = new Solvent($roleName, 'solvent' . $i, $entities);
+        foreach ($this->getSolvent() as $solvent) {
+            $solventWrappers[] = new Solvent($solvent['role'], 'solvent' . $i, $solvent['entities']);
             $i++;
         }
         return $solventWrappers;

@@ -60,4 +60,4 @@ class Solvent {
 
         return $queryBuilder;
     }
-   }
+}

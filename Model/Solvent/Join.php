@@ -85,7 +85,7 @@ class Join {
                     $this->unique . $associations[$i - 1] . '.' . $associations[$i],
                     $this->unique . $associations[$i],
                     'WITH',
-                    $this->unique . $associations[0] . '.id = ' . $this->id
+                    $this->unique . $associations[$i] . '.id = ' . $this->id
                 );
             } else {
                 $queryBuilder->join($this->unique . $associations[$i - 1] . '.' . $associations[$i], $this->unique . $associations[$i]);
