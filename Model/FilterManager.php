@@ -23,7 +23,20 @@ class FilterManager {
     public function applyFilters($queryBuilder)
     {
         $user = $this->securityContext->getToken()->getUser();
-        foreach ($user->getFilter() as $filter) {
+        if ($this->securityContext->isGranted('ROLE_ADMIN')) {
+
+            return $queryBuilder;
+        }
+
+        $filters = $user->getFilter();
+
+        if (0 === count($filters)) {
+            $queryBuilder->andWhere('1 = 0');
+
+            return $queryBuilder;
+        }
+
+        foreach ($filters as $filter) {
             $queryBuilder = $this->applyFilter($queryBuilder, $filter);
         }
 
@@ -33,8 +46,9 @@ class FilterManager {
     protected function applyFilter($queryBuilder, $filter)
     {
         foreach ($filter->getSolventWrappers() as $solvent) {
-            $queryBuilder = $solvent->applyToQueryBuilder($queryBuilder);
+            $queryBuilder = $solvent->applyToQueryBuilder($queryBuilder, $solvent->getDetails());
         }
+
 
         return $queryBuilder;
     }

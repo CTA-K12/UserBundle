@@ -65,33 +65,57 @@ class Join {
         return $this->id;
     }
 
-    public function applyToQueryBuilder($alias, $queryBuilder)
+    public function applyToQueryBuilder($alias, $queryBuilder, $details)
     {
         $associations = $this->association;
         $length = count($associations);
-        if (1 === $length) {
-            $queryBuilder->join(
-                $alias . '.' . $associations[0],
-                $this->unique . $associations[0],
-                'WITH',
-                $this->unique . $associations[0] . '.id = ' . $this->id
-            );
-        } else {
-            $queryBuilder->join($alias . '.' . $associations[0], $this->unique . $associations[0]);
-        }
-        for ($i = 1; $i < $length; $i++) {
-            if ($i === $length - 1) {
+        if ('' === $details) {
+            if (1 === $length) {
                 $queryBuilder->join(
-                    $this->unique . $associations[$i - 1] . '.' . $associations[$i],
-                    $this->unique . $associations[$i],
-                    'WITH',
-                    $this->unique . $associations[$i] . '.id = ' . $this->id
+                    $alias . '.' . $associations[0],
+                    $this->unique . $associations[0]
                 );
             } else {
-                $queryBuilder->join($this->unique . $associations[$i - 1] . '.' . $associations[$i], $this->unique . $associations[$i]);
+                $queryBuilder->join($alias . '.' . $associations[0], $this->unique . $associations[0]);
+            }
+            for ($i = 1; $i < $length; $i++) {
+                $queryBuilder->join(
+                    $this->unique . $associations[$i - 1] . '.' . $associations[$i],
+                    $this->unique . $associations[$i]
+                );
+            }
+        } else {
+            if (1 === $length) {
+                $queryBuilder->join(
+                    $alias . '.' . $associations[0],
+                    $this->unique . $associations[0],
+                    'WITH',
+                    $details
+                );
+            } else {
+                $queryBuilder->join($alias . '.' . $associations[0], $this->unique . $associations[0]);
+            }
+            for ($i = 1; $i < $length; $i++) {
+                if ($i === $length - 1) {
+                    $queryBuilder->join(
+                        $this->unique . $associations[$i - 1] . '.' . $associations[$i],
+                        $this->unique . $associations[$i],
+                        'WITH',
+                        $details
+                    );
+                } else {
+                    $queryBuilder->join($this->unique . $associations[$i - 1] . '.' . $associations[$i], $this->unique . $associations[$i]);
+                }
             }
         }
 
         return $queryBuilder;
+    }
+
+    public function getDetails()
+    {
+        $length = count($this->association);
+        $lastAssociation = $this->unique . $this->association[$length - 1];
+        return '(' . $lastAssociation . '.id = ' . $this->id . ')';
     }
 }

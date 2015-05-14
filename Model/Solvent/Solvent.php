@@ -15,33 +15,41 @@ class Solvent {
     /**
      * @var array
      */
-    protected $or;
+    protected $bunch;
 
-    public function __construct($unique, $ors)
+    public function __construct($unique, $bunches)
     {
-        $this->or = array();
-        $length = count($ors);
+        $this->bunch = array();
+        $length = count($bunches);
         for ($i = 0; $i < $length; $i++) {
-            $this->or[] = new Entity($ors[$i], $unique . 'or' . $i, $ors[$i]);
+            $this->bunch[] = new Bunch($unique, $bunches[$i]);
         }
     }
 
     /**
-     * Get or
+     * Get bunch
      *
      * @return array
      */
-    public function getOr()
+    public function getBunch()
     {
-        return $this->or;
+        return $this->bunch;
     }
 
-    public function applyToQueryBuilder($queryBuilder)
+    public function applyToQueryBuilder($queryBuilder, $details)
     {
-        foreach ($this->or as $or) {
-            $or->applyToQueryBuilder($queryBuilder);
-        }
+        $this->bunch[0]->applyToQueryBuilder($queryBuilder, $details);
 
         return $queryBuilder;
+    }
+
+    public function getDetails()
+    {
+        $details = array();
+        foreach($this->bunch as $bunch) {
+            $details[] = $bunch->getDetails();
+        }
+
+        return '(' . implode(' OR ', $details) . ')';
     }
 }

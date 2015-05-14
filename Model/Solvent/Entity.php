@@ -30,7 +30,7 @@ class Entity {
         $length = count($joins);
         $i = 0;
         foreach($joins as $joinName => $joinId) {
-            $this->join[] = new Join($joinName, $unique . 'join' . $i, $joinId);
+            $this->join[] = new Join($joinName, $unique, $joinId);
             $i++;
         }
     }
@@ -55,7 +55,7 @@ class Entity {
         return $this->join;
     }
 
-    public function applyToQueryBuilder($queryBuilder)
+    public function applyToQueryBuilder($queryBuilder, $details)
     {
         foreach ($queryBuilder->getDQLParts() as $partName => $parts) {
             if (false !== $parts && !is_null($parts) && !empty($parts)) {
@@ -63,15 +63,25 @@ class Entity {
                     if ('select' === $partName) {
                     } elseif ('from' === $partName) {
                         if ($this->name === $part->getFrom()) {
-                            foreach ($this->join as $join) {
-                                $queryBuilder = $join->applyToQueryBuilder($part->getAlias(), $queryBuilder);
+                            $length = count($this->join);
+                            for ($i = 0; $i < $length; $i++) {
+                                if (($length - 1) === $i) {
+                                    $queryBuilder = $this->join[$i]->applyToQueryBuilder($part->getAlias(), $queryBuilder, $details);
+                                } else {
+                                    $queryBuilder = $this->join[$i]->applyToQueryBuilder($part->getAlias(), $queryBuilder, '');
+                                }
                             }
                         }
                     } elseif ('join' === $partName) {
                         foreach ($part as $partJoin) {
                             if ($this->name === $partJoin->getJoin()) {
-                                foreach ($this->join as $join) {
-                                    $queryBuilder = $join->applyToQueryBuilder($partJoin->getAlias(), $queryBuilder);
+                                $length = count($this->join);
+                                for ($i = 0; $i < $length; $i++) {
+                                    if (($length - 1) === $i) {
+                                        $queryBuilder = $join[$i]->applyToQueryBuilder($partJoin->getAlias(), $queryBuilder, $details);
+                                    } else {
+                                        $queryBuilder = $join[$i]->applyToQueryBuilder($partJoin->getAlias(), $queryBuilder, '');
+                                    }
                                 }
                             }
                         }
@@ -81,5 +91,15 @@ class Entity {
         }
 
         return $queryBuilder;
+    }
+
+    public function getDetails()
+    {
+        $details = array();
+        foreach($this->join as $join) {
+            $details[] = $join->getDetails();
+        }
+
+        return '(' . implode(' AND ', $details) . ')';
     }
 }
