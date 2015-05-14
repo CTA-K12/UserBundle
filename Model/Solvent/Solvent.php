@@ -10,52 +10,36 @@ class Solvent {
     /**
      * @var string
      */
-    protected $name;
-
-    /**
-     * @var string
-     */
     protected $unique;
 
     /**
      * @var array
      */
-    protected $entity;
+    protected $or;
 
-    public function __construct($name, $unique, $entities)
+    public function __construct($unique, $ors)
     {
-        $this->name = $name;
-        $this->entity = array();
-        $length = count($entities);
+        $this->or = array();
+        $length = count($ors);
         for ($i = 0; $i < $length; $i++) {
-            $this->entity[] = new Entity($entities[$i]['name'], $unique . 'entity' . $i, $entities[$i]['joins']);
+            $this->or[] = new Entity($ors[$i], $unique . 'or' . $i, $ors[$i]);
         }
     }
 
     /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get entity
+     * Get or
      *
      * @return array
      */
-    public function getEntity()
+    public function getOr()
     {
-        return $this->entity;
+        return $this->or;
     }
 
     public function applyToQueryBuilder($queryBuilder)
     {
-        foreach ($this->entity as $entity) {
-            $entity->applyToQueryBuilder($queryBuilder);
+        foreach ($this->or as $or) {
+            $or->applyToQueryBuilder($queryBuilder);
         }
 
         return $queryBuilder;
