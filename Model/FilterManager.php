@@ -9,7 +9,7 @@ class FilterManager {
     private $filterClass;
     private $roleClass;
     private $userClass;
-    private $config;
+    private $bypassRoles;
 
     public function __construct($securityContext, $objectManager, $userClass, $roleClass, $filterClass)
     {
@@ -23,9 +23,11 @@ class FilterManager {
     public function applyFilters($queryBuilder)
     {
         $user = $this->securityContext->getToken()->getUser();
-        if ($this->securityContext->isGranted('ROLE_ADMIN')) {
+        foreach ($this->bypassRoles as $bypassRole) {
+            if ($this->securityContext->isGranted($bypassRole)) {
 
-            return $queryBuilder;
+                return $queryBuilder;
+            }
         }
 
         $filters = $user->getFilter();
@@ -53,15 +55,15 @@ class FilterManager {
         return $queryBuilder;
     }
 
-    public function setConfig( $config )
+    public function setBypassRoles( $bypassRoles )
     {
-        $this->config = $config;
+        $this->bypassRoles = $bypassRoles;
 
         return $this;
     }
 
-    public function getConfig()
+    public function getBypassRoles()
     {
-        return $this->config;
+        return $this->bypassRoles;
     }
 }

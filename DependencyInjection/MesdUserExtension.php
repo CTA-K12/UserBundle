@@ -80,7 +80,7 @@ class MesdUserExtension extends Extension
             // Once the services definition are read, get your service and add a method call to setConfig()
             $sillyServiceDefinition = $container->getDefinition( 'mesd_user.filter_manager' );
 
-            $sillyServiceDefinition->addMethodCall( 'setConfig', array( $config[ 'filters' ] ) );
+            $sillyServiceDefinition->addMethodCall( 'setBypassRoles', array( $config[ 'filter' ][ 'bypass_roles' ] ) );
         }
         else {
             $container->setParameter('mesd_user.filter_class_placeholder', null);
