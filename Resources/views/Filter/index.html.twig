@@ -1,0 +1,43 @@
+{% extends "MesdUserBundle::layout.html.twig" %}
+
+{% block mesd_user_content %}
+
+    {% if error is defined %}
+        {% if error %}
+            <div>{{ error.message }}</div>
+        {% endif %}
+    {% endif %}
+
+    <table border=1>
+        <tr>
+        </tr>
+        {% for filter in filters %}
+            <tr>
+                <td>
+                {{ filter['user'] }}
+                </td>
+                <td>
+                {{ filter['role'] }}
+                </td>
+                <td>
+    <table border=2>
+        <tr>
+        </tr>
+                {% for solvent in filter['solvent'] %}
+            <tr>
+                <td>
+                    {{ solvent['name'] }}
+                </td>
+                <td>
+                    {{ solvent['trail'] }}
+                </td>
+                <td>
+                    {{ solvent['item'] }}
+                </td>
+            </tr>
+                {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock mesd_user_content %}

@@ -19,6 +19,7 @@ class Bunch {
 
     public function __construct($unique, $entities)
     {
+        $this->unique = $unique;
         $this->entity = array();
         $length = count($entities);
         for ($i = 0; $i < $length; $i++) {

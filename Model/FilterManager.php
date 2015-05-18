@@ -10,6 +10,7 @@ class FilterManager {
     private $roleClass;
     private $userClass;
     private $bypassRoles;
+    private $config;
 
     public function __construct($securityContext, $objectManager, $userClass, $roleClass, $filterClass)
     {
@@ -51,7 +52,6 @@ class FilterManager {
             $queryBuilder = $solvent->applyToQueryBuilder($queryBuilder, $solvent->getDetails());
         }
 
-
         return $queryBuilder;
     }
 
@@ -65,5 +65,17 @@ class FilterManager {
     public function getBypassRoles()
     {
         return $this->bypassRoles;
+    }
+
+    public function setConfig( $config )
+    {
+        $this->config = $config;
+
+        return $this;
+    }
+
+    public function getConfig()
+    {
+        return $this->config;
     }
 }

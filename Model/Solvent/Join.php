@@ -15,6 +15,11 @@ class Join {
     /**
      * @var string
      */
+    protected $trail;
+
+    /**
+     * @var string
+     */
     protected $unique;
 
     /**
@@ -23,16 +28,17 @@ class Join {
     protected $association;
 
     /**
-     * @var int
+     * @var string
      */
-    protected $id;
+    protected $value;
 
-    public function __construct($name, $unique, $id)
+    public function __construct($name, $trail, $unique, $value)
     {
         $this->name = $name;
+        $this->trail = $trail;
         $this->unique = $unique;
-        $this->association = explode('->', $name);
-        $this->id = (int)$id;
+        $this->association = explode('->', $trail);
+        $this->value = $value;
     }
 
     /**
@@ -46,6 +52,16 @@ class Join {
     }
 
     /**
+     * Get trail
+     *
+     * @return string
+     */
+    public function getTrail()
+    {
+        return $this->trail;
+    }
+
+    /**
      * Get association
      *
      * @return array
@@ -56,13 +72,13 @@ class Join {
     }
 
     /**
-     * Get id
+     * Get value
      *
-     * @return int
+     * @return string
      */
-    public function getId()
+    public function getValue()
     {
-        return $this->id;
+        return $this->value;
     }
 
     public function applyToQueryBuilder($alias, $queryBuilder, $details)
@@ -116,6 +132,7 @@ class Join {
     {
         $length = count($this->association);
         $lastAssociation = $this->unique . $this->association[$length - 1];
-        return '(' . $lastAssociation . '.id = ' . $this->id . ')';
+
+        return '(' . $lastAssociation . '.id = ' . $this->value . ')';
     }
 }

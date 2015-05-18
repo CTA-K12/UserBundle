@@ -19,6 +19,7 @@ class Solvent {
 
     public function __construct($unique, $bunches)
     {
+        $this->unique = $unique;
         $this->bunch = array();
         $length = count($bunches);
         for ($i = 0; $i < $length; $i++) {

@@ -78,9 +78,9 @@ class MesdUserExtension extends Extension
             $userMetadataListener->addMethodCall('setFiltersEnabled', array(true));
 
             // Once the services definition are read, get your service and add a method call to setConfig()
-            $sillyServiceDefinition = $container->getDefinition( 'mesd_user.filter_manager' );
-
-            $sillyServiceDefinition->addMethodCall( 'setBypassRoles', array( $config[ 'filter' ][ 'bypass_roles' ] ) );
+            $serviceDefinition = $container->getDefinition( 'mesd_user.filter_manager' );
+            $serviceDefinition->addMethodCall( 'setBypassRoles', array( $config[ 'filter' ][ 'bypass_roles' ] ) );
+            $serviceDefinition->addMethodCall( 'setConfig', array( $config[ 'filter' ][ 'filters' ] ) );
         }
         else {
             $container->setParameter('mesd_user.filter_class_placeholder', null);
