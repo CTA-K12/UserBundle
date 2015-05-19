@@ -5,6 +5,7 @@ namespace Mesd\UserBundle\Controller;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mesd\UserBundle\Form\Type\FilterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class FilterController extends Controller
@@ -81,5 +82,33 @@ class FilterController extends Controller
                 'form' => $form->createView(),
             )
         );
+    }
+
+    public function solventAction(Request $request)
+    {
+        $roleId = $request->query->get('id');
+        $entityManager = $this->getDoctrine()->getManager();
+        $roleClass = $this->container->getParameter('mesd_user.role_class');
+        $roleRepository = $entityManager->getRepository($roleClass);
+        $role = $roleRepository->findOneById($roleId);
+        $filterManager = $this->get('mesd_user.filter_manager');
+        $config = $filterManager->getConfig();
+        $roleName = $role->getName();
+        if (array_key_exists($roleName, $config)) {
+            $roleConfig = $config[$roleName];
+        } else {
+            $roleConfig = null;
+        }
+        $response = new JsonResponse();
+        $response->setData(
+            array(
+                'id' => $roleId,
+                'name' => $roleName,
+                'description' => $role->getDescription(),
+                'config' => $roleConfig,
+            )
+        );
+
+        return $response;
     }
 }

@@ -7,3 +7,8 @@ MesdUserBundle_filter_new:
     pattern: /new
     defaults: { _controller: MesdUserBundle:Filter:new }
     methods:  [GET]
+
+MesdUserBundle_filter_solvent:
+    pattern: /solvent
+    defaults: { _controller: MesdUserBundle:Filter:solvent }
+    methods:  [GET]

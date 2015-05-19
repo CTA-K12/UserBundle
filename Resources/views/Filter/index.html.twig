@@ -1,35 +1,6 @@
-{% extends "MesdUserBundle::layout.html.twig" %}
+{% extends "MesdUserBundle:Filter:layout.html.twig" %}
 
-{% block mesd_user_head %}
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
-    <link href='//fonts.googleapis.com/css?family=Roboto:500,400' rel='stylesheet' type='text/css' />
-    <style>
-        table tr th {
-            font-family: 'Roboto', sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            opacity: 0.54;
-        }
-        table tr td {
-            font-family: 'Roboto', sans-serif;
-            font-size: 13px;
-            font-weight: 400;
-            opacity: 0.87;
-        }
-        table tr td:hover {
-            background-color: #eeeeee;
-        }
-    </style>
-{% endblock mesd_user_head %}
-
-{% block mesd_user_content %}
-
-    {% if error is defined %}
-        {% if error %}
-            <div>{{ error.message }}</div>
-        {% endif %}
-    {% endif %}
-
+{% block mesd_user_filter_content %}
     <h1>Filter List</h1>
 
     <table class="table table-striped table-hover">
@@ -88,8 +59,4 @@
             </td>
         </tr>
     </table>
-    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script>
-    </script>
-{% endblock mesd_user_content %}
+{% endblock mesd_user_filter_content %}

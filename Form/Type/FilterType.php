@@ -43,7 +43,16 @@ class FilterType extends AbstractType
                 )
             )
             ->add(
-                'request',
+                'solvent',
+                'hidden',
+                array(
+                    'attr' => array(
+                        'class' => 'filter-solvent-hidden',
+                    ),
+                )
+            )
+            ->add(
+                'submit',
                 'submit',
                 array(
                     'label' => 'Submit'
