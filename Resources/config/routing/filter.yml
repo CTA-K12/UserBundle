@@ -2,3 +2,8 @@ MesdUserBundle_filter_index:
     pattern: /
     defaults: { _controller: MesdUserBundle:Filter:index }
     methods:  [GET]
+
+MesdUserBundle_filter_new:
+    pattern: /new
+    defaults: { _controller: MesdUserBundle:Filter:new }
+    methods:  [GET]
