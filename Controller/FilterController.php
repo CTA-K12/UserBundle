@@ -94,21 +94,40 @@ class FilterController extends Controller
         $filterManager = $this->get('mesd_user.filter_manager');
         $config = $filterManager->getConfig();
         $roleName = $role->getName();
+        $metadataFactory = $entityManager->getMetadataFactory();
+        $entityLists = array();
+
         if (array_key_exists($roleName, $config)) {
             $roleConfig = $config[$roleName];
+            foreach ($roleConfig['entities'] as $entity) {
+                // print_r($entity['entity']['name']);
+                $metadata = $metadataFactory->getMetadataFor($entity['entity']['name']);
+                foreach ($entity['entity']['joins'] as $join) {
+                    // print_r($join['name']);
+                    // print_r($join['trail']);
+                    if (!array_key_exists($join['name'], $entityLists)) {
+                        $associations = explode('->', $join['trail']);
+                        $associationMetadata = $metadata;
+                        $length = count($associations);
+                        for ($i = 0; $i < $length; $i++) {
+                             $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
+                             $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
+                        }
+                        $entities = $entityManager->getRepository($associationMetadata->getName())->findAll();
+                        $entityLists[$join['name']] = $entities;
+                    }
+                }
+            }
         } else {
             $roleConfig = null;
         }
-        $response = new JsonResponse();
-        $response->setData(
+
+        return $this->render(
+            $this->container->getParameter('mesd_user.filter.template.solvent'),
             array(
-                'id' => $roleId,
-                'name' => $roleName,
-                'description' => $role->getDescription(),
-                'config' => $roleConfig,
+                'roleConfig' => $roleConfig,
+                'entityLists' => $entityLists,
             )
         );
-
-        return $response;
     }
 }

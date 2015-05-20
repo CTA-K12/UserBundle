@@ -1,0 +1,15 @@
+{% if roleConfig is not null %}
+    <div>
+        {% for entity in roleConfig['entities'] %}
+            {% for join in entity['entity']['joins'] %}
+                <label>{{ join['name'] }}</label>
+                <select class="no-listener-yet">
+                    <option></option>
+                    {% for item in entityLists[join['name']] %}
+                        <option value="{{ item.id }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endif %}

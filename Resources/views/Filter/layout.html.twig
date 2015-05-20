@@ -1,25 +1,6 @@
 {% extends "MesdUserBundle::layout.html.twig" %}
 
 {% block mesd_user_head %}
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
-    <link href='//fonts.googleapis.com/css?family=Roboto:500,400' rel='stylesheet' type='text/css' />
-    <style>
-        table tr th {
-            font-family: 'Roboto', sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            opacity: 0.54;
-        }
-        table tr td {
-            font-family: 'Roboto', sans-serif;
-            font-size: 13px;
-            font-weight: 400;
-            opacity: 0.87;
-        }
-        table tr td:hover {
-            background-color: #eeeeee;
-        }
-    </style>
     {% block mesd_user_filter_css %}
     {% endblock mesd_user_filter_css %}
 {% endblock mesd_user_head %}
@@ -36,22 +17,47 @@
     {% endblock mesd_user_filter_content %}
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script>
         $( document ).ready(function() {
-            $('.filter-role-dropdown').on('change', function() {
-                var role = $(this).val();
+            function addSolvent(dropdown) {
+                var solvent = $('#solvent');
+                solvent.html('');
+                var role = dropdown.val();
                 if ('' !== role) {
                     $.ajax({
                         url: '{{ path('MesdUserBundle_filter_solvent') }}',
                         data: {id: role}
                     }).done(function(msg) {
-                        console.log(msg);
-                        var solvent = $('#solvent');
-                        console.log(solvent);
-                        solvent.html('solvent');
+                        var afterSolvent = $('#afterSolvent');
+                        if ('' === msg) {
+                            afterSolvent.html('');
+                        } else {
+                            var solvent = $('#solvent');
+                            solvent.append(msg);
+                            afterSolvent.html('<button id="addAnother">Add Another</button>');
+                            $('#addAnother').on('click', function(event) {
+                                event.preventDefault();
+                                solvent.append(msg);
+                                $('.no-listener-yet').on('change', function() {
+                                    updateSolvent();
+                                }).removeClass('no-listener-yet');
+                            });
+                        }
+                        $('.no-listener-yet').on('change', function() {
+                            updateSolvent();
+                        }).removeClass('no-listener-yet');
                     });
                 }
+            };
+            function updateSolvent() {
+                var solvent = {};
+                $('#solvent').each(function(index) {
+                    console.log( this );
+                });
+                $('#mesd_user_filter_solvent').val(JSON.stringify(solvent));
+            };
+            $('.filter-role-dropdown').on('change', function() {
+                addSolvent($(this));
             });
         });
     </script>
