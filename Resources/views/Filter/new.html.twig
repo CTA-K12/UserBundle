@@ -11,6 +11,8 @@
     {{ form_label(form.role) }}
     {{ form_widget(form.role, {'attr': {'class': 'form-control filter-role-dropdown'}}) }}
     {{ form_errors(form.role) }}
+    {{ form_widget(form.solvent) }}
+    <div id="solvent"></div>
     {{ form_label(form.submit) }}
     {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary'}}) }}
     {{ form_end(form) }}

@@ -47,6 +47,9 @@
                         data: {id: role}
                     }).done(function(msg) {
                         console.log(msg);
+                        var solvent = $('#solvent');
+                        console.log(solvent);
+                        solvent.html('solvent');
                     });
                 }
             });
