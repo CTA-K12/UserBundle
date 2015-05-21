@@ -44,7 +44,7 @@ class FilterType extends AbstractType
             )
             ->add(
                 'solvent',
-                'text',
+                'textarea',
                 array(
                     'attr' => array(
                         'class' => 'filter-solvent-hidden',

@@ -50,11 +50,32 @@
                 }
             };
             function updateSolvent() {
-                var solvent = {};
-                $('#solvent').each(function(index) {
-                    console.log( this );
+                var array0 = []
+                $('#solvent').children('div').each(function(index) {
+                    var array1 = [];
+                    $(this).children('div').each(function(index) {
+                        var array2 = [];
+                        $(this).children('div').each(function(index) {
+                            var array3 = {};
+                            array3.name = $(this).data('name');
+                            array3.joins = [];
+                            $(this).children('div').each(function(index) {
+                                var array4 = {}
+                                var join = $(this);
+                                array4.name = join.data('name');
+                                array4.trail = join.data('trail');
+                                select = $(join.children('select')[0]);
+                                option = $(select.children('option:selected')[0]);
+                                array4.value = option.val();
+                                array3.joins.push(array4);
+                            });
+                            array2.push(array3);
+                        });
+                        array1.push(array2);
+                    });
+                    array0.push(array1);
                 });
-                $('#mesd_user_filter_solvent').val(JSON.stringify(solvent));
+                $('#mesd_user_filter_solvent').val(JSON.stringify(array0));
             };
             $('.filter-role-dropdown').on('change', function() {
                 addSolvent($(this));
