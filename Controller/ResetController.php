@@ -125,7 +125,9 @@ class ResetController extends Controller
         $user = $this->get('mesd_user.user_manager')->findUserByConfirmationToken($token);
 
         if (null === $user) {
-            throw new NotFoundHttpException(
+            // class not declared
+            //throw new NotFoundHttpException(
+            throw $this->createNotFoundException(
                 sprintf('The user with "confirmation token" does not exist for value "%s"', $token)
             );
         }
