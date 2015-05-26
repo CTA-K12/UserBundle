@@ -48,9 +48,13 @@ class FilterManager {
 
     protected function applyFilter($queryBuilder, $filter)
     {
-        foreach ($filter->getSolventWrappers() as $solvent) {
-            $queryBuilder = $solvent->applyToQueryBuilder($queryBuilder, $solvent->getDetails());
+        $solventWrappers = $filter->getSolventWrappers();
+        $details = array();
+        foreach ($solventWrappers as $solventWrapper) {
+            $details[] = $solventWrapper->getDetails();
         }
+        $detail = '(' . implode(' OR ', $details) . ')';
+        $queryBuilder = $solventWrapper->applyToQueryBuilder($queryBuilder, $detail);
 
         return $queryBuilder;
     }

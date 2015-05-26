@@ -14,7 +14,7 @@
                 <table class="table table-striped table-hover">
                     <tr>
                         <th>
-                            Role
+                            Category
                         </th>
                         <th>
                             Filters
@@ -23,12 +23,12 @@
                     {% for filter in filters %}
                         <tr>
                             <td>
-                            {{ filter['role'] }}
+                            {{ filter['filterCategory'] }}
                             </td>
                             <td>
                                 <table class="table table-striped table-hover">
                                     <tr>
-                                        {% for join in filter['solvent'][0][0] %}
+                                        {% for join in filter['solvent'][0][0][0] %}
                                             <th>
                                                 {{ join['name'] }}
                                             </th>
@@ -36,11 +36,13 @@
                                     </tr>
                                     {% for solvent in filter['solvent'] %}
                                         <tr>
-                                            {% for entity in solvent %}
-                                                {% for join in entity %}
-                                                    <td>
-                                                        {{ join['item'] }}
-                                                    </td>
+                                            {% for bunch in solvent %}
+                                                {% for entity in bunch %}
+                                                    {% for join in entity %}
+                                                        <td>
+                                                            {{ join['item'] }}
+                                                        </td>
+                                                    {% endfor %}
                                                 {% endfor %}
                                             {% endfor %}
                                         </tr>

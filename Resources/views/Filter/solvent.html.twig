@@ -1,6 +1,6 @@
-{% if roleConfig is not null %}
+{% if filterCategoryConfig is not null %}
     <div>
-        {% for entities in roleConfig['entities'] %}
+        {% for entities in filterCategoryConfig['entities'] %}
             <div>
                 {% for entity in entities %}
                     <div data-name="{{ entity['name'] }}">

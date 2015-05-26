@@ -43,7 +43,7 @@ interface GroupInterface
     /**
      * Add role
      *
-     * @param \Mesd\UserBundle\Entity\Role $role
+     * @param RoleInterface $role
      * @return Group
      */
     public function addRole(RoleInterface $role);

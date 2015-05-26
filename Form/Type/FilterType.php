@@ -10,13 +10,13 @@ class FilterType extends AbstractType
 {
     private $filterClassName;
     private $userClassName;
-    private $roleClassName;
+    private $filterCategoryClassName;
 
-    public function __construct($filterClassName, $userClassName, $roleClassName)
+    public function __construct($filterClassName, $userClassName, $filterCategoryClassName)
     {
         $this->filterClassName = $filterClassName;
         $this->userClassName = $userClassName;
-        $this->roleClassName = $roleClassName;
+        $this->filterCategoryClassName = $filterCategoryClassName;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -33,11 +33,11 @@ class FilterType extends AbstractType
                 )
             )
             ->add(
-                'role',
+                'filterCategory',
                 'entity',
                 array(
-                    'class' => $this->roleClassName,
-                    'label' => 'Role',
+                    'class' => $this->filterCategoryClassName,
+                    'label' => 'Category',
                     'required' => true,
                     'empty_value' => '',
                 )

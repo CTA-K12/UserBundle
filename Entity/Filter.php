@@ -26,7 +26,7 @@ abstract class Filter implements FilterInterface
 
     public function __toString()
     {
-        return (string) $this->getSolvent();
+        return json_encode($this->getSolvent());
     }
 
     /**

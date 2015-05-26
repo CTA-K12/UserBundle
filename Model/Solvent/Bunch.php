@@ -23,7 +23,7 @@ class Bunch {
         $this->entity = array();
         $length = count($entities);
         for ($i = 0; $i < $length; $i++) {
-            $this->entity[] = new Entity($entities[$i]['name'], $unique . 'entity' . $i, $entities[$i]['joins']);
+            $this->entity[] = new Entity($entities[$i]['name'], 'entity' . $i, $entities[$i]['joins']);
         }
     }
 

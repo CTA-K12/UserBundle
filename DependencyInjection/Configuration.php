@@ -30,6 +30,8 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('filter_class')
                 ->end()
+                ->scalarNode('filter_category_class')
+                ->end()
                 ->arrayNode('filter')
                     ->children()
                         ->arrayNode('bypass_roles')

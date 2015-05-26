@@ -73,6 +73,7 @@ class MesdUserExtension extends Extension
 
             $loader->load('FilterManagerService.yml');
             $container->setParameter('mesd_user.filter_class_placeholder', $container->getParameter('mesd_user.filter_class'));
+            $container->setParameter('mesd_user.filter_category_class_placeholder', $container->getParameter('mesd_user.filter_category_class'));
 
             //Set the filters enabled on the user metadata listener to true
             $userMetadataListener->addMethodCall('setFiltersEnabled', array(true));
@@ -84,6 +85,7 @@ class MesdUserExtension extends Extension
         }
         else {
             $container->setParameter('mesd_user.filter_class_placeholder', null);
+            $container->setParameter('mesd_user.filter_category_class_placeholder', null);
 
             //Set the filters enabled on the user metadata listener to false
             $userMetadataListener->addMethodCall('setFiltersEnabled', array(false));

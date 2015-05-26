@@ -49,12 +49,12 @@ class FilterController extends Controller
                     }
                     $bunchArray[] = $entityArray;
                 }
-                $solventArray = $bunchArray;
+                $solventArray[] = $bunchArray;
             }
 
             $filterArray[] = array(
                 'user' => $filter->getUser(),
-                'role' => $filter->getRole(),
+                'filterCategory' => $filter->getFilterCategory(),
                 'solvent' => $solventArray,
             );
         }
@@ -71,10 +71,10 @@ class FilterController extends Controller
     {
         $filterClass = $this->container->getParameter('mesd_user.filter_class');
         $userClass = $this->container->getParameter('mesd_user.user_class');
-        $roleClass = $this->container->getParameter('mesd_user.role_class');
+        $filterCategoryClass = $this->container->getParameter('mesd_user.filter_category_class');
         $entity = new $filterClass();
         $form = $this->createForm(
-            new FilterType($filterClass, $userClass, $roleClass),
+            new FilterType($filterClass, $userClass, $filterCategoryClass),
             $entity,
             array(
                 'action' => $this->generateUrl('MesdUserBundle_filter_create'),
@@ -95,20 +95,20 @@ class FilterController extends Controller
 
     public function solventAction(Request $request)
     {
-        $roleId = $request->query->get('id');
+        $filterCategoryId = $request->query->get('id');
         $entityManager = $this->getDoctrine()->getManager();
-        $roleClass = $this->container->getParameter('mesd_user.role_class');
-        $roleRepository = $entityManager->getRepository($roleClass);
-        $role = $roleRepository->findOneById($roleId);
+        $filterCategoryClass = $this->container->getParameter('mesd_user.filter_category_class');
+        $filterCategoryRepository = $entityManager->getRepository($filterCategoryClass);
+        $filterCategory = $filterCategoryRepository->findOneById($filterCategoryId);
         $filterManager = $this->get('mesd_user.filter_manager');
         $config = $filterManager->getConfig();
-        $roleName = $role->getName();
+        $filterCategoryName = $filterCategory->getName();
         $metadataFactory = $entityManager->getMetadataFactory();
         $entityLists = array();
 
-        if (array_key_exists($roleName, $config)) {
-            $roleConfig = $config[$roleName];
-            foreach ($roleConfig['entities'] as $entity) {
+        if (array_key_exists($filterCategoryName, $config)) {
+            $filterCategoryConfig = $config[$filterCategoryName];
+            foreach ($filterCategoryConfig['entities'] as $entity) {
                 $metadata = $metadataFactory->getMetadataFor($entity['entity']['name']);
                 foreach ($entity['entity']['joins'] as $join) {
                     if (!array_key_exists($join['name'], $entityLists)) {
@@ -125,13 +125,13 @@ class FilterController extends Controller
                 }
             }
         } else {
-            $roleConfig = null;
+            $filterCategoryConfig = null;
         }
 
         return $this->render(
             $this->container->getParameter('mesd_user.filter.template.solvent'),
             array(
-                'roleConfig' => $roleConfig,
+                'filterCategoryConfig' => $filterCategoryConfig,
                 'entityLists' => $entityLists,
             )
         );
@@ -141,10 +141,10 @@ class FilterController extends Controller
     {
         $filterClass = $this->container->getParameter('mesd_user.filter_class');
         $userClass = $this->container->getParameter('mesd_user.user_class');
-        $roleClass = $this->container->getParameter('mesd_user.role_class');
+        $filterCategoryClass = $this->container->getParameter('mesd_user.filter_category_class');
         $entity = new $filterClass();
         $form = $this->createForm(
-            new FilterType($filterClass, $userClass, $roleClass),
+            new FilterType($filterClass, $userClass, $filterCategoryClass),
             $entity,
             array(
                 'action' => $this->generateUrl('MesdUserBundle_filter_create'),
@@ -212,11 +212,11 @@ class FilterController extends Controller
                     }
                     $bunchArray[] = $entityArray;
                 }
-                $solventArray = $bunchArray;
+                $solventArray[] = $bunchArray;
             }
 
             $filterArray[] = array(
-                'role' => $filter->getRole(),
+                'filterCategory' => $filter->getFilterCategory(),
                 'solvent' => $solventArray,
             );
         }

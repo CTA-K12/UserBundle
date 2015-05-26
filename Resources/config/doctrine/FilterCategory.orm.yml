@@ -1,0 +1,9 @@
+Mesd\UserBundle\Entity\FilterCategory:
+  type: mappedSuperclass
+  fields:
+    name:
+      type: string
+      nullable: false
+    description:
+      type: string
+      nullable: false
