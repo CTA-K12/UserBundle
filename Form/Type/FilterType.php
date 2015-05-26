@@ -51,13 +51,6 @@ class FilterType extends AbstractType
                     ),
                 )
             )
-            ->add(
-                'submit',
-                'submit',
-                array(
-                    'label' => 'Submit'
-                )
-            )
         ;
     }
 

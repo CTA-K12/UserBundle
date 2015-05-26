@@ -12,3 +12,13 @@ MesdUserBundle_filter_solvent:
     pattern: /solvent
     defaults: { _controller: MesdUserBundle:Filter:solvent }
     methods:  [GET]
+
+MesdUserBundle_filter_create:
+    pattern: /create
+    defaults: { _controller: MesdUserBundle:Filter:create }
+    methods:  [POST]
+
+MesdUserBundle_filter_show:
+    pattern: /show/{id}
+    defaults: { _controller: MesdUserBundle:Filter:show }
+    methods:  [GET]

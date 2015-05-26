@@ -29,9 +29,8 @@ class Entity {
         $this->join = array();
         $length = count($joins);
         $i = 0;
-        foreach($joins as $join) {
-            $this->join[] = new Join($join['name'], $join['trail'], $unique, $join['value']);
-            $i++;
+        for($i = 0; $i < $length; $i++) {
+            $this->join[] = new Join($joins[$i]['name'], $joins[$i]['trail'], $unique, $joins[$i]['value']);
         }
     }
 
