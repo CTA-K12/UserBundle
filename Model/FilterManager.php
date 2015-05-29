@@ -82,4 +82,71 @@ class FilterManager {
     {
         return $this->config;
     }
+
+    public function getAsArray($filters, $metadataFactory)
+    {
+        $filterArray = array();
+        foreach ($filters as $filter) {
+            $solvents = $filter->getSolventWrappers();
+            $solventArray = array();
+            foreach ($solvents as $solvent) {
+                $bunchArray = array();
+                foreach ($solvent->getBunch() as $bunch) {
+                    $entityArray = array();
+                    foreach ($bunch->getEntity() as $entity) {
+                        $metadata = $metadataFactory->getMetadataFor($entity->getName());
+                        $joinArray = array();
+                        foreach ($entity->getJoin() as $join) {
+                            $associationMetadata = $metadata;
+                            $associations = $join->getAssociation();
+                            $length = count($associations);
+                            for ($i = 0; $i < $length; $i++) {
+                                 $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
+                                 $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
+                            }
+                            $entity = $this->objectManager->getRepository($associationMetadata->getName())->findOneById($join->getValue());
+                            $joinArray[] = array(
+                                'name' => $join->getName(),
+                                'item' => (string) $entity,
+                            );
+                        }
+                        $entityArray[] = $joinArray;
+                    }
+                    $bunchArray[] = $entityArray;
+                }
+                $solventArray[] = $bunchArray;
+            }
+
+            $filterArray[] = array(
+                'filterCategory' => $filter->getFilterCategory(),
+                'name'           => $filter->getName(),
+                'solvent'        => $solventArray,
+            );
+        }
+
+        return $filterArray;
+    }
+
+    public function getEntityLists($filterEntities, $metadataFactory)
+    {
+        $entityLists = array();
+        foreach ($filterEntities as $entity) {
+            $metadata = $metadataFactory->getMetadataFor($entity['entity']['name']);
+            foreach ($entity['entity']['joins'] as $join) {
+                if (!array_key_exists($join['name'], $entityLists)) {
+                    $associations = explode('->', $join['trail']);
+                    $associationMetadata = $metadata;
+                    $length = count($associations);
+                    for ($i = 0; $i < $length; $i++) {
+                         $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
+                         $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
+                    }
+                    $entities = $this->objectManager->getRepository($associationMetadata->getName())->findAll();
+                    $entityLists[$join['name']] = $entities;
+                }
+            }
+        }
+
+        return $entityLists;
+    }
 }

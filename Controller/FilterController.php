@@ -19,46 +19,7 @@ class FilterController extends Controller
         $filters = $filterRepository->findAll();
         $filterManager = $this->get('mesd_user.filter_manager');
         $metadataFactory = $entityManager->getMetadataFactory();
-
-        $filterArray = array();
-        foreach ($filters as $filter) {
-            $solvents = $filter->getSolventWrappers();
-            $solventArray = array();
-            foreach ($solvents as $solvent) {
-                $bunchArray = array();
-                foreach ($solvent->getBunch() as $bunch) {
-                    $entityArray = array();
-                    foreach ($bunch->getEntity() as $entity) {
-                        $metadata = $metadataFactory->getMetadataFor($entity->getName());
-                        $joinArray = array();
-                        foreach ($entity->getJoin() as $join) {
-                            $associationMetadata = $metadata;
-                            $associations = $join->getAssociation();
-                            $length = count($associations);
-                            for ($i = 0; $i < $length; $i++) {
-                                 $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
-                                 $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
-                            }
-                            $entity = $entityManager->getRepository($associationMetadata->getName())->findOneById($join->getValue());
-                            $joinArray[] = array(
-                                'name' => $join->getName(),
-                                'item' => (string) $entity,
-                            );
-                        }
-                        $entityArray[] = $joinArray;
-                    }
-                    $bunchArray[] = $entityArray;
-                }
-                $solventArray[] = $bunchArray;
-            }
-
-            $filterArray[] = array(
-                'user'           => $filter->getUser(),
-                'filterCategory' => $filter->getFilterCategory(),
-                'name'           => $filter->getName(),
-                'solvent'        => $solventArray,
-            );
-        }
+        $filterArray = $filterManager->getAsArray($filters, $metadataFactory);
 
         return $this->render(
             $this->container->getParameter('mesd_user.filter.template.index'),
@@ -105,25 +66,9 @@ class FilterController extends Controller
         $filterCategoryName = $filterCategory->getName();
         $metadataFactory = $entityManager->getMetadataFactory();
         $entityLists = array();
-
         if (array_key_exists($filterCategoryName, $config)) {
             $filterCategoryConfig = $config[$filterCategoryName];
-            foreach ($filterCategoryConfig['entities'] as $entity) {
-                $metadata = $metadataFactory->getMetadataFor($entity['entity']['name']);
-                foreach ($entity['entity']['joins'] as $join) {
-                    if (!array_key_exists($join['name'], $entityLists)) {
-                        $associations = explode('->', $join['trail']);
-                        $associationMetadata = $metadata;
-                        $length = count($associations);
-                        for ($i = 0; $i < $length; $i++) {
-                             $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
-                             $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
-                        }
-                        $entities = $entityManager->getRepository($associationMetadata->getName())->findAll();
-                        $entityLists[$join['name']] = $entities;
-                    }
-                }
-            }
+            $entityLists = $filterManager->getEntityLists($filterCategoryConfig['entities'], $metadataFactory);
         } else {
             $filterCategoryConfig = null;
         }
@@ -181,45 +126,7 @@ class FilterController extends Controller
         $filters = $filterRepository->findById($id);
         $filterManager = $this->get('mesd_user.filter_manager');
         $metadataFactory = $entityManager->getMetadataFactory();
-
-        $filterArray = array();
-        foreach ($filters as $filter) {
-            $solvents = $filter->getSolventWrappers();
-            $solventArray = array();
-            foreach ($solvents as $solvent) {
-                $bunchArray = array();
-                foreach ($solvent->getBunch() as $bunch) {
-                    $entityArray = array();
-                    foreach ($bunch->getEntity() as $entity) {
-                        $metadata = $metadataFactory->getMetadataFor($entity->getName());
-                        $joinArray = array();
-                        foreach ($entity->getJoin() as $join) {
-                            $associationMetadata = $metadata;
-                            $associations = $join->getAssociation();
-                            $length = count($associations);
-                            for ($i = 0; $i < $length; $i++) {
-                                 $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
-                                 $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
-                            }
-                            $entity = $entityManager->getRepository($associationMetadata->getName())->findOneById($join->getValue());
-                            $joinArray[] = array(
-                                'name' => $join->getName(),
-                                'item' => (string) $entity,
-                            );
-                        }
-                        $entityArray[] = $joinArray;
-                    }
-                    $bunchArray[] = $entityArray;
-                }
-                $solventArray[] = $bunchArray;
-            }
-
-            $filterArray[] = array(
-                'filterCategory' => $filter->getFilterCategory(),
-                'name'           => $filter->getName(),
-                'solvent'        => $solventArray,
-            );
-        }
+        $filterArray = $filterManager->getAsArray($filters, $metadataFactory);
 
         return $this->render(
             $this->container->getParameter('mesd_user.filter.template.show'),
