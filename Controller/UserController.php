@@ -45,7 +45,7 @@ class UserController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('user_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('MesdUserBundle_user_show', array('id' => $entity->getId())));
         }
 
         return $this->render('MesdUserBundle:User:new.html.twig', array(
@@ -66,7 +66,7 @@ class UserController extends Controller
         $filterClass = $this->container->getParameter('mesd_user.filter_class');
         $userClass = $this->container->getParameter('mesd_user.user_class');
         $form = $this->createForm(new UserType($userClass, $filterClass), $entity, array(
-            'action' => $this->generateUrl('user_create'),
+            'action' => $this->generateUrl('MesdUserBundle_user_create'),
             'method' => 'POST',
         ));
 
@@ -150,7 +150,7 @@ class UserController extends Controller
         $filterClass = $this->container->getParameter('mesd_user.filter_class');
         $userClass = $this->container->getParameter('mesd_user.user_class');
         $form = $this->createForm(new UserType($userClass, $filterClass), $entity, array(
-            'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('MesdUserBundle_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -180,7 +180,7 @@ class UserController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('MesdUserBundle_user_edit', array('id' => $id)));
         }
 
         return $this->render('MesdUserBundle:User:edit.html.twig', array(
@@ -211,7 +211,7 @@ class UserController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('alice'));
+        return $this->redirect($this->generateUrl('user'));
     }
 
     /**
@@ -224,7 +224,7 @@ class UserController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('user_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('MesdUserBundle_user_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()

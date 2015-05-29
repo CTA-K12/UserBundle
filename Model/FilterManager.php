@@ -118,6 +118,7 @@ class FilterManager {
             }
 
             $filterArray[] = array(
+                'id'             => $filter->getId(),
                 'filterCategory' => $filter->getFilterCategory(),
                 'name'           => $filter->getName(),
                 'solvent'        => $solventArray,
