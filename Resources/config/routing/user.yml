@@ -1,0 +1,30 @@
+user:
+    path:     /
+    defaults: { _controller: "MesdUserBundle:User:index" }
+
+user_show:
+    path:     /{id}/show
+    defaults: { _controller: "MesdUserBundle:User:show" }
+
+user_new:
+    path:     /new
+    defaults: { _controller: "MesdUserBundle:User:new" }
+
+user_create:
+    path:     /create
+    defaults: { _controller: "MesdUserBundle:User:create" }
+    requirements: { _method: post }
+
+user_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MesdUserBundle:User:edit" }
+
+user_update:
+    path:     /{id}/update
+    defaults: { _controller: "MesdUserBundle:User:update" }
+    requirements: { _method: post|put }
+
+user_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MesdUserBundle:User:delete" }
+    requirements: { _method: post|delete }
