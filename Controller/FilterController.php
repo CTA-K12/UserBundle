@@ -71,11 +71,10 @@ class FilterController extends Controller
     public function newAction()
     {
         $filterClass = $this->container->getParameter('mesd_user.filter_class');
-        $userClass = $this->container->getParameter('mesd_user.user_class');
         $filterCategoryClass = $this->container->getParameter('mesd_user.filter_category_class');
         $entity = new $filterClass();
         $form = $this->createForm(
-            new FilterType($filterClass, $userClass, $filterCategoryClass),
+            new FilterType($filterClass, $filterCategoryClass),
             $entity,
             array(
                 'action' => $this->generateUrl('MesdUserBundle_filter_create'),
@@ -141,11 +140,10 @@ class FilterController extends Controller
     public function createAction(Request $request)
     {
         $filterClass = $this->container->getParameter('mesd_user.filter_class');
-        $userClass = $this->container->getParameter('mesd_user.user_class');
         $filterCategoryClass = $this->container->getParameter('mesd_user.filter_category_class');
         $entity = new $filterClass();
         $form = $this->createForm(
-            new FilterType($filterClass, $userClass, $filterCategoryClass),
+            new FilterType($filterClass, $filterCategoryClass),
             $entity,
             array(
                 'action' => $this->generateUrl('MesdUserBundle_filter_create'),

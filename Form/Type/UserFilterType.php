@@ -8,50 +8,43 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class FilterType extends AbstractType
 {
+    private $userClassName;
     private $filterClassName;
-    private $filterCategoryClassName;
 
-    public function __construct($filterClassName, $filterCategoryClassName)
+    public function __construct($userClassName, $filterClassName)
     {
+        $this->userClassName = $userClassName;
         $this->filterClassName = $filterClassName;
-        $this->filterCategoryClassName = $filterCategoryClassName;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add(
-                'filterCategory',
+                'user',
                 'entity',
                 array(
-                    'class' => $this->filterCategoryClassName,
-                    'label' => 'Category',
+                    'class' => $this->userClassName,
+                    'label' => 'User',
                     'required' => true,
                     'empty_value' => '',
                 )
             )
-            ->add('name')
             ->add(
-                'solvent',
-                'textarea',
+                'filter',
+                'entity',
                 array(
-                    'attr' => array(
-                        'class' => 'filter-solvent-hidden',
-                    ),
+                    'class' => $this->filterClassName,
+                    'label' => 'Filter',
+                    'required' => true,
+                    'empty_value' => '',
                 )
             )
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => $this->filterClassName
-        ));
-    }
-
     public function getName()
     {
-        return 'mesd_filter';
+        return 'mesd_user_filter';
     }
 }
