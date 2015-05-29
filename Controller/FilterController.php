@@ -53,9 +53,10 @@ class FilterController extends Controller
             }
 
             $filterArray[] = array(
-                'user' => $filter->getUser(),
+                'user'           => $filter->getUser(),
                 'filterCategory' => $filter->getFilterCategory(),
-                'solvent' => $solventArray,
+                'name'           => $filter->getName(),
+                'solvent'        => $solventArray,
             );
         }
 
@@ -217,7 +218,8 @@ class FilterController extends Controller
 
             $filterArray[] = array(
                 'filterCategory' => $filter->getFilterCategory(),
-                'solvent' => $solventArray,
+                'name'           => $filter->getName(),
+                'solvent'        => $solventArray,
             );
         }
 

@@ -14,22 +14,22 @@
                 <table class="table table-striped table-hover">
                     <tr>
                         <th>
-                            Username
-                        </th>
-                        <th>
                             Category
                         </th>
                         <th>
-                            Filters
+                            Name
+                        </th>
+                        <th>
+                            Solvents
                         </th>
                     </tr>
                     {% for filter in filters %}
                         <tr>
                             <td>
-                            {{ filter['user'] }}
+                                {{ filter['filterCategory'] }}
                             </td>
                             <td>
-                            {{ filter['filterCategory'] }}
+                                {{ filter['name'] }}
                             </td>
                             <td>
                                 <table class="table table-striped table-hover">

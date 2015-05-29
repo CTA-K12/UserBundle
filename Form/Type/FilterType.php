@@ -23,16 +23,6 @@ class FilterType extends AbstractType
     {
         $builder
             ->add(
-                'user',
-                'entity',
-                array(
-                    'class' => $this->userClassName,
-                    'label' => 'User',
-                    'required' => true,
-                    'empty_value' => '',
-                )
-            )
-            ->add(
                 'filterCategory',
                 'entity',
                 array(
@@ -42,6 +32,7 @@ class FilterType extends AbstractType
                     'empty_value' => '',
                 )
             )
+            ->add('name')
             ->add(
                 'solvent',
                 'textarea',

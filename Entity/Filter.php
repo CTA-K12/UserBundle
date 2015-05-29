@@ -14,11 +14,14 @@ abstract class Filter implements FilterInterface
     protected $id;
 
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
      * @var array
      */
     protected $solvent;
-
-
 
     public function __construct()
     {
@@ -26,7 +29,30 @@ abstract class Filter implements FilterInterface
 
     public function __toString()
     {
-        return json_encode($this->getSolvent());
+        return $this->name;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Filter
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

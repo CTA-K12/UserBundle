@@ -17,13 +17,19 @@
                             Category
                         </th>
                         <th>
-                            Filters
+                            Name
+                        </th>
+                        <th>
+                            Solvents
                         </th>
                     </tr>
                     {% for filter in filters %}
                         <tr>
                             <td>
-                            {{ filter['filterCategory'] }}
+                                {{ filter['filterCategory'] }}
+                            </td>
+                            <td>
+                                {{ filter['name'] }}
                             </td>
                             <td>
                                 <table class="table table-striped table-hover">
