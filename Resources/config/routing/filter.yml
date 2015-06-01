@@ -1,16 +1,6 @@
-MesdUserBundle_filter_index:
+MesdUserBundle_filter:
     pattern: /
     defaults: { _controller: MesdUserBundle:Filter:index }
-    methods:  [GET]
-
-MesdUserBundle_filter_new:
-    pattern: /new
-    defaults: { _controller: MesdUserBundle:Filter:new }
-    methods:  [GET]
-
-MesdUserBundle_filter_solvent:
-    pattern: /solvent
-    defaults: { _controller: MesdUserBundle:Filter:solvent }
     methods:  [GET]
 
 MesdUserBundle_filter_create:
@@ -18,7 +8,28 @@ MesdUserBundle_filter_create:
     defaults: { _controller: MesdUserBundle:Filter:create }
     methods:  [POST]
 
+MesdUserBundle_filter_edit:
+    pattern: /edit/{id}
+    defaults: { _controller: MesdUserBundle:Filter:edit }
+    methods:  [GET]
+
+MesdUserBundle_filter_new:
+    pattern: /new
+    defaults: { _controller: MesdUserBundle:Filter:new }
+    methods:  [GET]
+
 MesdUserBundle_filter_show:
     pattern: /show/{id}
     defaults: { _controller: MesdUserBundle:Filter:show }
     methods:  [GET]
+
+MesdUserBundle_filter_solvent:
+    pattern: /solvent
+    defaults: { _controller: MesdUserBundle:Filter:solvent }
+    methods:  [GET]
+
+MesdUserBundle_filter_update:
+    pattern: /update
+    defaults: { _controller: MesdUserBundle:Filter:update }
+    methods:  [POST]
+
