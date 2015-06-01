@@ -34,15 +34,6 @@ class FilterType extends AbstractType
                 )
             )
             ->add('name')
-            ->add(
-                'solvent',
-                'hidden',
-                array(
-                    'attr' => array(
-                        'class' => 'filter-solvent-hidden',
-                    ),
-                )
-            )
         ;
         $builder->add(
             $builder->create(

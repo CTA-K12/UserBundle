@@ -19,6 +19,32 @@
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script>
         $( document ).ready(function() {
+            var solvent = $('#solvent');
+            if ('' != solvent.html()) {
+                addListeners();
+                updateSolvent();
+            }
+            function addListeners() {
+                $('.no-listener-yet').on('change', function() {
+                    updateSolvent();
+                }).removeClass('no-listener-yet');
+            }
+            function addJoin(msg) {
+                var afterSolvent = $('#afterSolvent');
+                if ('' === msg) {
+                    afterSolvent.html('');
+                } else {
+                    var solvent = $('#solvent');
+                    solvent.append(msg);
+                    afterSolvent.html('<button id="addAnother">Add Another</button>');
+                    $('#addAnother').on('click', function(event) {
+                        event.preventDefault();
+                        solvent.append(msg);
+                        addListeners();
+                    });
+                }
+                addListeners();
+            }
             function addSolvent(dropdown) {
                 var solvent = $('#solvent');
                 solvent.html('');
@@ -28,33 +54,18 @@
                         url: '{{ path('MesdUserBundle_filter_solvent') }}',
                         data: {id: role}
                     }).done(function(msg) {
-                        var afterSolvent = $('#afterSolvent');
-                        if ('' === msg) {
-                            afterSolvent.html('');
-                        } else {
-                            var solvent = $('#solvent');
-                            solvent.append(msg);
-                            afterSolvent.html('<button id="addAnother">Add Another</button>');
-                            $('#addAnother').on('click', function(event) {
-                                event.preventDefault();
-                                solvent.append(msg);
-                                $('.no-listener-yet').on('change', function() {
-                                    updateSolvent();
-                                }).removeClass('no-listener-yet');
-                            });
-                        }
-                        $('.no-listener-yet').on('change', function() {
-                            updateSolvent();
-                        }).removeClass('no-listener-yet');
+                        addJoin(msg);
                     });
                 }
             };
             function updateSolvent() {
+                var solvent = $('#solvent');
                 var array0 = []
-                $('#solvent').children('div').each(function(index) {
+                solvent.children('div').each(function(index) {
                     var array1 = [];
                     $(this).children('div').each(function(index) {
                         var array2 = [];
+                        console.log($(this).children('div'));
                         $(this).children('div').each(function(index) {
                             var array3 = {};
                             array3.name = $(this).data('name');
@@ -75,6 +86,7 @@
                     });
                     array0.push(array1);
                 });
+                console.log(array0);
                 $('#mesd_filter_solvent').val(JSON.stringify(array0));
             };
             $('.filter-role-dropdown').on('change', function() {

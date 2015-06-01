@@ -15,34 +15,34 @@
     <div id="solvent">
         {% for filter in filters %}
             {% for solvent in filter['solvent'] %}
-                {% if filterCategoryConfig is not null %}
-                    <div>
-                        {% for entities in filterCategoryConfig['entities'] %}
-                            <div>
-                                {% for entity in entities %}
-                                    <div data-name="{{ entity['name'] }}">
-                                        {% for join in entity['joins'] %}
-                                            <div data-name="{{ join['name'] }}" data-trail="{{ join['trail'] }}">
-                                                <label>{{ join['name'] }}</label>
+                <div>
+                    {% for entities in solvent %}
+                        <div>
+                            {% for entity in entities %}
+                                <div data-name="{{ entity['name'] }}">
+                                    {% for join in entity %}
+                                        {% for association in join %}
+                                            <div data-name="{{ association.name }}" data-trail="{{ association.trail }}">
+                                                <label>{{ association.name }}</label>
                                                 <select class="no-listener-yet">
                                                     <option></option>
-                                                    {% for item in entityLists[join['name']] %}
-                                                        <option value="{{ item.id }}">{{ item }}</option>
+                                                    {% for item in entityLists[association.name] %}
+                                                        <option value="{{ item.id }}"{% if association.item == item.name %} selected="selected"{% endif %}>{{ item.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
                                         {% endfor %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
             {% endfor %}
         {% endfor %}
     </div>
     <div id="afterSolvent"></div>
-    {{ form_label(form.create) }}
-    {{ form_widget(form.create, {'attr': {'class': 'btn btn-primary'}}) }}
+    {{ form_label(form.update) }}
+    {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary'}}) }}
     {{ form_end(form) }}
 {% endblock mesd_user_filter_content %}

@@ -164,13 +164,13 @@ class FilterController extends Controller
             new FilterType($filterClass, $filterCategoryClass),
             $entity,
             array(
-                'action' => $this->generateUrl('MesdUserBundle_filter_update'),
+                'action' => $this->generateUrl('MesdUserBundle_filter_update', array('id' => $entity->getId())),
                 'em' => $entityManager,
                 'method' => 'POST',
             )
         );
-        $form->add('create', 'submit', array(
-            'label' => 'Create',
+        $form->add('update', 'submit', array(
+            'label' => 'Update',
         ));
 
         return $this->render(
@@ -183,4 +183,57 @@ class FilterController extends Controller
             )
         );
     }
+
+    public function updateAction(Request $request, $id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $filterClass = $this->container->getParameter('mesd_user.filter_class');
+        $filterRepository = $entityManager->getRepository($filterClass);
+        $filters = $filterRepository->findById($id);
+        $entity = $filterRepository->findOneById($id);
+        $filterCategoryClass = $this->container->getParameter('mesd_user.filter_category_class');
+        $filterCategory = $entity->getFilterCategory();
+        $filterManager = $this->get('mesd_user.filter_manager');
+        $metadataFactory = $entityManager->getMetadataFactory();
+        $filterArray = $filterManager->getAsArray($filters, $metadataFactory);
+        $config = $filterManager->getConfig();
+        $filterCategoryName = $filterCategory->getName();
+        $entityLists = array();
+        if (array_key_exists($filterCategoryName, $config)) {
+            $filterCategoryConfig = $config[$filterCategoryName];
+            $entityLists = $filterManager->getEntityLists($filterCategoryConfig['entities'], $metadataFactory);
+        } else {
+            $filterCategoryConfig = null;
+        }
+        $form = $this->createForm(
+            new FilterType($filterClass, $filterCategoryClass),
+            $entity,
+            array(
+                'action' => $this->generateUrl('MesdUserBundle_filter_update', array('id' => $entity->getId())),
+                'em' => $entityManager,
+                'method' => 'POST',
+            )
+        );
+        $form->add('update', 'submit', array(
+            'label' => 'Update',
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('MesdUserBundle_filter_show', array('id' => $entity->getId())));
+        }
+
+        return $this->render(
+            $this->container->getParameter('mesd_user.filter.template.edit'),
+            array(
+                'form' => $form->createView(),
+            )
+        );
+    }
+
 }

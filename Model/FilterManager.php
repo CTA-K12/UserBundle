@@ -104,13 +104,17 @@ class FilterManager {
                                  $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
                                  $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
                             }
-                            $entity = $this->objectManager->getRepository($associationMetadata->getName())->findOneById($join->getValue());
+                            $item = $this->objectManager->getRepository($associationMetadata->getName())->findOneById($join->getValue());
                             $joinArray[] = array(
                                 'name' => $join->getName(),
-                                'item' => (string) $entity,
+                                'trail' => $join->getTrail(),
+                                'item' => (string) $item,
                             );
                         }
-                        $entityArray[] = $joinArray;
+                        $entityArray[] = array(
+                            'name' => $entity->getName(),
+                            'joins' => $joinArray,
+                        );
                     }
                     $bunchArray[] = $entityArray;
                 }

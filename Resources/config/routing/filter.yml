@@ -9,7 +9,7 @@ MesdUserBundle_filter_create:
     methods:  [POST]
 
 MesdUserBundle_filter_edit:
-    pattern: /edit/{id}
+    pattern: /{id}/edit
     defaults: { _controller: MesdUserBundle:Filter:edit }
     methods:  [GET]
 
@@ -19,7 +19,7 @@ MesdUserBundle_filter_new:
     methods:  [GET]
 
 MesdUserBundle_filter_show:
-    pattern: /show/{id}
+    pattern: /{id}/show
     defaults: { _controller: MesdUserBundle:Filter:show }
     methods:  [GET]
 
@@ -29,7 +29,7 @@ MesdUserBundle_filter_solvent:
     methods:  [GET]
 
 MesdUserBundle_filter_update:
-    pattern: /update
+    pattern: /{id}/update
     defaults: { _controller: MesdUserBundle:Filter:update }
     methods:  [POST]
 
