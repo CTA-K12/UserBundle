@@ -134,6 +134,7 @@ class FilterController extends Controller
         return $this->render(
             $this->container->getParameter('mesd_user.filter.template.show'),
             array(
+                'id' => $id,
                 'filters' => $filterArray,
             )
         );

@@ -25,6 +25,9 @@
                         <th>
                             Solvents
                         </th>
+                        <th>
+                            Actions
+                        </th>
                     </tr>
                     {% for filter in filters %}
                         <tr>
@@ -62,6 +65,12 @@
                                         </tr>
                                     {% endfor %}
                                 </table>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li><a href="{{ path('MesdUserBundle_filter_show', {'id': filter['id']}) }}">show</a></li>
+                                    <li><a href="{{ path('MesdUserBundle_filter_edit', {'id': filter['id']}) }}">edit</a></li>
+                                </ul>
                             </td>
                         </tr>
                     {% endfor %}
