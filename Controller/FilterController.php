@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Mesd\UserBundle\Form\Factory\FilterFormFactory;
 use Mesd\UserBundle\Form\Type\FilterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class FilterController extends Controller
@@ -237,4 +236,21 @@ class FilterController extends Controller
         );
     }
 
+    public function eachUserAction()
+    {
+        return $this->render(
+            $this->container->getParameter('mesd_user.filter.template.eachuser'),
+            array(
+            )
+        );
+    }
+
+    public function allUsersAction()
+    {
+        return $this->render(
+            $this->container->getParameter('mesd_user.filter.template.allusers'),
+            array(
+            )
+        );
+    }
 }
