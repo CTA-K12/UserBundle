@@ -238,6 +238,16 @@ class FilterController extends Controller
 
     public function eachUserAction()
     {
+        $form = $this->createForm(
+            new OneUserManyFiltersType($userClass, $filterClass),
+            $entity,
+            array(
+                'action' => $this->generateUrl('MesdUserBundle_filter_update', array('id' => $entity->getId())),
+                'em' => $entityManager,
+                'method' => 'POST',
+            )
+        );
+
         return $this->render(
             $this->container->getParameter('mesd_user.filter.template.eachuser'),
             array(
