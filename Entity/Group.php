@@ -39,6 +39,16 @@ abstract class Group implements GroupInterface
     public function __tostring() {
         return $this->getName();
     }
+    
+    /**
+     * Get getId
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set name
