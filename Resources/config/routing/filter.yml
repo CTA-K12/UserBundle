@@ -3,20 +3,10 @@ MesdUserBundle_filter:
     defaults: { _controller: MesdUserBundle:Filter:index }
     methods:  [GET]
 
-MesdUserBundle_filter_allusers:
-    pattern: /allusers
-    defaults: { _controller: MesdUserBundle:Filter:allUsers }
-    methods:  [GET]
-
 MesdUserBundle_filter_create:
     pattern: /create
     defaults: { _controller: MesdUserBundle:Filter:create }
     methods:  [POST]
-
-MesdUserBundle_filter_eachuser:
-    pattern: /eachuser
-    defaults: { _controller: MesdUserBundle:Filter:eachUser }
-    methods:  [GET]
 
 MesdUserBundle_filter_edit:
     pattern: /{id}/edit

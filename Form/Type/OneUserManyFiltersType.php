@@ -8,13 +8,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class OneUserManyFiltersType extends AbstractType
 {
-    private $userClassName;
     private $filterClassName;
+    private $userClassName;
 
-    public function __construct($userClassName, $filterClassName)
+    public function __construct($filterClassName, $userClassName)
     {
-        $this->userClassName = $userClassName;
         $this->filterClassName = $filterClassName;
+        $this->userClassName = $userClassName;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -26,6 +26,8 @@ class OneUserManyFiltersType extends AbstractType
                 array(
                     'class' => $this->filterClassName,
                     'label' => 'Filters',
+                    'multiple' => true,
+                    'expanded' => true,
                 )
             )
         ;
