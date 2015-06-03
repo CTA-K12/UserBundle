@@ -32,33 +32,51 @@ class FilterManager {
         }
 
         $filters = $user->getFilter();
-        $filtersUsed = array();
+        $sortedCategories = array();
 
         foreach ($filters as $filter) {
             $category = $filter->getFilterCategory()->getName();
             if (in_array($category, $filtersToApply)) {
-                $filtersUsed[$category] = true;
-                $queryBuilder = $this->applyFilter($queryBuilder, $filter);
+                if (array_key_exists($category, $sortedCategories)) {
+                    $sortedCategories[$category][] = $filter;
+                } else {
+                    $sortedCategories[$category] = array($filter);
+                }
             }
         }
 
-        if ((0 === count($filters)) || (count($filters) != count($filtersUsed))) {
+        if ((0 === count($filters)) || (count($filtersToApply) != count($sortedCategories))) {
             $queryBuilder->andWhere('1 = 0');
 
             return $queryBuilder;
         }
 
+        foreach ($sortedCategories as $sortedFilters) {
+            $details = array();
+            foreach ($sortedFilters as $filter) {
+                $solventWrappers = $filter->getSolventWrappers();
+                $detail = $this->getDetail($solventWrappers);
+                $details[] = $detail;
+            }
+            $detail = '(' . implode(' OR ', $details) . ')';
+            $queryBuilder = $this->applyFilter($queryBuilder, $solventWrappers[0], $detail);
+        }
+
         return $queryBuilder;
     }
 
-    protected function applyFilter($queryBuilder, $filter)
-    {
-        $solventWrappers = $filter->getSolventWrappers();
+    protected function getDetail($solventWrappers) {
         $details = array();
         foreach ($solventWrappers as $solventWrapper) {
             $details[] = $solventWrapper->getDetails();
         }
         $detail = '(' . implode(' OR ', $details) . ')';
+
+        return $detail;
+    }
+
+    protected function applyFilter($queryBuilder, $solventWrapper, $detail)
+    {
         $queryBuilder = $solventWrapper->applyToQueryBuilder($queryBuilder, $detail);
 
         return $queryBuilder;
