@@ -21,7 +21,7 @@ class FilterManager {
         $this->filterClass     = $filterClass;
     }
 
-    public function applyFilters($queryBuilder)
+    public function applyFilters($queryBuilder, $filtersToApply)
     {
         $user = $this->securityContext->getToken()->getUser();
         foreach ($this->bypassRoles as $bypassRole) {
@@ -32,15 +32,20 @@ class FilterManager {
         }
 
         $filters = $user->getFilter();
+        $filtersUsed = array();
 
-        if (0 === count($filters)) {
+        foreach ($filters as $filter) {
+            $category = $filter->getFilterCategory()->getName();
+            if (in_array($category, $filtersToApply)) {
+                $filtersUsed[$category] = true;
+                $queryBuilder = $this->applyFilter($queryBuilder, $filter);
+            }
+        }
+
+        if ((0 === count($filters)) || (count($filters) != count($filtersUsed))) {
             $queryBuilder->andWhere('1 = 0');
 
             return $queryBuilder;
-        }
-
-        foreach ($filters as $filter) {
-            $queryBuilder = $this->applyFilter($queryBuilder, $filter);
         }
 
         return $queryBuilder;
