@@ -86,7 +86,8 @@ class Join {
         $associations = $this->association;
         $length = count($associations);
         if ('' === $details) {
-            if (1 === $length) {
+            if ('id' == $this->trail) {
+            } elseif (1 === $length) {
                 $queryBuilder->join(
                     $alias . '.' . $associations[0],
                     $this->unique . $associations[0]
@@ -101,7 +102,9 @@ class Join {
                 );
             }
         } else {
-            if (1 === $length) {
+            if ('id' == $this->trail) {
+                $queryBuilder->andWhere($details);
+            } elseif (1 === $length) {
                 $queryBuilder->join(
                     $alias . '.' . $associations[0],
                     $this->unique . $associations[0],
@@ -128,11 +131,15 @@ class Join {
         return $queryBuilder;
     }
 
-    public function getDetails()
+    public function getDetails($alias)
     {
-        $length = count($this->association);
-        $lastAssociation = $this->unique . $this->association[$length - 1];
+        if ('id' == $this->trail) {
+            return '(' . $alias . '.id = ' . $this->value . ')';
+        } else {
+            $length = count($this->association);
+            $lastAssociation = $this->unique . $this->association[$length - 1];
 
-        return '(' . $lastAssociation . '.id = ' . $this->value . ')';
+            return '(' . $lastAssociation . '.id = ' . $this->value . ')';
+        }
     }
 }

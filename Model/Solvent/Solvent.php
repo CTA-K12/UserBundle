@@ -44,11 +44,11 @@ class Solvent {
         return $queryBuilder;
     }
 
-    public function getDetails()
+    public function getDetails($alias)
     {
         $details = array();
         foreach($this->bunch as $bunch) {
-            $details[] = $bunch->getDetails();
+            $details[] = $bunch->getDetails($alias);
         }
 
         return '(' . implode(' OR ', $details) . ')';

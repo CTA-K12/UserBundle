@@ -92,11 +92,11 @@ class Entity {
         return $queryBuilder;
     }
 
-    public function getDetails()
+    public function getDetails($alias)
     {
         $details = array();
         foreach($this->join as $join) {
-            $details[] = $join->getDetails();
+            $details[] = $join->getDetails($alias);
         }
 
         return '(' . implode(' AND ', $details) . ')';

@@ -51,11 +51,11 @@ class Bunch {
         return $queryBuilder;
     }
 
-    public function getDetails()
+    public function getDetails($alias)
     {
         $details = array();
         foreach($this->entity as $entity) {
-            $details[] = $entity->getDetails();
+            $details[] = $entity->getDetails($alias);
         }
 
         return '(' . implode(' AND ', $details) . ')';

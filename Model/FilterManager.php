@@ -51,11 +51,13 @@ class FilterManager {
             return $queryBuilder;
         }
 
+        $alias = $queryBuilder->getRootAlias();
+
         foreach ($sortedCategories as $sortedFilters) {
             $details = array();
             foreach ($sortedFilters as $filter) {
                 $solventWrappers = $filter->getSolventWrappers();
-                $detail = $this->getDetail($solventWrappers);
+                $detail = $this->getDetail($solventWrappers, $alias);
                 $details[] = $detail;
             }
             $detail = '(' . implode(' OR ', $details) . ')';
@@ -65,10 +67,10 @@ class FilterManager {
         return $queryBuilder;
     }
 
-    protected function getDetail($solventWrappers) {
+    protected function getDetail($solventWrappers, $alias) {
         $details = array();
         foreach ($solventWrappers as $solventWrapper) {
-            $details[] = $solventWrapper->getDetails();
+            $details[] = $solventWrapper->getDetails($alias);
         }
         $detail = '(' . implode(' OR ', $details) . ')';
 
@@ -122,12 +124,16 @@ class FilterManager {
                         foreach ($entity->getJoin() as $join) {
                             $associationMetadata = $metadata;
                             $associations = $join->getAssociation();
-                            $length = count($associations);
-                            for ($i = 0; $i < $length; $i++) {
-                                 $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
-                                 $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
+                            if ('id' === $associations[0]) {
+                                $item = $this->objectManager->getRepository($entity->getName())->findOneById($join->getValue());
+                            } else {
+                                $length = count($associations);
+                                for ($i = 0; $i < $length; $i++) {
+                                     $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
+                                     $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
+                                }
+                                $item = $this->objectManager->getRepository($associationMetadata->getName())->findOneById($join->getValue());
                             }
-                            $item = $this->objectManager->getRepository($associationMetadata->getName())->findOneById($join->getValue());
                             $joinArray[] = array(
                                 'name' => $join->getName(),
                                 'trail' => $join->getTrail(),
@@ -162,15 +168,20 @@ class FilterManager {
             $metadata = $metadataFactory->getMetadataFor($entity['entity']['name']);
             foreach ($entity['entity']['joins'] as $join) {
                 if (!array_key_exists($join['name'], $entityLists)) {
-                    $associations = explode('->', $join['trail']);
-                    $associationMetadata = $metadata;
-                    $length = count($associations);
-                    for ($i = 0; $i < $length; $i++) {
-                         $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
-                         $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
+                    if ('id' === $join['trail']) {
+                        $entities = $this->objectManager->getRepository($entity['entity']['name'])->findAll();
+                        $entityLists[$join['name']] = $entities;
+                    } else {
+                        $associations = explode('->', $join['trail']);
+                        $associationMetadata = $metadata;
+                        $length = count($associations);
+                        for ($i = 0; $i < $length; $i++) {
+                            $targetEntity = $associationMetadata->getAssociationMapping($associations[$i])['targetEntity'];
+                            $associationMetadata = $metadataFactory->getMetadataFor($targetEntity);
+                        }
+                        $entities = $this->objectManager->getRepository($associationMetadata->getName())->findAll();
+                        $entityLists[$join['name']] = $entities;
                     }
-                    $entities = $this->objectManager->getRepository($associationMetadata->getName())->findAll();
-                    $entityLists[$join['name']] = $entities;
                 }
             }
         }
