@@ -59,6 +59,6 @@ class FilterType extends AbstractType
 
     public function getName()
     {
-        return 'mesd_filter';
+        return 'mesd_user_filter';
     }
 }

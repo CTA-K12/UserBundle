@@ -42,6 +42,6 @@ class OneUserManyFiltersType extends AbstractType
 
     public function getName()
     {
-        return 'mesd_one_user_many_filters';
+        return 'mesd_user_one_user_many_filters';
     }
 }
