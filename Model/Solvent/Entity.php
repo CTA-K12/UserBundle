@@ -22,15 +22,50 @@ class Entity {
      */
     protected $join;
 
+    /**
+     * @var array
+     */
+    protected $joinNames;
+
+    /**
+     * @var array
+     */
+    protected $joinChecks;
+
+
     public function __construct($name, $unique, $joins)
     {
         $this->name = $name;
         $this->unique = $unique;
         $this->join = array();
+        $this->joinNames = array();
         $length = count($joins);
-        $i = 0;
-        for($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; $i++) {
             $this->join[] = new Join($joins[$i]['name'], $joins[$i]['trail'], $unique, $joins[$i]['value']);
+            if ('id' === $joins[$i]['trail']) {
+            } else {
+                $trail = explode('->', $joins[$i]['trail']);
+                $trailJoins = array();
+
+                $trailLength = count($trail);
+                for ($j = 0; $j < $trailLength; $j++) {
+                    if (0 === $j) {
+                        $previous = 'entity';
+                    } else {
+                        $previous = $trail[$j - 1];
+                    }
+                    $previous .= '.';
+                    $trailJoins[] = $previous . $trail[$j];
+                }
+
+                $this->joinNames = array_merge(array_unique(array_merge($this->joinNames, $trailJoins)), array());
+            }
+        }
+        $this->joinChecks = array();
+        $length = count($this->joinNames);
+        for ($i = 0; $i < $length; $i++) {
+            $key = $this->joinNames[$i];
+            $this->joinChecks[$key] = false;
         }
     }
 
@@ -65,9 +100,9 @@ class Entity {
                             $length = count($this->join);
                             for ($i = 0; $i < $length; $i++) {
                                 if (($length - 1) === $i) {
-                                    $queryBuilder = $this->join[$i]->applyToQueryBuilder($part->getAlias(), $queryBuilder, $details);
+                                    $queryBuilder = $this->join[$i]->applyToQueryBuilder($part->getAlias(), $queryBuilder, $details, $this);
                                 } else {
-                                    $queryBuilder = $this->join[$i]->applyToQueryBuilder($part->getAlias(), $queryBuilder, '');
+                                    $queryBuilder = $this->join[$i]->applyToQueryBuilder($part->getAlias(), $queryBuilder, '', $this);
                                 }
                             }
                         }
@@ -77,9 +112,9 @@ class Entity {
                                 $length = count($this->join);
                                 for ($i = 0; $i < $length; $i++) {
                                     if (($length - 1) === $i) {
-                                        $queryBuilder = $join[$i]->applyToQueryBuilder($partJoin->getAlias(), $queryBuilder, $details);
+                                        $queryBuilder = $join[$i]->applyToQueryBuilder($partJoin->getAlias(), $queryBuilder, $details, $this);
                                     } else {
-                                        $queryBuilder = $join[$i]->applyToQueryBuilder($partJoin->getAlias(), $queryBuilder, '');
+                                        $queryBuilder = $join[$i]->applyToQueryBuilder($partJoin->getAlias(), $queryBuilder, '', $this);
                                     }
                                 }
                             }
@@ -100,5 +135,26 @@ class Entity {
         }
 
         return '(' . implode(' AND ', $details) . ')';
+    }
+
+    public function getCheckedJoin($joinName = null)
+    {
+        if (is_null($joinName)) {
+
+            return $this->joinChecks;
+        }
+
+        if (array_key_exists($joinName, $this->joinChecks)) {
+            return $this->joinChecks[$joinName];
+        } else {
+            return null;
+        }
+    }
+
+    public function setCheckedJoin($joinName, $value)
+    {
+        if (array_key_exists($joinName, $this->joinChecks)) {
+            $this->joinChecks[$joinName] = $value;
+        }
     }
 }
