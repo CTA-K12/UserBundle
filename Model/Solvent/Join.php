@@ -81,49 +81,87 @@ class Join {
         return $this->value;
     }
 
-    public function applyToQueryBuilder($alias, $queryBuilder, $details)
+    public function applyToQueryBuilder($alias, $queryBuilder, $details, $entity)
     {
         $associations = $this->association;
         $length = count($associations);
         if ('' === $details) {
             if ('id' == $this->trail) {
             } elseif (1 === $length) {
-                $queryBuilder->join(
-                    $alias . '.' . $associations[0],
-                    $this->unique . $associations[0]
-                );
+                $key = 'entity.' . $associations[0];
+                if ($entity->getCheckedJoin($key)) {
+                } else {
+                    $join = $alias . '.' . $associations[0];
+                    $queryBuilder->join(
+                        $join,
+                        $this->unique . $associations[0]
+                    );
+                    $entity->setCheckedJoin($key, true);
+                }
             } else {
-                $queryBuilder->join($alias . '.' . $associations[0], $this->unique . $associations[0]);
+                $key = 'entity.' . $associations[0];
+                if ($entity->getCheckedJoin($key)) {
+                } else {
+                    $join = $alias . '.' . $associations[0];
+                    $queryBuilder->join($join, $this->unique . $associations[0]);
+                    $entity->setCheckedJoin($key, true);
+                }
             }
             for ($i = 1; $i < $length; $i++) {
-                $queryBuilder->join(
-                    $this->unique . $associations[$i - 1] . '.' . $associations[$i],
-                    $this->unique . $associations[$i]
-                );
+                $key = $associations[$i - 1] . '.' . $associations[$i];
+                if ($entity->getCheckedJoin($key)) {
+                } else {
+                    $queryBuilder->join(
+                        $this->unique . $key,
+                        $this->unique . $associations[$i]
+                    );
+                    $entity->setCheckedJoin($key, true);
+                }
             }
         } else {
             if ('id' == $this->trail) {
                 $queryBuilder->andWhere($details);
             } elseif (1 === $length) {
-                $queryBuilder->join(
-                    $alias . '.' . $associations[0],
-                    $this->unique . $associations[0],
-                    'WITH',
-                    $details
-                );
-            } else {
-                $queryBuilder->join($alias . '.' . $associations[0], $this->unique . $associations[0]);
-            }
-            for ($i = 1; $i < $length; $i++) {
-                if ($i === $length - 1) {
+                $key = 'entity.' . $associations[0];
+                if ($entity->getCheckedJoin($key)) {
+                } else {
+                    $join = $alias . '.' . $associations[0];
                     $queryBuilder->join(
-                        $this->unique . $associations[$i - 1] . '.' . $associations[$i],
-                        $this->unique . $associations[$i],
+                        $join,
+                        $this->unique . $associations[0],
                         'WITH',
                         $details
                     );
+                    $entity->setCheckedJoin($key, true);
+                }
+            } else {
+                $key = 'entity.' . $associations[0];
+                if ($entity->getCheckedJoin($key)) {
                 } else {
-                    $queryBuilder->join($this->unique . $associations[$i - 1] . '.' . $associations[$i], $this->unique . $associations[$i]);
+                    $join = $alias . '.' . $associations[0];
+                    $queryBuilder->join($join, $this->unique . $associations[0]);
+                }
+            }
+            for ($i = 1; $i < $length; $i++) {
+                if ($i === $length - 1) {
+                    $key = $associations[$i - 1] . '.' . $associations[$i];
+                    if ($entity->getCheckedJoin($key)) {
+                    } else {
+                        $queryBuilder->join(
+                            $this->unique . $associations[$i - 1] . '.' . $associations[$i],
+                            $this->unique . $associations[$i],
+                            'WITH',
+                            $details
+                        );
+                        $entity->setCheckedJoin($key, true);
+                    }
+                } else {
+                    $key = $associations[$i - 1] . '.' . $associations[$i];
+                    if ($entity->getCheckedJoin($key)) {
+                    } else {
+                        $queryBuilder->join($this->unique . $associations[$i - 1] . '.' . $associations[$i], $this->unique . $associations[$i]);
+                        $entity->setCheckedJoin($key, true);
+                    }
                 }
             }
         }
