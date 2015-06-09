@@ -20,7 +20,7 @@ class FilterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $entityManager = $options['em'];
+        $entityManager = $options['entityManager'];
         $transformer = new SolventToJsonTransformer($entityManager);
         $builder
             ->add(
@@ -54,7 +54,7 @@ class FilterType extends AbstractType
             'data_class' => $this->filterClassName
         ));
 
-        $resolver->setRequired(array('em'));
+        $resolver->setRequired(array('entityManager'));
     }
 
     public function getName()

@@ -38,9 +38,9 @@ class FilterController extends Controller
             new FilterType($filterClass, $filterCategoryClass),
             $entity,
             array(
-                'action' => $this->generateUrl('MesdUserBundle_filter_create'),
-                'em' => $entityManager,
-                'method' => 'POST',
+                'action'        => $this->generateUrl('MesdUserBundle_filter_create'),
+                'entityManager' => $entityManager,
+                'method'        => 'POST',
             )
         );
         $form->add('create', 'submit', array(
@@ -78,7 +78,7 @@ class FilterController extends Controller
             $this->container->getParameter('mesd_user.filter.template.solvent'),
             array(
                 'filterCategoryConfig' => $filterCategoryConfig,
-                'entityLists' => $entityLists,
+                'entityLists'          => $entityLists,
             )
         );
     }
@@ -93,9 +93,9 @@ class FilterController extends Controller
             new FilterType($filterClass, $filterCategoryClass),
             $entity,
             array(
-                'action' => $this->generateUrl('MesdUserBundle_filter_create'),
-                'em' => $entityManager,
-                'method' => 'POST',
+                'action'        => $this->generateUrl('MesdUserBundle_filter_create'),
+                'entityManager' => $entityManager,
+                'method'        => 'POST',
             )
         );
         $form->add('create', 'submit', array(
@@ -133,7 +133,7 @@ class FilterController extends Controller
         return $this->render(
             $this->container->getParameter('mesd_user.filter.template.show'),
             array(
-                'id' => $id,
+                'id'      => $id,
                 'filters' => $filterArray,
             )
         );
@@ -164,9 +164,9 @@ class FilterController extends Controller
             new FilterType($filterClass, $filterCategoryClass),
             $entity,
             array(
-                'action' => $this->generateUrl('MesdUserBundle_filter_update', array('id' => $entity->getId())),
-                'em' => $entityManager,
-                'method' => 'POST',
+                'action'        => $this->generateUrl('MesdUserBundle_filter_update', array('id' => $entity->getId())),
+                'entityManager' => $entityManager,
+                'method'        => 'POST',
             )
         );
         $form->add('update', 'submit', array(
@@ -178,10 +178,10 @@ class FilterController extends Controller
             $this->container->getParameter('mesd_user.filter.template.edit'),
             array(
                 'filterCategoryConfig' => $filterCategoryConfig,
-                'filters' => $filterArray,
-                'form' => $form->createView(),
-                'entityLists' => $entityLists,
-                'delete_form' => $deleteForm->createView(),
+                'filters'              => $filterArray,
+                'form'                 => $form->createView(),
+                'entityLists'          => $entityLists,
+                'delete_form'          => $deleteForm->createView(),
             )
         );
     }
@@ -211,9 +211,9 @@ class FilterController extends Controller
             new FilterType($filterClass, $filterCategoryClass),
             $entity,
             array(
-                'action' => $this->generateUrl('MesdUserBundle_filter_update', array('id' => $entity->getId())),
-                'em' => $entityManager,
-                'method' => 'POST',
+                'action'        => $this->generateUrl('MesdUserBundle_filter_update', array('id' => $entity->getId())),
+                'entityManager' => $entityManager,
+                'method'        => 'POST',
             )
         );
         $form->add('update', 'submit', array(
@@ -235,10 +235,10 @@ class FilterController extends Controller
             $this->container->getParameter('mesd_user.filter.template.edit'),
             array(
                 'filterCategoryConfig' => $filterCategoryConfig,
-                'filters' => $filterArray,
-                'form' => $form->createView(),
-                'entityLists' => $entityLists,
-                'delete_form' => $deleteForm,
+                'filters'              => $filterArray,
+                'form'                 => $form->createView(),
+                'entityLists'          => $entityLists,
+                'delete_form'          => $deleteForm,
             )
         );
     }
