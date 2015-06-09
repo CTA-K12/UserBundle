@@ -105,9 +105,9 @@ class FilterController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($entity);
+            $entityManager->flush();
 
             return $this->redirect($this->generateUrl('MesdUserBundle_filter_show', array('id' => $entity->getId())));
         }
@@ -172,6 +172,7 @@ class FilterController extends Controller
         $form->add('update', 'submit', array(
             'label' => 'Update',
         ));
+        $deleteForm = $this->createDeleteForm($id);
 
         return $this->render(
             $this->container->getParameter('mesd_user.filter.template.edit'),
@@ -180,6 +181,7 @@ class FilterController extends Controller
                 'filters' => $filterArray,
                 'form' => $form->createView(),
                 'entityLists' => $entityLists,
+                'delete_form' => $deleteForm->createView(),
             )
         );
     }
@@ -217,13 +219,14 @@ class FilterController extends Controller
         $form->add('update', 'submit', array(
             'label' => 'Update',
         ));
+        $deleteForm = $this->createDeleteForm($id);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($entity);
+            $entityManager->flush();
 
             return $this->redirect($this->generateUrl('MesdUserBundle_filter_show', array('id' => $entity->getId())));
         }
@@ -231,8 +234,55 @@ class FilterController extends Controller
         return $this->render(
             $this->container->getParameter('mesd_user.filter.template.edit'),
             array(
+                'filterCategoryConfig' => $filterCategoryConfig,
+                'filters' => $filterArray,
                 'form' => $form->createView(),
+                'entityLists' => $entityLists,
+                'delete_form' => $deleteForm,
             )
         );
+    }
+
+    /**
+     * Deletes a Filter entity.
+     *
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $filterClass = $this->container->getParameter('mesd_user.filter_class');
+            $filterRepository = $entityManager->getRepository($filterClass);
+            $entity = $filterRepository->findOneById($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Filter entity.');
+            }
+
+            $entityManager->remove($entity);
+            $entityManager->flush();
+        }
+
+        return $this->redirect($this->generateUrl('MesdUserBundle_filter'));
+    }
+
+    /**
+     * Creates a form to delete a Filter entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('MesdUserBundle_filter_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->getForm()
+        ;
     }
 }

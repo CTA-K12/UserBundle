@@ -45,4 +45,7 @@
     {{ form_label(form.update) }}
     {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary'}}) }}
     {{ form_end(form) }}
+    <ul>
+        <li>{{ form(delete_form) }}</li>
+    </ul>
 {% endblock mesd_user_filter_content %}

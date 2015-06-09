@@ -8,6 +8,11 @@ MesdUserBundle_filter_create:
     defaults: { _controller: MesdUserBundle:Filter:create }
     methods:  [POST]
 
+MesdUserBundle_filter_delete:
+    pattern: /{id}/delete
+    defaults: { _controller: MesdUserBundle:Filter:delete }
+    methods:  [DELETE, POST]
+
 MesdUserBundle_filter_edit:
     pattern: /{id}/edit
     defaults: { _controller: MesdUserBundle:Filter:edit }
@@ -31,5 +36,5 @@ MesdUserBundle_filter_solvent:
 MesdUserBundle_filter_update:
     pattern: /{id}/update
     defaults: { _controller: MesdUserBundle:Filter:update }
-    methods:  [POST]
+    methods:  [POST, PUT]
 
