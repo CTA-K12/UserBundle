@@ -10,26 +10,35 @@ class OneFilterManyUsersType extends AbstractType
 {
     private $filterClassName;
     private $userClassName;
+    private $queryBuilder;
 
-    public function __construct($filterClassName, $userClassName)
+    public function __construct(
+        $filterClassName,
+        $userClassName,
+        $queryBuilder
+    )
     {
         $this->filterClassName = $filterClassName;
         $this->userClassName = $userClassName;
+        $this->queryBuilder = $queryBuilder;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builderOptions = array(
+            'class' => $this->userClassName,
+            'multiple' => true,
+            'expanded' => true,
+            'by_reference' => false,
+        );
+        if (!is_null($this->queryBuilder)) {
+            $builderOptions['query_builder'] = $this->queryBuilder;
+        }
         $builder
             ->add(
                 'user',
                 'entity',
-                array(
-                    'class' => $this->userClassName,
-                    'label' => 'Users',
-                    'multiple' => true,
-                    'expanded' => true,
-                    'by_reference' => false,
-                )
+                $builderOptions
             )
         ;
     }

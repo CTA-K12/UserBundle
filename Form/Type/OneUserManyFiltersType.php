@@ -25,7 +25,6 @@ class OneUserManyFiltersType extends AbstractType
                 'entity',
                 array(
                     'class' => $this->filterClassName,
-                    'label' => 'Filters',
                     'multiple' => true,
                     'expanded' => true,
                 )

@@ -83,7 +83,7 @@ class OneFilterManyUsersController extends Controller
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm($entity, $filterClass, $userClass)
+    private function createEditForm($entity, $filterClass, $userClass, $queryBuilder = null)
     {
         $form = $this->createForm(new OneFilterManyUsersType($filterClass, $userClass), $entity, array(
             'action' => $this->generateUrl('MesdUserBundle_onefiltermanyusers_update', array('id' => $entity->getId())),
