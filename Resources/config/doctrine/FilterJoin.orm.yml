@@ -1,7 +1,7 @@
-Mesd\UserBundle\Entity\Filter:
+Mesd\UserBundle\Entity\FilterJoin:
     type: entity
-    table: mesd_user_filter
-    repositoryClass: Mesd\UserBundle\Repository\FilterRepository
+    table: mesd_user_filter_join
+    repositoryClass: Mesd\UserBundle\Repository\FilterJoinRepository
 
     fields:
         id:
@@ -10,6 +10,10 @@ Mesd\UserBundle\Entity\Filter:
             nullable: false
             generator:
                 strategy: AUTO
+        value:
+            type: integer
+            column: value
+            nullable: false
         description:
             type: text
             column: description

@@ -1,7 +1,7 @@
-Mesd\UserBundle\Entity\Filter:
+Mesd\UserBundle\Entity\FilterRow:
     type: entity
-    table: mesd_user_filter
-    repositoryClass: Mesd\UserBundle\Repository\FilterRepository
+    table: mesd_user_filter_row
+    repositoryClass: Mesd\UserBundle\Repository\FilterRowRepository
 
     fields:
         id:

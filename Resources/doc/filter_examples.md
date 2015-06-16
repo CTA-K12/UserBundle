@@ -50,10 +50,10 @@
  15 | 6       | 6
  16 | 6       | 8
 
-####VenueType
+####Venue
 
  id | name
-----|--------------------
+----|--------------
  1  | The Garage
  2  | The Dive Bar
  3  | Wayside High
@@ -63,61 +63,60 @@
 
 ####Gig
 
- id | band_id | venue_type_id | datetime
-----|---------|---------------|------------------
- 1  | 1       | 5             | 2015-06-06 19:00
- 2  | 2       | 2             | 2015-06-07 19:00
- 3  | 3       | 3             | 2015-06-08 19:00
- 4  | 4       | 2             | 2015-06-09 19:00
- 5  | 5       | 5             | 2015-06-10 19:00
- 6  | 6       | 1             | 2015-06-11 19:00
- 7  | 5       | 2             | 2015-06-12 19:00
- 8  | 1       | 4             | 2015-06-13 19:00
- 9  | 6       | 3             | 2015-06-14 19:00
- 10 | 5       | 1             | 2015-06-15 19:00
+ id | band_id | venue_id | datetime
+----|---------|----------|------------------
+ 1  | 1       | 5        | 2015-06-06 19:00
+ 2  | 2       | 2        | 2015-06-07 19:00
+ 3  | 3       | 3        | 2015-06-08 19:00
+ 4  | 4       | 2        | 2015-06-09 19:00
+ 5  | 5       | 5        | 2015-06-10 19:00
+ 6  | 6       | 1        | 2015-06-11 19:00
+ 7  | 5       | 2        | 2015-06-12 19:00
+ 8  | 1       | 4        | 2015-06-13 19:00
+ 9  | 6       | 3        | 2015-06-14 19:00
+ 10 | 5       | 1        | 2015-06-15 19:00
 
-####Entity
+####FilterEntity
 
  id | name | database_name
 ----|------|---------------
  1  | Gig  | gig
 
-####Association
+####FilterAssociation
 
- id | entity_id | name      | trail
-----|-----------|-----------|-----------
- 1  | 1         | Gig Band  | band
- 2  | 1         | Gig Venue | venueType
-
+ id | filter_entity_id | name      | trail
+----|------------------|-----------|-----------
+ 1  | 1                | Gig Band  | band
+ 2  | 1                | Gig Venue | venue
 
 ####FilterCategory
 
- id | name
-----|-------------
- 1  | Talent Agent
- 2  | Gig
+ id | name         | code_name
+----|--------------|---------------------
+ 1  | Talent Agent | FILTER_TALENT_AGENT
+ 2  | Gig          | FILTER_GIG
 
-####Join
+####FilterJoin
 
- id | association_id | value
-----|----------------|-------
- 1  | 1              | 3
- 2  | 2              | 5
- 3  | 2              | 1
- 4  | 1              | 6
- 5  | 1              | 2
- 6  | 1              | 4
- 7  | 1              | 1
- 8  | 1              | 5
- 9  | 2              | 3
- 10 | 2              | 4
- 11 | 2              | 6
- 12 | 2              | 2
+ id | filter_association_id | value | description
+----|-----------------------|-------|-----------------------------------
+ 1  | 1                     | 3     | Gig Band = Awesome Agencies
+ 2  | 2                     | 5     | Gig Venue = Bar None
+ 3  | 2                     | 1     | Gig Venue = The Garage
+ 4  | 1                     | 6     | Gig Band = Beautiful Billings
+ 5  | 1                     | 2     | Gig Band = Courageous Companies
+ 6  | 1                     | 4     | Gig Band = Dependable Departments
+ 7  | 1                     | 1     | Gig Band = Electric End Users
+ 8  | 1                     | 5     | Gig Band = Fantastic Forms
+ 9  | 2                     | 3     | Gig Venue = Wayside High
+ 10 | 2                     | 4     | Gig Venue = Comet Cash
+ 11 | 2                     | 6     | Gig Venue = Dex Hall
+ 12 | 2                     | 2     | Gig Venue = The Dive Bar
 
 ####FilterCell
 
  id | description
-----|----------------------------------
+----|--------------------------------------------------------------------------------------------
  1  | Awesome Agencies
  2  | Bar None or The Garage
  3  | Beautiful Billings
@@ -134,29 +133,29 @@
  
 ####FilterCellJoin
 
- id | filter_cell_id | join_id
-----|----------------|---------
- 1  | 1              | 1
- 2  | 2              | 2
- 3  | 2              | 3
- 4  | 3              | 4
- 5  | 4              | 5
- 6  | 5              | 6
- 7  | 6              | 7
- 8  | 7              | 8
- 9  | 8              | 9
- 10 | 9              | 4
- 11 | 9              | 5
- 12 | 9              | 6
- 13 | 9              | 7
- 14 | 10             | 2
- 15 | 10             | 10
- 16 | 11             | 11
- 17 | 12             | 1
- 18 | 12             | 8
- 19 | 13             | 12
+ filter_cell_id | filter_join_id
+----------------|----------------
+ 1              | 1
+ 2              | 2
+ 2              | 3
+ 3              | 4
+ 4              | 5
+ 5              | 6
+ 6              | 7
+ 7              | 8
+ 8              | 9
+ 9              | 4
+ 9              | 5
+ 9              | 6
+ 9              | 7
+ 10             | 2
+ 10             | 10
+ 11             | 11
+ 12             | 1
+ 12             | 8
+ 13             | 12
 
-####FilterColumn
+####FilterRow
 
  id | description
 ----|---------------------------------------------------------------------------------------------------------------------------
@@ -172,30 +171,30 @@
  10 | Dependable Departments and Dex Hall
  11 | (Awesome Agencies or Fantastic Forms) and The Dive Bar
 
-####FilterColumnCell
+####FilterRowCell
 
- id | filter_column_id | filter_cell_id
-----|------------------|----------------
- 1  | 1                | 1
- 2  | 2                | 1
- 2  | 2                | 2
- 3  | 3                | 3
- 4  | 4                | 4
- 5  | 5                | 5
- 6  | 6                | 6
- 7  | 7                | 7
- 8  | 8                | 7
- 9  | 8                | 8
- 10 | 9                | 9
- 11 | 9                | 10
- 12 | 10               | 5
- 13 | 10               | 11
- 14 | 11               | 12
- 15 | 11               | 13
+ filter_row_id | filter_cell_id
+---------------|----------------
+ 1             | 1
+ 2             | 1
+ 2             | 2
+ 3             | 3
+ 4             | 4
+ 5             | 5
+ 6             | 6
+ 7             | 7
+ 8             | 7
+ 8             | 8
+ 9             | 9
+ 9             | 10
+ 10            | 5
+ 10            | 11
+ 11            | 12
+ 11            | 13
 
 ####Filter
 
- id | filter_category_id | name
+ id | filter_category_id | description
 ----|--------------------|------------------------------------------------
  1  | 1                  | Awesome Agencies band
  2  | 2                  | AA band at Bar None/The Garage
@@ -208,51 +207,51 @@
  9  | 2                  | BB/CC/DD/EE bands at Bar None/Comet Cash
  10 | 2                  | DD at Dex Hall or ((AA or FF) at The Dive Bar)
 
-####FilterRow
+####FilterRowFilter
 
- id | filter_id | filter_column_id
-----|-----------|----------
- 1  | 1         | 1
- 2  | 2         | 2
- 3  | 3         | 3
- 4  | 4         | 4
- 5  | 5         | 5
- 6  | 6         | 6
- 7  | 7         | 7
- 8  | 8         | 8
- 9  | 9         | 9
- 10 | 10        | 10
- 11 | 10        | 11
+ filter_row_id | filter_id
+---------------|-----------
+ 1             | 1
+ 2             | 2
+ 3             | 3
+ 4             | 4
+ 5             | 5
+ 6             | 6
+ 7             | 7
+ 8             | 8
+ 9             | 9
+ 10            | 10
+ 10            | 11
 
 ####UserFilter
 
- id | user_id | filter_id
-----|---------|-----------
- 1  | 2       | 2
- 2  | 2       | 6
- 3  | 3       | 4
- 4  | 3       | 6
- 5  | 4       | 2
- 6  | 4       | 4
- 7  | 4       | 5
- 8  | 5       | 1
- 9  | 6       | 1
- 10 | 6       | 5
- 11 | 6       | 6
- 12 | 6       | 3
- 13 | 7       | 4
- 14 | 8       | 1
- 15 | 8       | 6
- 16 | 9       | 5
- 17 | 10      | 7
- 18 | 10      | 2
- 19 | 10      | 5
- 20 | 10      | 6
- 21 | 11      | 3
- 22 | 11      | 4
- 23 | 11      | 8
- 24 | 11      | 1
- 25 | 11      | 9
+ user_id | filter_row_id
+---------|---------------
+ 2       | 2
+ 2       | 6
+ 3       | 4
+ 3       | 6
+ 4       | 2
+ 4       | 4
+ 4       | 5
+ 5       | 1
+ 6       | 1
+ 6       | 5
+ 6       | 6
+ 6       | 3
+ 7       | 4
+ 8       | 1
+ 8       | 6
+ 9       | 5
+ 10      | 7
+ 10      | 2
+ 10      | 5
+ 10      | 6
+ 11      | 3
+ 11      | 4
+ 11      | 8
+ 11      | 1
+ 11      | 9
 
 ###How query builders will be affected
 

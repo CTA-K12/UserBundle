@@ -1,7 +1,7 @@
-Mesd\UserBundle\Entity\FilterCategory:
+Mesd\UserBundle\Entity\FilterAssociation:
     type: entity
-    table: mesd_user_filter_category
-    repositoryClass: Mesd\UserBundle\Repository\FilterCategoryRepository
+    table: mesd_user_filter_association
+    repositoryClass: Mesd\UserBundle\Repository\FilterAssociationRepository
 
     fields:
         id:
@@ -14,7 +14,7 @@ Mesd\UserBundle\Entity\FilterCategory:
             type: string
             column: name
             nullable: false
-        codeName:
-            type: string
-            column: code_name
+        trail:
+            type: text
+            column: trail
             nullable: false
