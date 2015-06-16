@@ -101,24 +101,33 @@ start:
 
 ##### Option A) Annotations:
 
-``` php
+```php
+<?php
 // src/Acme/UserBundle/Entity/User.php
 
-namespace Acme\UserBundle\Entity;
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\Table;
 
 use Mesd\UserBundle\Entity\User as BaseUser;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="acme_user")
+ * @Entity
+ * @Table(name="acme_user")
  */
 class User extends BaseUser
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @Id
+     * @Column(type="integer")
+     * @GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
@@ -129,7 +138,7 @@ class User extends BaseUser
      *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
      * )
      **/
-    private $role;
+    protected $role;
 
     public function __construct()
     {
@@ -237,23 +246,29 @@ start:
 ##### Option A) Annotations:
 
 ``` php
+<?php
 // src/Acme/UserBundle/Entity/Role.php
 
-namespace Acme\UserBundle\Entity;
+namespace AppBundle\Entity;
 
 use Mesd\UserBundle\Entity\Role as BaseRole;
-use Doctrine\ORM\Mapping as ORM;
+
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="acme_role")
+ * @Entity
+ * @Table(name="acme_role")
  */
 class Role extends BaseRole
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @Id
+     * @Column(type="integer")
+     * @GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
@@ -326,7 +341,9 @@ in your application:
 # app/config/security.yml
 security:
     encoders:
-        Mesd\UserBundle\Model\UserInterface: sha512
+        Mesd\UserBundle\Model\UserInterface:
+            algorithm: bcrypt
+            cost:      15
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
