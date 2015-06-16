@@ -1,7 +1,7 @@
-Mesd\UserBundle\Entity\FilterCell:
+Mesd\UserBundle\Entity\FilterEntity:
     type: entity
-    table: mesd_user_filter_cell
-    repositoryClass: Mesd\UserBundle\Repository\FilterCellRepository
+    table: mesd_user_filter_entity
+    repositoryClass: Mesd\UserBundle\Repository\FilterEntityRepository
 
     fields:
         id:
@@ -18,3 +18,8 @@ Mesd\UserBundle\Entity\FilterCell:
             type: string
             column: database_name
             nullable: false
+
+    manyToMany:
+        filterAssociation:
+            targetEntity: FilterAssociation
+            mappedBy: filterEntity

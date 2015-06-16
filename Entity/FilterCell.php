@@ -5,9 +5,9 @@ namespace Mesd\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Filter
+ * FilterCell
  */
-class Filter
+class FilterCell
 {
     /**
      * @var integer
@@ -25,11 +25,17 @@ class Filter
     private $filterRow;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $filterJoin;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->filterRow = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->filterJoin = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -46,7 +52,7 @@ class Filter
      * Set description
      *
      * @param string $description
-     * @return Filter
+     * @return FilterCell
      */
     public function setDescription($description)
     {
@@ -69,7 +75,7 @@ class Filter
      * Add filterRow
      *
      * @param \Mesd\UserBundle\Entity\FilterRow $filterRow
-     * @return Filter
+     * @return FilterCell
      */
     public function addFilterRow(\Mesd\UserBundle\Entity\FilterRow $filterRow)
     {
@@ -96,5 +102,38 @@ class Filter
     public function getFilterRow()
     {
         return $this->filterRow;
+    }
+
+    /**
+     * Add filterJoin
+     *
+     * @param \Mesd\UserBundle\Entity\FilterJoin $filterJoin
+     * @return FilterCell
+     */
+    public function addFilterJoin(\Mesd\UserBundle\Entity\FilterJoin $filterJoin)
+    {
+        $this->filterJoin[] = $filterJoin;
+
+        return $this;
+    }
+
+    /**
+     * Remove filterJoin
+     *
+     * @param \Mesd\UserBundle\Entity\FilterJoin $filterJoin
+     */
+    public function removeFilterJoin(\Mesd\UserBundle\Entity\FilterJoin $filterJoin)
+    {
+        $this->filterJoin->removeElement($filterJoin);
+    }
+
+    /**
+     * Get filterJoin
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFilterJoin()
+    {
+        return $this->filterJoin;
     }
 }

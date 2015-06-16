@@ -14,3 +14,17 @@ Mesd\UserBundle\Entity\Filter:
             type: text
             column: description
             nullable: false
+
+    manyToMany:
+        filterRow:
+            targetEntity: FilterRow
+            inversedBy: filter
+            cascade: {  }
+            joinTable:
+                name: filter__filter_row
+                joinColumns:
+                    filter_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    filter_row_id:
+                        referencedColumnName: id

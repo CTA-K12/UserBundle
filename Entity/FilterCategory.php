@@ -3,34 +3,36 @@
 namespace Mesd\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Mesd\UserBundle\Model\FilterCategoryInterface;
-use Mesd\UserBundle\Model\FilterInterface;
 
 /**
  * FilterCategory
  */
-abstract class FilterCategory implements FilterCategoryInterface
+class FilterCategory
 {
-    protected $id;
+    /**
+     * @var integer
+     */
+    private $id;
 
     /**
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * @var string
      */
-    protected $description;
+    private $codeName;
 
 
-    public function __construct()
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
     {
-    }
-
-    public function __toString()
-    {
-        return $this->name;
+        return $this->id;
     }
 
     /**
@@ -49,7 +51,7 @@ abstract class FilterCategory implements FilterCategoryInterface
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
@@ -57,58 +59,25 @@ abstract class FilterCategory implements FilterCategoryInterface
     }
 
     /**
-     * Set description
+     * Set codeName
      *
-     * @param string $description
+     * @param string $codeName
      * @return FilterCategory
      */
-    public function setDescription($description)
+    public function setCodeName($codeName)
     {
-        $this->description = $description;
+        $this->codeName = $codeName;
 
         return $this;
     }
 
     /**
-     * Get description
+     * Get codeName
      *
-     * @return string
+     * @return string 
      */
-    public function getDescription()
+    public function getCodeName()
     {
-        return $this->description;
-    }
-
-    /**
-     * Add filter
-     *
-     * @param FilterInterface $filter
-     * @return FilterCategory
-     */
-    public function addFilter(FilterInterface $filter)
-    {
-        $this->filter[] = $filter;
-    
-        return $this;
-    }
-
-    /**
-     * Remove filter
-     *
-     * @param FilterInterface $filter
-     */
-    public function removeFilter(FilterInterface $filter)
-    {
-        $this->filter->removeElement($filter);
-    }
-
-    /**
-     * Get filter
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getFilter()
-    {
-        return $this->filter;
+        return $this->codeName;
     }
 }

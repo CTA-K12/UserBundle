@@ -18,3 +18,21 @@ Mesd\UserBundle\Entity\FilterJoin:
             type: text
             column: description
             nullable: false
+
+    manyToMany:
+        filterCell:
+            targetEntity: FilterCell
+            mappedBy: filterJoin
+
+        filterAssociation:
+            targetEntity: FilterAssociation
+            inversedBy: filterJoin
+            cascade: {  }
+            joinTable:
+                name: filter_join__filter_association
+                joinColumns:
+                    filter_join_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    filter_association_id:
+                        referencedColumnName: id
