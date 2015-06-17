@@ -68,29 +68,6 @@ class MesdUserExtension extends Extension
             $userMetadataListener->addMethodCall('setGroupsEnabled', array(false));
         }
 
-        // Check if filter configuration is set, load filter service if yes
-        if ($container->hasParameter('mesd_user.filter_class')) {
-
-            $loader->load('FilterManagerService.yml');
-            $container->setParameter('mesd_user.filter_class_placeholder', $container->getParameter('mesd_user.filter_class'));
-            $container->setParameter('mesd_user.filter_category_class_placeholder', $container->getParameter('mesd_user.filter_category_class'));
-
-            //Set the filters enabled on the user metadata listener to true
-            $userMetadataListener->addMethodCall('setFiltersEnabled', array(true));
-
-            // Once the services definition are read, get your service and add a method call to setConfig()
-            $serviceDefinition = $container->getDefinition( 'mesd_user.filter_manager' );
-            $serviceDefinition->addMethodCall( 'setBypassRoles', array( $config[ 'filter' ][ 'bypass_roles' ] ) );
-            $serviceDefinition->addMethodCall( 'setConfig', array( $config[ 'filter' ][ 'filters' ] ) );
-        }
-        else {
-            $container->setParameter('mesd_user.filter_class_placeholder', null);
-            $container->setParameter('mesd_user.filter_category_class_placeholder', null);
-
-            //Set the filters enabled on the user metadata listener to false
-            $userMetadataListener->addMethodCall('setFiltersEnabled', array(false));
-        }
-
         // Load default services
         $loader->load('UserManagerService.yml');
         $loader->load('RoleManagerService.yml');
