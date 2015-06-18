@@ -1,11 +1,11 @@
 Mesd\UserBundle\Entity\Group:
-  type: mappedSuperclass
-  fields:
-    name:
-      type: string
-      length: 255
-      nullable: false
-      unique: true
-    description:
-      type: text
-      nullable: true
+    type: mappedSuperclass
+    fields:
+        name:
+            type: string
+            length: 255
+            nullable: false
+            unique: true
+        description:
+            type: text
+            nullable: true

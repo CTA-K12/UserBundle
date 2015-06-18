@@ -545,7 +545,7 @@ abstract class User implements UserInterface
      */
     public function getRole()
     {
-        $role =  $this->role->toArray();
+        $role = $this->role->toArray();
 
         if ( $this->isGroupsEnabled() && 0 < count($this->getGroup())) {
             foreach ($this->getGroup() as $group) {
@@ -740,53 +740,6 @@ abstract class User implements UserInterface
 
         return $this;
     }
-
-
-    /**
-     * Filter Methods
-     *
-     */
-
-    /**
-     * Add Filter
-     *
-     * @param FilterInterface
-     * @return User
-     */
-    public function addFilter(FilterInterface $filter)
-    {
-        $this->filter->addElement($filter);
-
-        return $this;
-    }
-
-    /**
-     * Get Filter
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFilter()
-    {
-
-        return $this->filter;
-    }
-
-
-    /**
-     * Remove Filter
-     *
-     * @param RoleInterface $filter
-     * @return User
-     */
-    public function removeFilter(FilterInterface $filter)
-    {
-        if($this->filter->contains($filter)) {
-            $this->filter->removeElement($filter);
-        }
-
-        return $this;
-    }
-
 
     /**
      * AdvancedUserInterface additionaly required methods
