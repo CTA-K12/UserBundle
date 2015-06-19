@@ -1,19 +1,14 @@
 {% extends "MesdUserBundle::layout.html.twig" %}
+{% trans_default_domain "mesd_user" %}
 
 {% block mesd_user_content %}
-
     {% if form_errors is defined %}
-        {% if form_errors %}
-            <div>{{ form_errors }}</div>
-        {% endif %}
+        {% if form_errors %}<div>{{ form_errors }}</div>{% endif %}
     {% endif %}
 
     {% if invalid_username is defined %}
-        {% if invalid_username %}
-            <div>No user {{ invalid_username }} found.</div>
-        {% endif %}
+        {% if invalid_username %}<div>{{ '%username%.not.found'|trans({'%username%': invalid_username}) }}</div>{% endif %}
     {% endif %}
 
     {{ form(form) }}
-
 {% endblock mesd_user_content %}

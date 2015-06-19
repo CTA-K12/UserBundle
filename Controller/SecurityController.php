@@ -40,20 +40,36 @@ class SecurityController extends Controller
             $error = null;
         }
 
-        // check if credentials have expired
-        if ($error instanceof CredentialsExpiredException) {
-            return $this->render($this->container->getParameter('mesd_user.reset.template.reset'), array());
-        }
-       
-        // prior to this update, the user bundle was converting error messages
-        // to a string. we now check to ensure the error is an instance of
-        // authentication exception or we pass null to the error object
-        if (!$error instanceof AuthenticationException) {
-            $error = null; // Return only values from the Symfony security component
-        }
-
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
+
+        // check if credentials have expired
+        if ($error instanceof CredentialsExpiredException) {
+
+            $manager = $this->get('mesd_user.user_manager');
+            $user = $manager->findOneByUsernameOrEmail($lastUsername);
+
+            //var_dump($user);exit;
+            if ($user) {
+                $user->generateConfirmationToken();
+                $user->setPasswordRequestedAt(new \DateTime());
+                $manager->updateUser($user);
+
+                $request->getSession()->getFlashBag()->add(
+                    'danger',
+                    $this->get('translator')->trans('user.credentials.expired.create.new.password.required')
+                );
+        
+                return $this->redirect($this->generateUrl('MesdUserBundle_reset_new_password', array(
+                    'token' => $user->getConfirmationToken(),
+                )));
+            }
+        }
+
+        if (!$error instanceof AuthenticationException) {
+            $error = null;
+        }
+
 
         $csrfToken = $this->container->has('form.csrf_provider')
             ? $this->container->get('form.csrf_provider')->generateCsrfToken('authenticate')

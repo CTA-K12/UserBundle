@@ -1,7 +1,6 @@
 {% extends "MesdUserBundle::layout.html.twig" %}
+{% trans_default_domain "mesd_user" %}
 
 {% block mesd_user_content %}
-
-Your password has been reset.
-
+<p>{{ 'password.reset.successful'|trans }}</p>
 {% endblock mesd_user_content %}

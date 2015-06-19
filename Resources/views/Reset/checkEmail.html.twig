@@ -1,7 +1,9 @@
 {% extends "MesdUserBundle::layout.html.twig" %}
+{% trans_default_domain "mesd_user" %}
 
 {% block mesd_user_content %}
-
-An email has been sent to {{ email }}. It contains a link you must click to reset your password.
-
+<p>
+    {{ 'email.sent.to.%adress%'|trans({'%address%': email}) }}
+    {{ 'contains.link.must.click.to.reset.password'|trans }}
+</p>
 {% endblock mesd_user_content %}

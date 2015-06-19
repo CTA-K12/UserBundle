@@ -1,15 +1,10 @@
 {% extends "MesdUserBundle::layout.html.twig" %}
+{% trans_default_domain "mesd_user" %}
 
 {% block mesd_user_content %}
-
-    <div>
-        <p>User account {{ form.username.vars.value }} has been created.</p>
-        {% if send_mail %}
-        <p>A confirmation email was sent to {{ form.email['first'].vars.value }}</p>
-        {% endif %}
-        {% if approval %}
-        <p>However, account approval is required and your account is locked.</p>
-        {% endif %}
-    </div>
-
+<div>
+    <p>{{ 'user.account.%username%.created'|trans({'%username%': 'form.username.vars.value'}) }}</p>
+    {% if send_mail %}<p>{{ 'confirmation.email.sent.to.%address%'|trans({'%address%': form.email['first'].vars.value }) }}</p>{% endif %}
+    {% if approval %}<p>{{ 'however.account.approval.required.locked.until.further.notice'|trans }}</p>{% endif %}
+</div>
 {% endblock mesd_user_content %}

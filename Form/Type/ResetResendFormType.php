@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class NewPasswordFormType extends AbstractType
+class ResetResendFormType extends AbstractType
 {
     private $class;
 
@@ -17,13 +17,11 @@ class NewPasswordFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('plainPassword', 'repeated', array(
-            'type'            => 'password',
-            'first_options'   => array(),
-            'second_options'  => array(),
-            'invalid_message' => 'passwords.do.not.match',
-            ))
-            ->add('reset', 'submit', array());
+        $builder
+            ->add('username', 'hidden')
+            ->add('confirmationToken', 'hidden')
+            ->add('resend', 'submit')
+        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -35,6 +33,6 @@ class NewPasswordFormType extends AbstractType
     
     public function getName()
     {
-        return 'mesd_user_new_password';
+        return 'mesd_user_reset_resend';
     }
 }

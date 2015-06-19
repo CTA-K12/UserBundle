@@ -6,7 +6,6 @@ namespace Mesd\UserBundle\Listener;
 use Symfony\Component\Security\Core\AuthenticationEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
-use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 use Doctrine\Bundle\DoctrineBundle\Registry as Doctrine;
@@ -25,15 +24,6 @@ class AuthenticationListener implements EventSubscriberInterface
     {
         $this->em = $doctrine->getManager();
     }
-
-    /*
-    protected $userManager;
-
-    public function __construct(UserManager $userManager)
-    {
-        $this->userManager = $userManager;
-    }
-    */
 
     /**
      * getSubscribedEvents

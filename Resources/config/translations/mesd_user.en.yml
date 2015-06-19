@@ -1,0 +1,21 @@
+# /src/Mesd/UserBundle/Resources/translations/mesd_user.en.yml
+# Engrish
+#
+# Examples
+# #############################
+# help:       Help
+# log:
+#     in:     Login
+#     out:    Logout
+# %x%.of.%y%: Displaying %x% of %y%.
+# #############################
+confirmation.email.sent.to.%address%:       A confirmation email has been sent to %address%.
+contains.link.must.click.to.reset.password: It contains a link you must click to reset your password.
+email.sent.to.%adress%:                     An email has been sent to %address%.
+emails.do.not.match:                        Emails do not match.
+however.account.approval.required.locked.until.further.notice: However, account approval is required and will be locked until further notice.
+password.reset.for.user.already.requested:  A password reset for this user has already been requested.
+password.reset.successful:                  Password has been successfully reset.
+passwords.do.not.match:                     Passwords do not match.
+user.account.%username%.created:            User account %username% has been created.
+%username%.not.found:                       %username% not found.

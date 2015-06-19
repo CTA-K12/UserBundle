@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Mesd\UserBundle\Form\Type\NewPasswordFormType;
 use Mesd\UserBundle\Form\Type\ResetRequestFormType;
+use Mesd\UserBundle\Form\Type\ResetResendFormType;
 use Mesd\UserBundle\Model\Mailer;
 use Mesd\UserBundle\Model\UserInterface;
 
@@ -75,10 +76,23 @@ class ResetController extends Controller
                 );
             }
 
-            // Determine is user already has an non-expired reset confirmation token
+            // Determine if user already has an non-expired reset confirmation token
             if ($user->isPasswordRequestNonExpired($this->container->getParameter('mesd_user.reset.token_ttl'))) {
+
+                $resendForm = $this->createForm(
+                    new ResetResendFormType($this->container->getParameter('mesd_user.user_class')),
+                    null,
+                    array(
+                        'action' => $this->generateUrl('MesdUserBundle_reset_resend_email'),
+                        'method' => 'POST',
+                    )
+                );
+
                 return $this->render(
-                    $this->container->getParameter('mesd_user.reset.template.already_requested')
+                    $this->container->getParameter('mesd_user.reset.template.already_requested'),
+                    array(
+                        'form' => $resendForm->createView(),
+                    )
                 );
             }
 
@@ -119,9 +133,75 @@ class ResetController extends Controller
         }
     }
 
+    public function resendEmailAction(Request $request)
+    {
+        $form = $this->createForm(
+            new ResetResendFormType($this->container->getParameter('mesd_user.user_class')),
+            null,
+            array(
+                'action' => $this->generateUrl('MesdUserBundle_reset_resend_email'),
+                'method' => 'POST',
+            )
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data       = $form->getData();
+
+            $credential = $data['username'];
+            $user       = $this->get('mesd_user.user_manager')->findOneByUsername($credential);
+
+            // If no user found, redirect to request and display error
+            if (null === $user || $user->getConfirmationToken() !== $data['confirmationToken']) {
+                return $this->render(
+                    $this->container->getParameter('mesd_user.reset.template.request'),
+                    array(
+                        'form' => $form->createView(),
+                        'invalid_username' => $credential
+                    )
+                );
+            }
+
+            // Generate new reset confirmation token
+            $user->generateConfirmationToken();
+            $user->setPasswordRequestedAt(new \DateTime());
+            $this->get('mesd_user.user_manager')->updateUser($user);
+
+            $mailer = new Mailer(
+                $this->get('mailer'),
+                $this->get('router'),
+                $this->get('templating')
+            );
+
+            $mailer->sendPasswordResetEmailMessage(
+                $user,
+                array(
+                    'from'     => $this->container->getParameter('mesd_user.reset.mail_from'),
+                    'subject'  => $this->container->getParameter('mesd_user.reset.mail_subject'),
+                    'template' => $this->container->getParameter('mesd_user.reset.template.reset_mail')
+                )
+            );
+
+            return $this->render(
+                $this->container->getParameter('mesd_user.reset.template.check_email'),
+                array('email' => $this->getObfuscatedEmail($user))
+            );
+        } else {
+            return $this->render(
+                $this->container->getParameter('mesd_user.reset.template.request'),
+                array(
+                    'form' => $form->createView(),
+                    'form_errors' => $form->getErrorsAsString()
+                )
+            );
+        }
+    }
+
 
     public function newPasswordAction(Request $request, $token)
     {
+        //var_dump($request->getSession()->getFlashBag());exit;
         $user = $this->get('mesd_user.user_manager')->findUserByConfirmationToken($token);
 
         if (null === $user) {
@@ -130,6 +210,14 @@ class ResetController extends Controller
             throw $this->createNotFoundException(
                 sprintf('The user with "confirmation token" does not exist for value "%s"', $token)
             );
+        }
+
+        $tokenTimestamp = $user->getPasswordRequestedAt()->getTimestamp();
+        $tokenExpire = $tokenTimestamp + $this->container->getParameter('mesd_user.reset.token_ttl');
+        $now = new \DateTime();
+
+        if ($now->getTimestamp() > $tokenExpire) {
+            throw $this->createNotFoundException('This page is expired or does not exist');
         }
 
         $form = $this->createForm(
@@ -150,6 +238,9 @@ class ResetController extends Controller
             $this->get('mesd_user.user_manager')->updatePassword($user);
             $user->setConfirmationToken(null);
             $user->setPasswordRequestedAt(null);
+            $user->setCredentialsExpired(false);
+            $user->setCredentialsExpireAt(null);
+
             $this->get('mesd_user.user_manager')->updateUser($user);
 
             return $this->redirect($this->generateUrl('MesdUserBundle_reset_success'));
@@ -158,7 +249,7 @@ class ResetController extends Controller
         return $this->render(
             $this->container->getParameter('mesd_user.reset.template.new_password'),
              array(
-                'form' => $form->createView()
+                'form' => $form->createView(),
             )
         );
     }

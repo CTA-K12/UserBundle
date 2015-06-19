@@ -1,19 +1,24 @@
 MesdUserBundle_reset_request:
-    pattern: /request
+    pattern:  /request
     defaults: { _controller: MesdUserBundle:Reset:request }
     methods:  [GET]
 
 MesdUserBundle_reset_send_email:
-    pattern: /send-email
+    pattern:  /send-email
     defaults: { _controller: MesdUserBundle:Reset:sendEmail }
     methods:  [POST]
 
 MesdUserBundle_reset_new_password:
-    pattern: /new-password/{token}
+    pattern:  /new-password/{token}
     defaults: { _controller: MesdUserBundle:Reset:newPassword }
     methods:  [GET|POST]
 
 MesdUserBundle_reset_success:
-    pattern: /success
+    pattern:  /success
     defaults: { _controller: MesdUserBundle:Reset:success }
     methods:  [GET]
+
+MesdUserBundle_reset_resend_email:
+    pattern:  /resend-email
+    defaults: { _controller: MesdUserBundle:Reset:resendEmail }
+    methods:  [POST]

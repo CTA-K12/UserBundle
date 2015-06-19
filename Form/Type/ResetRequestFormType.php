@@ -12,8 +12,8 @@ class ResetRequestFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('credential', 'text', array('label' => 'Username', 'required' => true))
-            ->add('request', 'submit', array('label' => 'Request Password Reset'))
+            ->add('credential', 'text', array('required' => true))
+            ->add('request', 'submit', array())
         ;
     }
 
@@ -22,4 +22,5 @@ class ResetRequestFormType extends AbstractType
     {
         return 'mesd_user_reset_request';
     }
+
 }
