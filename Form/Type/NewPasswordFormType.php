@@ -22,6 +22,7 @@ class NewPasswordFormType extends AbstractType
             'first_options'   => array(),
             'second_options'  => array(),
             'invalid_message' => 'passwords.do.not.match',
+            'error_bubbling'  => true,
             ))
             ->add('reset', 'submit', array());
     }

@@ -70,7 +70,7 @@ class ResetController extends Controller
                 return $this->render(
                     $this->container->getParameter('mesd_user.reset.template.request'),
                     array(
-                        'form' => $form->createView(),
+                        'form'             => $form->createView(),
                         'invalid_username' => $credential
                     )
                 );
@@ -81,9 +81,9 @@ class ResetController extends Controller
 
                 $resendForm = $this->createForm(
                     new ResetResendFormType($this->container->getParameter('mesd_user.user_class')),
-                    null,
+                    $user,
                     array(
-                        'action' => $this->generateUrl('MesdUserBundle_reset_resend_email'),
+                        'action' => $this->generateUrl('MesdUserBundle_reset_resend_email', array('token' => $user->getConfirmationToken())),
                         'method' => 'POST',
                     )
                 );
@@ -133,13 +133,15 @@ class ResetController extends Controller
         }
     }
 
-    public function resendEmailAction(Request $request)
+    public function resendEmailAction(Request $request, $token)
     {
+        $user = $this->get('mesd_user.user_manager')->findUserByConfirmationToken($token);
+
         $form = $this->createForm(
             new ResetResendFormType($this->container->getParameter('mesd_user.user_class')),
-            null,
+            $user,
             array(
-                'action' => $this->generateUrl('MesdUserBundle_reset_resend_email'),
+                'action' => $this->generateUrl('MesdUserBundle_reset_resend_email', array('token' => $token)),
                 'method' => 'POST',
             )
         );
@@ -147,21 +149,19 @@ class ResetController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $data       = $form->getData();
 
-            $credential = $data['username'];
-            $user       = $this->get('mesd_user.user_manager')->findOneByUsername($credential);
+            //$data       = $form->getData();
 
             // If no user found, redirect to request and display error
-            if (null === $user || $user->getConfirmationToken() !== $data['confirmationToken']) {
-                return $this->render(
-                    $this->container->getParameter('mesd_user.reset.template.request'),
-                    array(
-                        'form' => $form->createView(),
-                        'invalid_username' => $credential
-                    )
-                );
-            }
+            //if (null === $data || $user->getConfirmationToken() !== $data->getConfirmationToken()) {
+            //    return $this->render(
+            //        $this->container->getParameter('mesd_user.reset.template.request'),
+            //        array(
+            //            'form' => $form->createView(),
+            //            'invalid_username' => $credential
+            //        )
+            //    );
+            //}
 
             // Generate new reset confirmation token
             $user->generateConfirmationToken();
@@ -187,11 +187,12 @@ class ResetController extends Controller
                 $this->container->getParameter('mesd_user.reset.template.check_email'),
                 array('email' => $this->getObfuscatedEmail($user))
             );
-        } else {
+        }
+        else {
             return $this->render(
                 $this->container->getParameter('mesd_user.reset.template.request'),
                 array(
-                    'form' => $form->createView(),
+                    'form'        => $form->createView(),
                     'form_errors' => $form->getErrorsAsString()
                 )
             );
@@ -201,7 +202,6 @@ class ResetController extends Controller
 
     public function newPasswordAction(Request $request, $token)
     {
-        //var_dump($request->getSession()->getFlashBag());exit;
         $user = $this->get('mesd_user.user_manager')->findUserByConfirmationToken($token);
 
         if (null === $user) {
@@ -249,7 +249,7 @@ class ResetController extends Controller
         return $this->render(
             $this->container->getParameter('mesd_user.reset.template.new_password'),
              array(
-                'form' => $form->createView(),
+                'form'        => $form->createView(),
             )
         );
     }

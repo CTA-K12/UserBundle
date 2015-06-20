@@ -19,6 +19,6 @@ MesdUserBundle_reset_success:
     methods:  [GET]
 
 MesdUserBundle_reset_resend_email:
-    pattern:  /resend-email
+    pattern:  /resend-email/{token}
     defaults: { _controller: MesdUserBundle:Reset:resendEmail }
     methods:  [POST]
