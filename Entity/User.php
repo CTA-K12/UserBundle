@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Util\SecureRandom;
-use Mesd\UserBundle\Model\FilterInterface;
 use Mesd\UserBundle\Model\GroupInterface;
 use Mesd\UserBundle\Model\RoleInterface;
 use Mesd\UserBundle\Model\UserInterface;
@@ -100,11 +99,6 @@ abstract class User implements UserInterface
      * @var \Doctrine\Common\Collections\Collection
      */
     protected $group;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    protected $filter;
 
     /**
      * boolean
@@ -547,7 +541,7 @@ abstract class User implements UserInterface
     {
         $role = $this->role->toArray();
 
-        if ( $this->isGroupsEnabled() && 0 < count($this->getGroup())) {
+        if ($this->isGroupsEnabled() && 0 < count($this->getGroup())) {
             foreach ($this->getGroup() as $group) {
                 $role = array_merge($role, $group->getRole()->toArray());
             }
@@ -641,7 +635,7 @@ abstract class User implements UserInterface
     {
         $names = array();
 
-        if ( 0 < count($this->getRoleStandalone())) {
+        if (0 < count($this->getRoleStandalone())) {
             foreach ($this->getRoleStandalone() as $role) {
                 $names[] = $role->getName();
             }
@@ -658,7 +652,7 @@ abstract class User implements UserInterface
      */
     public function removeRole(RoleInterface $role)
     {
-        if($this->role->contains($role)) {
+        if ($this->role->contains($role)) {
             $this->role->removeElement($role);
         }
 
@@ -838,5 +832,4 @@ abstract class User implements UserInterface
             $this->id
         ) = $data;
     }
-
 }
