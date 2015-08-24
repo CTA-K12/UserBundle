@@ -20,17 +20,9 @@ class UserLoadMetadataListener
      */
     protected $groupsEnabled;
 
-    /**
-     * Whether the filters setting is enabled or not
-     *
-     * @var boolean
-     */
-    protected $filtersEnabled;
-
     //////////////
     // LISTENER //
     //////////////
-
 
     /**
      * loadClassMetadata listener callback
@@ -48,11 +40,9 @@ class UserLoadMetadataListener
         }
     }
 
-
     /////////////////////////
     // GETTERS AND SETTERS //
     /////////////////////////
-
 
     /**
      * Gets whether  the groups setting is enabled or not.
@@ -74,30 +64,6 @@ class UserLoadMetadataListener
     public function setGroupsEnabled($groupsEnabled)
     {
         $this->groupsEnabled = $groupsEnabled;
-
-        return $this;
-    }
-
-    /**
-     * Gets whether the filters setting is enabled or not.
-     *
-     * @return boolean
-     */
-    public function getFiltersEnabled()
-    {
-        return $this->filtersEnabled;
-    }
-
-    /**
-     * Sets whether the filters setting is enabled or not.
-     *
-     * @param boolean $filtersEnabled the filters enabled
-     *
-     * @return self
-     */
-    public function setFiltersEnabled($filtersEnabled)
-    {
-        $this->filtersEnabled = $filtersEnabled;
 
         return $this;
     }
