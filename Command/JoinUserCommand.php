@@ -57,7 +57,7 @@ EOT
 
         // Check to see if user has this group already
         if ($userManager->hasGroup($userName, $groupName)) {
-            $output->writeln(sprintf('<error>Error: User %s aleady belongs to group %s</error>', $userName, $groupName));
+            $output->writeln(sprintf('<error>Error: User %s already belongs to group %s</error>', $userName, $groupName));
         }
         // If no, then join group
         else {
