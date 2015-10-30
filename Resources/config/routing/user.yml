@@ -13,7 +13,7 @@ MesdUserBundle_user_new:
 MesdUserBundle_user_create:
     path:     /create
     defaults: { _controller: "MesdUserBundle:User:create" }
-    requirements: { _method: post }
+    requirements: { methods: post }
 
 MesdUserBundle_user_edit:
     path:     /{id}/edit
@@ -22,9 +22,9 @@ MesdUserBundle_user_edit:
 MesdUserBundle_user_update:
     path:     /{id}/update
     defaults: { _controller: "MesdUserBundle:User:update" }
-    requirements: { _method: post|put }
+    requirements: { methods: post|put }
 
 MesdUserBundle_user_delete:
     path:     /{id}/delete
     defaults: { _controller: "MesdUserBundle:User:delete" }
-    requirements: { _method: post|delete }
+    requirements: { methods: post|delete }

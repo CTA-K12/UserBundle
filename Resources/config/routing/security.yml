@@ -1,12 +1,12 @@
 MesdUserBundle_login:
-    pattern: /login
+    path: /login
     defaults: { _controller: MesdUserBundle:Security:login }
 
 MesdUserBundle_check:
-    pattern: /login_check
+    path: /login_check
     defaults: { _controller: MesdUserBundle:Security:check }
     methods:  [POST]
 
 MesdUserBundle_logout:
-    pattern: /logout
+    path: /logout
     defaults: { _controller: MesdUserBundle:Security:logout }
