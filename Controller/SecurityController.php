@@ -4,8 +4,9 @@ namespace Mesd\UserBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\AuthenticationEvents;
+
+
 
 class SecurityController extends Controller
 {
@@ -14,8 +15,10 @@ class SecurityController extends Controller
 
         $session = $request->getSession();
 
+        $authenticationUtils = $this->get('security.authentication_utils');
+
         // Check if security context is already authenticated
-        if (true === $this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if (true === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $revistBehavior = $this->container
                 ->getParameter('mesd_user.login.revisit_behavior');
 
@@ -31,11 +34,11 @@ class SecurityController extends Controller
         }
 
         // Check for errors
-        if ($request->attributes->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(SecurityContextInterface::AUTHENTICATION_ERROR);
-        } elseif (null !== $session && $session->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
-            $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContextInterface::AUTHENTICATION_ERROR);
+        if ($request->attributes->has(AuthenticationEvents::AUTHENTICATION_FAILURE)) {
+            $error = $request->attributes->get(AuthenticationEvents::AUTHENTICATION_FAILURE);
+        } elseif (null !== $session && $session->has(AuthenticationEvents::AUTHENTICATION_FAILURE)) {
+            $error = $session->get(AuthenticationEvents::AUTHENTICATION_FAILURE);
+            $session->remove(AuthenticationEvents::AUTHENTICATION_FAILURE);
         } else {
             $error = null;
         }
@@ -46,11 +49,13 @@ class SecurityController extends Controller
         }
 
         // Get last username entered by the user
-        $lastUsername = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
+        $lastUsername = (null === $session) ? '' : $authenticationUtils->getLastUsername();
 
         $csrfToken = $this->container->has('form.csrf_provider')
             ? $this->container->get('form.csrf_provider')->generateCsrfToken('authenticate')
             : null;
+
+        print('before render');
 
         return $this->render(
             $this->container->getParameter('mesd_user.login.template'),
